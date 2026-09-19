@@ -38,6 +38,7 @@
       data-search-preload="<%= cfg.search.preload ? '1' : '0' %>"
       data-search-shortcut="<%= cfg.search.shortcut === false ? '0' : '1' %>"
       data-lightbox="<%= cfg.article.lightbox === false ? '0' : '1' %>"
+      data-animate="<%= cfg.appearance.animate === false ? '0' : '1' %>"
       data-root="<%= site.root %>">
 <head>
 <meta charset="utf-8">
@@ -161,5 +162,8 @@
 <script type="speculationrules">
 {"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/search.json*"}},{"not":{"href_matches":"/*atom.xml*"}}]},"eagerness":"moderate"}]}
 </script>
+<% } %>
+<% if (cfg.appearance.animate !== false) { %>
+<noscript><style>body.is-home .post-card{opacity:1 !important}</style></noscript>
 <% } %>
 </head>

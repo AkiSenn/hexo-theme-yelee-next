@@ -1333,6 +1333,81 @@ function initAvatarShake() {
   avatars.forEach(bind);
 }
 
+/* ============================================ 15. 首页文章入场（复刻原版） ==
+   老主题 main.js 的做法：首页所有 .article 先 opacity:0，ScrollReveal 进入视口时
+   套一个随机的 animate.css 动画并置为 opacity:1 —— 所以快速下滑时，还没轮到的
+   文章是"空白"的，像没加载出来。这里用 IntersectionObserver 复刻同样的观感：
+     · 第一张卡片比视口还高时，它不参与动画（原版同款判断）
+     · 随机名沿用原版那 8 个（原版 Math.ceil 的取值有极小概率越界成 undefined，
+       这里用 Math.floor 修掉，动画名永远有效）
+     · 无 JS / 动效敏感 / 兜底超时：全部直接显示，绝不留白 */
+
+const REVEAL_NAMES = [
+  'pulse',
+  'fadeIn',
+  'fadeInRight',
+  'flipInX',
+  'lightSpeedIn',
+  'rotateInUpLeft',
+  'slideInUp',
+  'zoomIn'
+];
+
+function initReveal() {
+  if (html.getAttribute('data-animate') === '0') return;
+  const body = document.body;
+  if (!body || !body.classList.contains('is-home')) return;
+  const cards = $$('.post-list > .post-card');
+  if (!cards.length) return;
+
+  /* noAnim=true 时只显示、不套动画（原版对"太长的那一篇"就是这么处理的） */
+  const show = (el, noAnim) => {
+    if (el.classList.contains('is-revealed')) return;
+    if (!noAnim && !reduced()) {
+      el.classList.add('anim-' + REVEAL_NAMES[Math.floor(Math.random() * REVEAL_NAMES.length)]);
+    }
+    el.classList.add('is-revealed');
+  };
+
+  let list = cards;
+  /* 原版逻辑：首屏那篇比视口还高就不做动画（直接 opacity:1），否则用户一进来
+     整屏都是空白，观感像是没加载出来 */
+  if (cards[0].getBoundingClientRect().height > window.innerHeight) {
+    show(cards[0], true);
+    list = cards.slice(1);
+  }
+
+  if (reduced() || typeof IntersectionObserver !== 'function') {
+    list.forEach(show);
+    return;
+  }
+
+  const io = new IntersectionObserver(
+    entries => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        show(en.target);
+        io.unobserve(en.target);
+      });
+    },
+    { threshold: 0.01, rootMargin: '0px 0px -30px 0px' }
+  );
+  list.forEach(card => io.observe(card));
+
+  /* 兜底：3 秒后无论如何全部显示（脚本被拦、IO 异常都不至于白屏） */
+  window.setTimeout(() => list.forEach(show), 3000);
+}
+
+/* ============================================ 16. 滚动态（顶栏分层阴影） ==
+   原版移动端滚过 69px 会把 overlay 固定成 42px 细条；这里用
+   html.is-scrolled 给顶栏加一层阴影，等价地表达"页面已经滚起来了"。 */
+function initScrollState() {
+  const sync = () => {
+    html.classList.toggle('is-scrolled', (window.scrollY || 0) > 8);
+  };
+  onViewportChange(sync);
+}
+
 /* ============================================================== 启动 */
 
 function main() {
@@ -1349,6 +1424,8 @@ function main() {
   boot('lightbox', initLightbox);
   boot('search', initSearch);
   boot('avatar', initAvatarShake);
+  boot('reveal', initReveal);
+  boot('scrollState', initScrollState);
 }
 
 if (document.readyState === 'loading') {

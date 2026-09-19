@@ -40,6 +40,11 @@
 | 细节 | 原版 | 重制版 |
 | --- | --- | --- |
 | **移动端头像区** | 窄屏隐藏左栏（`.left-col{display:none}`），另有一个位于文档流最上方的 `#mobile-nav` 承载头像/署名/签名 | 同样拆成独立的 `.mobile-head` 顶部模块：主色渐变横带 + 头像压带 + 署名/签名/社交图标，**不塞进侧栏抽屉**；抽屉只留导航 |
+| **首页文章入场** | 首页所有文章先 `opacity:0`，ScrollReveal 进入视口时随机套一个 animate.css 动画（8 选 1）；**快速下滑时未轮到的文章是空白的，像没加载出来** | 同款观感：IntersectionObserver 揭示 + 同名 8 个关键帧随机挑一个；首篇高于视口则不做动画（原版同款判断）。差异：修掉原版随机名越界成 `undefined` 的小 bug、无 JS/动效敏感/脚本出错时兜底显示，不留白 |
+| **头像每次加载 zoomIn** | `.profilepic img` 带 `animated zoomIn`，0.4s + 0.3s 延迟 —— 所以**点文章跳页后头像会再"抖"一下** | 同款：`.profile__avatar img` 每次加载播 `yelee-zoomIn .4s ease .3s`（用 `backwards` 避免原版"先显示再跳回透明"的闪烁） |
+| **卡片左侧色条** | `.article-header{border-left:6px solid #eee}`，hover 变 `5px solid #9c9`（绿） | 同款位置：卡片左侧 4px 竖条，hover/focus 变主色 |
+| **侧栏面板滑动** | `.switch-wrap{transition:transform .3s ease-in}` + `.turn-left{translate(-100%)}` 横向滑动 | 页签切换时面板横向滑入 0.3s（`.side-panel.is-active` 走 `yelee-panel-in`） |
+| **页脚爱心** | `fa-heart animated infinite pulse`（1.1s，红色） | 同款：内联 SVG 爱心 + `yelee-pulse 1.1s infinite` |
 | **点头像回主页** | 头像链到站点根目录 | 头像（桌面侧栏 + 移动端顶部两处）点击 → 播一次震动 → 回主页；已在首页则震一下并滚回顶部；Ctrl/Cmd/中键仍可新标签打开 |
 | **头像抖动** | `.profilepic:hover` 的 0.15s 快速抖动 + 蓝色辉光 | 同样的节奏（`translate` 实现，不触发重排）+ 主色辉光，`prefers-reduced-motion` 下自动关闭 |
 | 侧栏竖排页签 | 小鸟屋/丝带/回环/小人四个手绘图标 + 横向滑动 | 同一位置换成无障碍 tablist（目录·菜单·标签云·友链·关于） |
