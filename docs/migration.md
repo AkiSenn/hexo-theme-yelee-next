@@ -11,7 +11,12 @@ theme: yelee-next      # 原来是 yelee
 
 挂载方式见 README（推荐 `node tools/link.mjs E:/hexo`，用目录 junction，主题源码留在独立仓库里）。
 
-### 2. 老配置直接搬
+### 2. 老配置直接搬（或直接抄起步配置）
+
+> 懒得对比旧 key 的话，直接用仓库里的起步配置：
+> `cp docs/starter-config.yml <站点>/_config.yelee-next.yml`，里面按你这套站点预设好了，
+> 只需填 ICP / GA / giscus 几处（都有 `👉` 标注与分步说明）。下面的自动迁移对老配置同样生效。
+
 
 把原来的 `themes/yelee/_config.yml` **另存为站点根目录的 `_config.yelee-next.yml`**，不用改任何 key：
 
@@ -122,11 +127,27 @@ sticky: 100       # 置顶（配合 hexo-generator-index）
 ---
 ```
 
-### 6. 标签 / 分类页
+### 6. 打开搜索
+
+老配置里 `search.on: false` 会把搜索关掉（原主题默认也是关的）。新式 key 优先级更高，所以只要在 `_config.yelee-next.yml` 里写：
+
+```yaml
+search:
+  enable: true
+  limit: 20
+  excerpt_length: 140
+  preload: false
+  shortcut: true      # 按 / 或 Ctrl/Cmd+K 唤起
+```
+
+构建日志里出现 `Generated: search.json` 就说明索引生成成功。前端交互：放大镜或快捷键唤起浮层 → `↑↓` 选择 → `Enter` 打开。
+（原主题是侧栏内嵌输入框 + `search.xml` + jQuery 解析，新版换成构建期 `search.json` + 原生 JS；`hexo-generator-search` 可以卸掉了。）
+
+### 7. 标签 / 分类页
 
 `source/tags/index.md`、`source/categories/index.md` 是空内容的页面，新版会在里面自动渲染**标签云 + 分类索引**（老 yelee 靠硬编码路径 `tags/index.html` 判断，新版两种写法都认：Hexo 约定的 `type: tags` 或路径匹配）。
 
-### 7. 404 页面
+### 8. 404 页面
 
 站点 `source/404.html`（配 `skip_render`）优先级更高，主题自带的 `layout/404.ejs` 只是兜底；两者可以共存，不动也行。
 

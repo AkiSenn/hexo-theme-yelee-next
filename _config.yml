@@ -56,9 +56,11 @@ menu:
   关于我: /about/
 
 # ---------------------------------------------------------------- 社交图标
-# key 按名字匹配内置 SVG 图标（GitHub / Email / RSS / bilibili / weibo / zhihu /
-# douban / netease / twitter / telegram / qq / wechat / jianshu / csdn / v2ex ...），
-# 匹配不到就显示名字首字母徽标。想换图标可以放 source/img/名字.svg 并改 icon 字段。
+# key 按名字匹配内置 SVG 图标，匹配不到就显示名字首字母徽标。
+# 内置名字：GitHub / Email(mail) / RSS / Twitter(X) / Telegram / bilibili / weibo /
+#          zhihu / douban / netease(网易云音乐) / qq / wechat / jianshu / csdn /
+#          v2ex / youtube / codepen / wordpress / globe(通用)
+# 也可以写成 { url: ..., icon: github } 显式指定图标。
 subnav: {}
 
 # -------------------------------------------------------------------- 外观
@@ -103,9 +105,15 @@ article:
                          # 可选：native / copy / weibo / twitter / telegram / qq；[] 关闭
 
 # -------------------------------------------------------------------- 搜索
-# 构建期生成 search.json，前端零依赖本地搜索（取代原来的 search.xml + jQuery）
+# 构建期生成 search.json，前端零依赖本地搜索（取代原来的 search.xml + jQuery）。
+# 交互与原主题的差别：原版是「左侧栏内嵌输入框 + 结果直接铺在侧栏」，
+# 新版是「放大镜/按 / 或 Ctrl+K 唤起浮层，↑↓ 选择、Enter 打开」，
+# 索引体积更小、首屏零请求，且不再需要 hexo-generator-search。
 search:
   enable:                # 默认 true
+                         # ⚠️ 老配置里的 search.on: false 会把它关掉。
+                         #    想开搜索：把老配置的 search 段删掉，或在这里明确写 true
+                         #    （新式 key 优先级最高，一定赢过旧的 search.on）
   path: search.json
   limit: 20              # 最多返回条数
   excerpt_length: 140
@@ -120,7 +128,14 @@ comments:
                          # （旧配置里的 valine.on / disqus.shortname 会被自动识别成对应后端）
   hint:                  # 评论框上方提示，留空不显示
   # --- giscus：基于 GitHub Discussions，零服务器零成本 ---------------------
-  # 到 https://giscus.app 填仓库，把生成的 data-* 抄进来即可
+  # 两个 id 怎么拿：
+  #   1) 给博客仓库装上 giscus App，并在仓库 Settings → General → Features 打开 Discussions
+  #   2) 打开 https://giscus.app ，「仓库」填 用户名/仓库名
+  #   3) 「Discussion 分类」选一个（默认 Announcements）
+  #   4) 页面下方生成的 <script> 里：
+  #        data-repo-id="R_xxx"       → 填到下面的 repo_id
+  #        data-category-id="DIC_xxx" → 填到下面的 category_id
+  #   没填全时构建会 warning，评论区显示加载失败提示，不影响其它功能。
   giscus:
     repo: AkiSenn/akisenn.github.io
     repo_id:
@@ -151,8 +166,12 @@ footer:
   copyright: true
   powered_by: true               # 显示 Hexo / Yelee 徽标
   custom:                        # 自定义 HTML，插在页脚信息下方
-  icp:                           # 备案号（留空不显示）
-  icp_link:
+  # ---- 备案号（留空则页脚不显示这块）-------------------------------------
+  icp:                           # 备案号文案，例如：萌ICP备20220413号
+                                 #   工信部备案就写：京ICP备2026000000号-1
+  icp_link:                      # 点备案号跳转的地址
+                                 #   萌ICP：https://icp.gov.moe/?keyword=20220413
+                                 #   工信部：https://beian.miit.gov.cn/
   runtime:                       # 「本站已运行 N 天」
     enable: true
     since: 2020-08-25            # 起始日期
@@ -183,7 +202,15 @@ math:
 
 # ------------------------------------------------------------------ 统计
 analytics:
-  google_analytics:      # GA4 填 G-XXXXXXX（老 UA-XXXX 也能用）
+  # ---- Google Analytics：填 GA4 的「衡量 ID」（形如 G-XXXXXXXXXX）--------
+  # 在哪拿：https://analytics.google.com → 左下角「管理」→ 数据收集和修改 →「数据流」
+  #         → 点你的网站 → 右侧「衡量 ID」→ 复制粘到这里
+  # 说明：老的 UA-XXXXXXX-X 也认，但 Google 已停止处理 UA 数据，建议换 GA4。
+  #       留空 = 完全不加载 GA（旧版模板里硬编码的那段 GA 已删除）。
+  #       脚本在页面 load 之后才注入，不影响首屏。
+  google_analytics:
+  # ---- 百度统计：填 id（https://tongji.baidu.com → 管理 → 代码获取）------
+  # 代码里 hm.js? 后面那串 32 位字符串
   baidu_tongji:
 
 # ------------------------------------------------------------------ 资源

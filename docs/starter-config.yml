@@ -1,0 +1,188 @@
+# ============================================================================
+#  yelee-next 起步配置（照着填就能用）
+#  ---------------------------------------------------------------------------
+#  用法（Git Bash / PowerShell 都可以）：
+#      cp docs/starter-config.yml  <你的Hexo站点>/_config.yelee-next.yml
+#  然后编辑 <你的Hexo站点>/_config.yelee-next.yml，把下面标了「👉 填这里」
+#  的几项补上即可。其余都是按你这套站点预先写好的。
+#
+#  优先级（高 → 低）：
+#      本文件里的新式 key  >  本文件里的旧式 key(原版 yelee 写法)
+#      >  主题自带 _config.yml  >  主题内置默认值
+#  也就是说：本文件里写了什么就以什么为准，不用改主题目录里的任何文件。
+# ============================================================================
+
+# ----------------------------------------------------------------- 个人信息
+profile:
+  author: AutumnT                    # 侧栏署名 / 页脚版权署名
+  subtitle: 科技技术生活              # 侧栏签名，留空则不显示
+  avatar: /img/avatar.png            # 头像（放在 themes/yelee-next/source/img/ 下，
+                                     #   或写成 https://... 的完整外链）
+  favicon: /img/GitHub.png           # 浏览器标签页图标（你原来的配置就用的这个图）
+  since: 2020                        # 建站年份，页脚显示 © 2020-2026
+  aboutme: 这很草，我是个普通人，只会简简单单的代码   # 侧栏「关于我」，支持一层 HTML
+  email: admin@516700.xyz
+
+# ------------------------------------------------------------------ 导航菜单
+menu:
+  主页: /
+  所有文章: /archives/
+  标签云: /tags/
+  关于我: /about/
+
+# ---------------------------------------------------------------- 社交图标
+# key 按名字自动匹配内置图标；匹配不到就显示名字首字母。
+# 可用名字：Email / GitHub / RSS / bilibili / weibo / zhihu / douban / netease /
+#          Twitter / Telegram / QQ / WeChat / jianshu / csdn / v2ex / youtube ...
+subnav:
+  Email: mailto:admin@516700.xyz
+  GitHub: https://github.com/AkiSenn
+  RSS: /atom.xml
+  bilibili: https://space.bilibili.com/373096022
+
+# -------------------------------------------------------------------- 外观
+appearance:
+  base_font_size: 16
+  sidebar_width: 300                 # 左侧栏宽度（>=1080px 时生效）
+  background_image: 5                # 从 source/background/bg-1..5.webp 里按页面固定选一张
+  background_overlay: 0.3            # 背景遮罩 0~1，越大越暗（文字更清楚）
+  color_scheme: auto                 # auto(跟随系统) | light | dark
+  theme_switch: true                 # 显示浅色/深色切换按钮
+  animate: true
+  reading_progress: true             # 顶部阅读进度条
+  accent:                            # 主题色，留空用内置蓝 #5b8def；想要别的色填 #ff6600 这种
+  radius: 14                         # 卡片圆角
+
+# ---------------------------------------------------------------- 文章页
+article:
+  excerpt: auto                      # 列表页摘要：auto(取 <!-- more --> 或前 N 字) | false(全文)
+  excerpt_length: 200
+  toc:
+    enable: true                     # 文章目录（桌面端在左侧栏「目录」页签里）
+    min_depth: 2
+    max_depth: 3
+    list_number: true
+  copyright: true                    # 文末版权声明
+  license: CC BY-NC-SA 4.0
+  license_url: https://creativecommons.org/licenses/by-nc-sa/4.0/
+  lightbox: true                     # 图片点击放大
+  lazyload: true
+  updated: true
+  word_count: true
+  reading_time: true
+  post_nav: true
+  share: [native, copy, weibo, twitter, telegram]
+
+# -------------------------------------------------------------------- 搜索
+# 构建期生成 search.json，前端零依赖本地搜索（不再需要 hexo-generator-search）。
+#
+# ⚠️ 你原来的老配置里写着 search.on: false。如果那份老配置还留着，它会把搜索关掉，
+#    所以要么把老配置里的 search 段删掉，要么像下面这样用新式 key 明确打开
+#    （新式 key 优先级最高，一定赢过 search.on）。
+search:
+  enable: true                       # 👈 开搜索（顶栏/侧栏的放大镜，或按 / 与 Ctrl+K）
+  path: search.json
+  limit: 20                          # 最多返回几条
+  excerpt_length: 140                # 每条结果摘要字数
+  preload: false                     # true = 页面加载就拉索引；false = 第一次搜索时拉
+  shortcut: true                     # 按 / 或 Ctrl/Cmd+K 唤起
+
+# -------------------------------------------------------------------- 评论
+comments:
+  enable: true
+  provider: giscus                   # giscus | waline | twikoo | disqus | valine | false
+  lazyload: true                     # 滚到评论区才加载（首屏零请求）
+  giscus:
+    repo: AkiSenn/akisenn.github.io  # 仓库（必须是公开仓库，且已开启 Discussions）
+    repo_id:                         # 👈 填这里
+    category: Announcements          # Discussions 分类名
+    category_id:                     # 👈 填这里
+    mapping: pathname
+    reactions_enabled: 1
+    input_position: top
+    theme: preferred_color_scheme
+    lang: zh-CN
+    loading: lazy
+# 两个 id 怎么拿：
+#   1) 打开 https://giscus.app
+#   2) 「仓库」填 AkiSenn/akisenn.github.io（先给仓库装上 giscus App 并开启 Discussions）
+#   3) 「Discussion 分类」选 Announcements
+#   4) 页面下方生成的 <script> 里，data-repo-id="R_xxx" 和 data-category-id="DIC_xxx"
+#      就是这两项（长这样：R_kgDOLxxxxx / DIC_kwDOLxxxxx）
+#   没填之前：构建时会 warning 提示，评论区显示「评论已关闭/加载失败」，不影响其它功能。
+
+# -------------------------------------------------------------------- 页脚
+footer:
+  copyright: true
+  powered_by: true
+  custom:                            # 想加自己的页脚 HTML 写这里
+  # ---- 备案号：填这两行就会在页脚显示，留空则整块不显示 ------------------
+  icp: 萌ICP备20220413号              # 👈 换成你的备案号（留空则页脚不显示这块）
+  icp_link: https://icp.gov.moe/?keyword=20220413   # 👈 换成你的备案查询链接
+  # 说明：
+  #   · 萌ICP（icp.gov.moe）就把 icp_link 写成 https://icp.gov.moe/?keyword=你的编号
+  #   · 以后换了工信部备案，icp 写成「京ICP备2026xxxxxx号」，icp_link 写 https://beian.miit.gov.cn/
+  runtime:                           # 「本站已运行 N 天」
+    enable: true
+    since: 2020-08-25
+    text: 本博客已悄咪咪运行
+  visit_counter:                     # 访问统计（不蒜子，国内可用）
+    enable: true
+    provider: busuanzi
+    site_pv: true                    # 显示「总访问」
+    site_uv: true                    # 显示「访客数」
+    page_pv: true                    # 显示「本页阅读」
+
+# -------------------------------------------------------------------- 数学
+# 按文章 opt-in：front-matter 写 mathjax: true 才加载，避免全站每页都拉公式库
+math:
+  enable: true
+  per_page: true
+  engine: mathjax
+  mathjax:
+    cdn: https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js
+    config:
+      tex:
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+
+# ------------------------------------------------------------------ 统计
+analytics:
+  # ---- Google Analytics ------------------------------------------------
+  # 👈 在这里填你的 GA4 衡量 ID（形如 G-XXXXXXXXXX）
+  google_analytics:
+  # google_analytics: UA-176074678-1   # ← 你原来用的老 ID（UA 已停收数据，仅供参考）
+  # 怎么拿：
+  #   1) 打开 https://analytics.google.com/ → 左下角「管理」
+  #   2) 「数据收集和修改」→「数据流」→ 点你的网站
+  #   3) 右侧「衡量 ID」就是 G- 开头那串，复制粘到上面
+  # 说明：
+  #   · 老的 UA-XXXXXXX-X 也认（你原来填的是 UA-176074678-1），
+  #     但 Google 已停止处理 UA 数据，建议换成 GA4 的 G- ID。
+  #   · 留空 = 完全不加载 GA（主题默认不再像旧版那样在模板里硬编码一段 GA 代码）。
+  #   · 脚本是页面 load 之后再注入的，不影响首屏速度。
+
+  # ---- 百度统计 --------------------------------------------------------
+  baidu_tongji:
+  # 怎么拿：https://tongji.baidu.com → 管理 → 代码获取 → 代码里 hm.js? 后面那串
+  # （形如 a1b2c3d4e5f6... 的 32 位字符串）
+
+# ------------------------------------------------------------------ 资源
+assets:
+  cdn:                               # 留空 = 自托管（推荐）；要 CDN 填 https://cdn.jsdelivr.net/gh/用户/仓库@v4
+  fingerprint: true                  # 内容指纹 ?v=<hash>，配合长缓存
+  critical_css: true                 # 内联关键 CSS，主样式表异步加载
+  preconnect: []                     # 额外预连接，如 [https://giscus.app]
+
+# ------------------------------------------------------------------ 性能
+performance:
+  minify_html: true
+  instant_nav: true                  # 悬停即预渲染下一页（Speculation Rules）
+  generate_headers: false            # true = 生成 public/_headers（Cloudflare 长缓存规则）
+
+# ---------------------------------------------------------------- 其他
+seo:
+  twitter_id:
+  og_image:                          # 分享卡片大图，留空用头像
+  json_ld: true
+open_in_new: true                    # 站外链接新窗口
+open_in_new_exclude: []

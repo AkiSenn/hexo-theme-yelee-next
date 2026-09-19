@@ -56,24 +56,36 @@ hexo clean && hexo g && hexo s
 
 把整个仓库复制到 `你的站点/themes/yelee-next/`，同样把 `theme` 改成 `yelee-next`。
 
-### 3. 配置
+### 3. 配置（照抄一份起步配置，填三个空）
 
-所有配置项、默认值、旧版 key 对照表都在 [`_config.yml`](./_config.yml) 的注释里。**推荐把自定义配置写在站点根目录的 `_config.yelee-next.yml`**（Hexo 原生支持，升级主题不会丢）：
+**推荐把自定义配置写在站点根目录的 `_config.yelee-next.yml`**（Hexo 原生支持，升级主题不会丢）。仓库里已经备好一份填了中文注释、按你这套站点预设好的起步配置：
 
-```yaml
-# 站点根目录 _config.yelee-next.yml
-profile:
-  author: 你的名字
-  since: 2020
-comments:
-  giscus:
-    repo: 用户名/仓库名
-    repo_id: R_xxxx
-    category: Announcements
-    category_id: DIC_xxxx
+```bash
+# Git Bash / PowerShell / cmd 都能用
+cp docs/starter-config.yml  <你的站点>/_config.yelee-next.yml
 ```
 
-优先级：`_config.yelee-next.yml` 的新式 key > 同文件的旧式 key > 主题 `_config.yml` > 内置默认值。
+然后只需要改这几处（起步配置里都标了 `👉`）：
+
+| 要填的东西 | 配置项 | 去哪拿 |
+| --- | --- | --- |
+| **ICP 备案号** | `footer.icp` + `footer.icp_link` | 起步配置里已填好你原来的「萌ICP备20220413号 / https://icp.gov.moe/?keyword=20220413」，换成自己的即可；以后换成工信部备案就写 `京ICP备2026xxxxxx号` + `https://beian.miit.gov.cn/`。留空则页脚整块不显示 |
+| **Google Analytics** | `analytics.google_analytics` | <https://analytics.google.com> → 左下「管理」→ 数据收集和修改 →「数据流」→ 点你的网站 → 右侧「**衡量 ID**」形如 `G-XXXXXXXXXX`，粘进去。留空 = 完全不加载 GA；老的 `UA-XXXXXXX-X` 也认但 Google 已停收数据 |
+| **百度统计** | `analytics.baidu_tongji` | <https://tongji.baidu.com> → 管理 → 代码获取 → 代码里 `hm.js?` 后面那串 32 位字符串 |
+| **giscus 评论** | `comments.giscus.repo_id` / `category_id` | 见 [`_config.yml`](./_config.yml) 里「两个 id 怎么拿」的四步；不填也能上线，只是评论区不可用 + 构建时 warning |
+| 站点信息 | `profile.author/subtitle/avatar/since/email` | 已经在起步配置里按你的站点填好了 |
+
+优先级：`_config.yelee-next.yml` 新式 key > 同文件旧式 key > 主题 `_config.yml` > 内置默认值。全部配置项和默认值都在 [`_config.yml`](./_config.yml) 的注释里。
+
+### 4. 搜索（默认开）
+
+搜索是**构建期**把文章正文压成 `search.json`，前端零依赖本地匹配（原版是 `search.xml` + jQuery 解析）：
+
+- 唤起：顶栏/侧栏的放大镜，或按 `/`、`Ctrl/Cmd+K`；`↑` `↓` 选，`Enter` 打开，`Esc` 关闭
+- 索引体积：3 篇文章 ≈ 4.8 KB；首次唤起才拉取（`search.preload: true` 可改成预加载）
+- 与原主题的差别：原版是「左侧栏内嵌输入框 + 结果铺在侧栏」，新版是居中浮层。要哪种都可以说，改起来是纯样式 + 挂载点的事
+- ⚠️ **老配置里的 `search.on: false` 会把搜索关掉**（你原来的配置就是 false）。起步配置里已经用新式 key 明确写了 `search.enable: true`，新式 key 优先级最高，一定赢过 `search.on`
+- 装了 `hexo-generator-search` 的话可以卸掉：它的 `search.xml` 没人用了，纯占体积
 
 ### 4. 从原版 yelee 3.5 迁移
 
@@ -100,20 +112,34 @@ source/img|background/   头像、图标、背景大图（WebP，已压过）
 languages/               default(简中) / en / zh-TW
 tools/link.mjs           把主题挂到 Hexo 站点
 tools/check.mjs          生成产物体检：资源引用是否存在、是否还有老依赖、阻塞请求统计
-docs/                    迁移指南 / 性能与缓存说明
+docs/                    起步配置(照着填) / 迁移指南 / 性能与缓存说明
 ```
 
 ---
 
-## 命令
+## 命令与环境
 
 ```bash
-node tools/link.mjs E:/hexo            # 挂到站点
+node tools/link.mjs E:/hexo            # 挂到站点（建目录 junction）
 node tools/link.mjs E:/hexo --unlink   # 摘掉
 node tools/check.mjs E:/hexo/public    # 检查生成产物
 ```
 
 `tools/check.mjs` 会逐页检查 HTML 里引用的本地资源是否存在，并统计还残留多少 jQuery/require.js/FontAwesome/fancybox/MathJax2 引用与阻塞渲染的样式表。
+
+**用哪个 shell 都行**：`link.mjs` 内部用 Node 的 `fs.symlinkSync(..., 'junction')` 建链接，直接走 Windows API，不调用 `cmd /c mklink`（所以在 PowerShell 里不会撞上 `mklink` 不是命令的问题），失败时才回退到 `mklink`，再失败会提示改用「直接复制目录」。文档里的示例统一用正斜杠，Git Bash / PowerShell / cmd 都能直接粘。
+
+### 常见报错
+
+| 现象 | 原因 / 处理 |
+| --- | --- |
+| `mklink : 无法将"mklink"项识别为 cmdlet` | 你在 PowerShell 里手敲了 `mklink`（它是 cmd 内置命令）。用 `node tools/link.mjs <站点>`，或改用 Git Bash |
+| `hexo : 无法将"hexo"项识别为...` | 用 `npx hexo g`，或 `node node_modules/hexo-cli/bin/hexo g` |
+| `hexo server` 卡住 / 端口占用 | 换端口 `hexo s -p 4011`；关掉卡死的进程：Git Bash `netstat -ano \| grep :4000` 后 `taskkill //F //PID <pid>`，PowerShell `Get-NetTCPConnection -LocalPort 4000 \| % { Stop-Process -Id $_.OwningProcess -Force }` |
+| 页面没有任何样式 | 确认 `themes/yelee-next` 链接或目录真的存在；`hexo clean && hexo g` 一次 |
+| 搜索点开没结果 | ① 老配置的 `search.on: false` 把搜索关了 → 写成 `search: { enable: true }`；② 确认 `public/search.json` 已生成（构建日志里有一行 `Generated: search.json`） |
+| 评论区提示加载失败 | `comments.giscus.repo_id` / `category_id` 没填（构建时也会 warning 提醒） |
+| 改了配置没生效 | 主题配置变化不触发增量重建，`hexo clean && hexo g` |
 
 ---
 

@@ -51,12 +51,32 @@ if (fs.existsSync(target)) {
     console.error(`✗ ${target} 已存在（${real}），先移除或换一个主题名：--unlink`);
     process.exit(1);
   }
-} else if (process.platform === 'win32') {
-  execFileSync('cmd', ['/c', 'mklink', '/J', target, themeDir], { stdio: 'inherit' });
-  console.log(`✓ 已创建目录 junction：${target} → ${themeDir}`);
 } else {
-  fs.symlinkSync(themeDir, target, 'dir');
-  console.log(`✓ 已创建软链接：${target} → ${themeDir}`);
+  /* 建 junction：优先用 Node 的 fs.symlinkSync('junction')，
+     它直接调 Windows API，不需要管理员权限、也不依赖 cmd.exe / mklink，
+     所以在 Git Bash、PowerShell、cmd 里跑都一样。 */
+  try {
+    fs.symlinkSync(themeDir, target, 'junction');
+    console.log(`✓ 已创建目录 junction：${target} → ${themeDir}`);
+  } catch (err) {
+    if (process.platform === 'win32') {
+      /* 兜底：个别环境（网络盘、被安全软件拦）要走 mklink */
+      try {
+        execFileSync('cmd', ['/c', 'mklink', '/J', target, themeDir], { stdio: 'inherit' });
+        console.log(`✓ 已用 mklink 创建目录 junction：${target} → ${themeDir}`);
+      } catch (err2) {
+        console.error(
+          `✗ 链接创建失败：${err.message}\n` +
+            '  可以改用「直接复制主题目录」的方式：\n' +
+            `    cp -r "${themeDir}" "${target}"`
+        );
+        process.exit(1);
+      }
+    } else {
+      console.error(`✗ 软链接创建失败：${err.message}`);
+      process.exit(1);
+    }
+  }
 }
 
 console.log(`
