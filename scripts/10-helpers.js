@@ -181,6 +181,14 @@ helper.register('yn_is_active', function (target) {
   return current === want || current.startsWith(want) || String(page.path || '').startsWith(want.replace(/^\//, ''));
 });
 
+/** 取年份：'2020' / 2020 / Date(2020-08-25) 都能解析出来，失败返回 0 */
+helper.register('yn_year', function (value) {
+  if (!value) return 0;
+  if (value instanceof Date) return Number(this.date(value, 'YYYY')) || 0;
+  const m = String(value).match(/(\d{4})/);
+  return m ? Number(m[1]) : 0;
+});
+
 /** 格式化日期 */
 helper.register('yn_date', function (value, format) {
   if (!value) return '';

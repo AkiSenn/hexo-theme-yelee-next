@@ -1,13 +1,16 @@
 <%
   var cfg = theme.footer;
-  var year = date(new Date(), 'YYYY');
-  var since = theme.profile.since;
-  var showRange = since && !isNaN(since) && Number(since) < Number(year);
+  /* 版权年份：起始年取 profile.since（没填就用 runtime.since 的年份），结束年取构建时的当前年。
+     例：since = 2020 → © 2020-2026；since = 2025 → © 2025-2026；同年则不显示区间。 */
+  var curYear = Number(date(new Date(), 'YYYY'));
+  var startYear = yn_year(theme.profile.since) || yn_year(cfg.runtime.since);
+  var showRange = startYear > 0 && startYear < curYear;
   var vc = cfg.visit_counter;
   var busuanzi = vc.enable && vc.provider === 'busuanzi';
-  var credits = cfg.credits || {};
   var showStats = busuanzi && (vc.today_pv || vc.today_uv || vc.site_pv || vc.site_uv || (is_post() && (vc.page_pv || vc.page_uv)));
-  var sinceValue = cfg.runtime.since ? date(cfg.runtime.since, 'YYYY-MM-DD') : (since ? since + '-01-01' : '');
+  var sinceValue = cfg.runtime.since
+          ? date(cfg.runtime.since, 'YYYY-MM-DD')
+          : (yn_year(theme.profile.since) ? yn_year(theme.profile.since) + '-01-01' : '');
 %>
 <footer class="footer" role="contentinfo">
   <div class="footer__inner">
@@ -16,17 +19,21 @@
       <% if (cfg.copyright) { %>
       <p class="footer__copy">
         <span class="footer__license-icon"><%- yn_icon('license') %></span>
-        © <%= showRange ? since + '-' : '' %><%= year %>
+        © <%= showRange ? startYear + '-' : '' %><%= curYear %>
         <a href="<%= url_for('/') %>"><%= theme.profile.author %></a>
       </p>
       <% } %>
 
-      <% if (cfg.powered_by && credits.enable) { %>
+      <% if (cfg.powered_by) { %>
+      <%
+        /* 署名写死（不提供配置项）：主题构建者是 AkiSenn 与原作者 MOxFIVE。
+           版本号取自 _config.yml 的 version，例：Hexo · Yelee Next 4.0.0（AkiSenn & MOxFIVE） */
+      %>
       <p class="footer__powered">
         <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>
         <span class="footer__sep">·</span>
-        <span class="footer__theme">Yelee</span>
-        <span class="footer__credits">（<% if (credits.theme_author_url) { %><a href="<%= credits.theme_author_url %>" target="_blank" rel="noopener"><%= credits.theme_author %></a><% } else { %><%= credits.theme_author %><% } %> &amp; <% if (credits.origin_author_url) { %><a href="<%= credits.origin_author_url %>" target="_blank" rel="noopener"><%= credits.origin_author %></a><% } else { %><%= credits.origin_author %><% } %>）</span>
+        <span class="footer__theme">Yelee Next <span class="footer__ver"><%= theme.version %></span></span>
+        <span class="footer__credits">（<a href="https://github.com/AkiSenn" target="_blank" rel="noopener">AkiSenn</a> &amp; <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" rel="noopener">MOxFIVE</a>）</span>
         <span class="footer__heart" aria-hidden="true"><%- yn_icon('heart') %></span>
       </p>
       <% } %>

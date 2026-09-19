@@ -116,14 +116,6 @@ const DEFAULTS = {
     police_icp_code: '',
     police_icp_link: '',
     police_icp_icon: '',
-    /* 页脚署名：Hexo · Yelee（AkiSenn & MOxFIVE） */
-    credits: {
-      enable: true,
-      theme_author: '',
-      theme_author_url: '',
-      origin_author: 'MOxFIVE',
-      origin_author_url: 'https://github.com/MOxFIVE/hexo-theme-yelee'
-    },
     runtime: { enable: true, since: '', text: '' },
     visit_counter: {
       enable: true,
@@ -422,10 +414,6 @@ function normalize() {
     }
   }
 
-  /* 页脚署名：主题作者默认跟 profile.author，链接默认跟站点 url */
-  const credits = theme.footer.credits;
-  if (!credits.theme_author) credits.theme_author = theme.profile.author || siteAuthor;
-  if (!credits.theme_author_url) credits.theme_author_url = site.url || '';
 
   theme.appearance.base_font_size = Number(theme.appearance.base_font_size) || 16;
   theme.appearance.sidebar_width = Number(theme.appearance.sidebar_width) || 300;

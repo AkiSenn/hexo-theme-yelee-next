@@ -97,6 +97,8 @@ cp docs/starter-config.yml  <你的站点>/_config.yelee-next.yml
 | **百度统计** | `analytics.baidu_tongji` | <https://tongji.baidu.com> → 管理 → 代码获取 → 代码里 `hm.js?` 后面那串 32 位字符串 |
 | **giscus 评论** | `comments.giscus.repo_id` / `category_id` | 见 [`_config.yml`](./_config.yml) 里「两个 id 怎么拿」的四步；不填也能上线，只是评论区不可用 + 构建时 warning |
 | 站点信息 | `profile.author/subtitle/avatar/since/email` | 已经在起步配置里按你的站点填好了 |
+| 版权年份 | `profile.since` | 填 `2020` → 页脚显示 `© 2020-2026`（**结束年取构建时的当前年**，不用手改）；填 `2025` → `© 2025-2026`；留空则只显示 `© 2026`。`AutumnT` 那部分取 `profile.author`，可改 |
+| 页脚署名 | 无配置项 | `Hexo · Yelee Next <version>（AkiSenn & MOxFIVE）`：版本号取 `_config.yml` 的 `version`；`AkiSenn` 与 `MOxFIVE` 是主题构建者署名，**写死在模板里不可配置**（链接分别是你的 GitHub 主页与原主题仓库） |
 
 优先级：`_config.yelee-next.yml` 新式 key > 同文件旧式 key > 主题 `_config.yml` > 内置默认值。全部配置项和默认值都在 [`_config.yml`](./_config.yml) 的注释里。
 

@@ -19,7 +19,9 @@ profile:
   avatar: /img/avatar.png            # 头像（放在 themes/yelee-next/source/img/ 下，
                                      #   或写成 https://... 的完整外链）
   favicon: /img/GitHub.png           # 浏览器标签页图标（你原来的配置就用的这个图）
-  since: 2020                        # 建站年份，页脚显示 © 2020-2026
+  since: 2020                        # 建站年份 → 页脚版权显示「© 2020-<当前年>」
+                                     #   结束年取构建时的当前年（网络/计算机时间），不用手改
+                                     #   例：填 2025 → © 2025-2026；留空则只显示 © 2026
   aboutme: 这很草，我是个普通人，只会简简单单的代码   # 侧栏「关于我」，支持一层 HTML
   email: admin@516700.xyz
 
@@ -119,14 +121,9 @@ comments:
 # -------------------------------------------------------------------- 页脚
 footer:
   copyright: true
-  powered_by: true                   # 页脚署名行：Hexo · Yelee（AkiSenn & MOxFIVE）
+  powered_by: true                   # 页脚署名行：Hexo · Yelee Next <version>（AkiSenn & MOxFIVE）
+                                     #   署名与两个链接写死在主题里（构建者署名，不可配置）
   custom:                            # 想加自己的页脚 HTML 写这里
-  credits:                           # 👈 署名：你的名字 + 原作者，各带链接
-    enable: true
-    theme_author: AkiSenn
-    theme_author_url: https://github.com/AkiSenn
-    origin_author: MOxFIVE
-    origin_author_url: https://github.com/MOxFIVE/hexo-theme-yelee
   # ---- 备案号：填这两行就会在页脚显示，留空则整块不显示 ------------------
   # ---- 备案区：填了才显示，没填的项完全不出现（不留空白）----------------
   icp: 萌ICP备20220413号              # 👈 换成你的备案号（留空 = 不显示这一项）
