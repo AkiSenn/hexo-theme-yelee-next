@@ -621,6 +621,7 @@ function initFab() {
   if (toTop) toTop.addEventListener('click', () => scrollToY(0));
   if (comments) {
     comments.addEventListener('click', () => {
+      if (ui.expandComments) ui.expandComments();
       const el = $('#comments');
       if (el) scrollToEl(el);
     });
@@ -874,6 +875,9 @@ function initComments() {
     return;
   }
 
+  /* 供「点击加载评论」「展开」复用的入口 */
+  ui.loadComments = load;
+
   const io = new IntersectionObserver(
     entries => {
       if (!entries.some(en => en.isIntersecting)) return;
@@ -883,6 +887,48 @@ function initComments() {
     { rootMargin: '400px 0px' }
   );
   io.observe(mount);
+}
+
+/* ==================================== 8.1 评论区展开 / 收起（原版 click2show） ==
+   收起时给 .comments__panel 加 [hidden]，整块不占位 —— 下面的页脚会自动顶上来，
+   不会留一个空白框。展开时才注入第三方评论脚本（首屏对 giscus/unpkg 零请求）。 */
+
+function initCommentsUI() {
+  const root = $('#comments');
+  if (!root) return;
+  const bar = $('[data-load-comments]', root);
+  const panel = $('[data-comments-panel]', root);
+  if (!panel) return;
+  const toggle = $('[data-toggle-comments]', root);
+  const toggleLabel = $('[data-comments-toggle-label]', root);
+
+  function open() {
+    if (bar) bar.hidden = true;
+    panel.hidden = false;
+    root.setAttribute('data-state', 'open');
+    if (toggle) toggle.setAttribute('aria-expanded', 'true');
+    if (toggleLabel) toggleLabel.textContent = i18n('comments-collapse', '收起');
+    if (ui.loadComments) ui.loadComments();
+  }
+
+  function collapse() {
+    panel.hidden = true;
+    if (bar) bar.hidden = false;
+    root.setAttribute('data-state', 'bar');
+    if (toggle) toggle.setAttribute('aria-expanded', 'false');
+    if (toggleLabel) toggleLabel.textContent = i18n('comments-expand', '展开');
+  }
+
+  if (bar) bar.addEventListener('click', open);
+  if (toggle) toggle.addEventListener('click', collapse);
+
+  /* 「跳到评论」类按钮（文章信息栏的评论按钮、右下角悬浮条）：收起状态下先展开再滚过去 */
+  ui.expandComments = () => {
+    if (panel.hidden) open();
+  };
+
+  /* 直接带 #comments 打开（别人分享的锚点链接）就自动展开 */
+  if (location.hash === '#comments') open();
 }
 
 /* ======================================================== 9. 运行天数 */
@@ -1419,6 +1465,7 @@ function main() {
   boot('fab', initFab);
   boot('copy', initCopy);
   boot('comments', initComments);
+  boot('commentsUI', initCommentsUI);
   boot('runtime', initRuntime);
   boot('busuanzi', initBusuanzi);
   boot('lightbox', initLightbox);

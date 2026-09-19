@@ -1441,3 +1441,63 @@ html[data-theme='dark'] .footer__filing a[href*='mps.gov.cn'] .icon { color: #7f
   .footer__row--meta { font-size: .7rem; gap: 4px 10px; }
   .footer__credits { font-size: .74rem; }
 }
+
+/* ======================= 27. 评论区：点击加载细栏 + 收起/展开 ==============
+   复刻原版 yelee 的 click2show：默认只显示一条细栏（图标 pulse + 文案），
+   点了才展开；收起时 .comments__panel 加 [hidden] 整块不占位，
+   下面的页脚自动顶上来 —— 所以收起状态绝不留空白框。 */
+.comment-bar {
+  display: flex;
+  inline-size: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border: 1px dashed var(--c-border);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--c-card) 72%, transparent);
+  color: var(--c-fg-soft);
+  font: inherit;
+  font-size: .86rem;
+  cursor: pointer;
+  transition: color .18s ease, border-color .18s ease, background-color .18s ease;
+}
+.comment-bar:hover,
+.comment-bar:focus-visible {
+  color: var(--c-link);
+  border-color: var(--c-accent);
+  border-style: solid;
+  background: color-mix(in srgb, var(--c-accent-soft) 60%, transparent);
+}
+.comment-bar .icon { inline-size: 15px; block-size: 15px; }
+/* 原版那颗 fa-commenting-o 是 animated infinite pulse */
+.comment-bar__icon { color: var(--c-link); animation: yelee-pulse 1.4s ease-in-out infinite; }
+
+/* 收起状态：整块只留细栏，去掉卡片的边距/边框/投影，避免"空白框" */
+.comments[data-state='bar'] {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* 标题右侧的收起按钮 */
+.comments__toggle {
+  margin-inline-start: auto;
+  padding: 3px 10px;
+  border: 1px solid var(--c-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--c-muted);
+  font: inherit;
+  font-size: .76rem;
+  cursor: pointer;
+  transition: color .16s ease, border-color .16s ease;
+}
+.comments__toggle:hover { color: var(--c-link); border-color: var(--c-accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .comment-bar__icon { animation: none; }
+}

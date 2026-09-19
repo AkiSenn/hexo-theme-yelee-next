@@ -56,6 +56,9 @@ comments:
   title: Comments
   hint: Say something
   loading: Loading comments…
+  load: Load comments
+  collapse: Collapse
+  expand: Expand
   disabled: Comments are closed
 
 footer:

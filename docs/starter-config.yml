@@ -90,6 +90,8 @@ search:
 # -------------------------------------------------------------------- 评论
 comments:
   enable: true
+  preload: false                     # false = 先给一条「点击加载评论」细栏（点了才加载第三方脚本）
+  collapsible: true                  # 展开后显示「收起」按钮；收起时不留空白、页脚自动上移
   provider: giscus                   # giscus | waline | twikoo | disqus | valine | false
   lazyload: true                     # 滚到评论区才加载（首屏零请求）
   giscus:

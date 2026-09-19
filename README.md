@@ -44,6 +44,7 @@
 | **头像每次加载 zoomIn** | `.profilepic img` 带 `animated zoomIn`，0.4s + 0.3s 延迟 —— 所以**点文章跳页后头像会再"抖"一下** | 同款：`.profile__avatar img` 每次加载播 `yelee-zoomIn .4s ease .3s`（用 `backwards` 避免原版"先显示再跳回透明"的闪烁） |
 | **卡片左侧色条** | `.article-header{border-left:6px solid #eee}`，hover 变 `5px solid #9c9`（绿） | 同款位置：卡片左侧 4px 竖条，hover/focus 变主色 |
 | **侧栏面板滑动** | `.switch-wrap{transition:transform .3s ease-in}` + `.turn-left{translate(-100%)}` 横向滑动 | 页签切换时面板横向滑入 0.3s（`.side-panel.is-active` 走 `yelee-panel-in`） |
+| **评论点击展开** | `comments/click2show.ejs`：`preload_comment: false` 时先显示一条 `aside.comment-bar`（pulse 评论图标），点击才加载评论并淡出 | 同款交互：默认给一条「点击加载评论」细栏，点了才注入第三方脚本（首屏对 giscus/unpkg **零请求**）；标题右侧「收起」按钮一按，区块整块 `[hidden]` 不占位，**页脚自动顶上来**；`comments.enable: false` 时整个评论区不渲染 |
 | **页脚爱心** | `fa-heart animated infinite pulse`（1.1s，红色） | 同款：内联 SVG 爱心 + `yelee-pulse 1.1s infinite` |
 | **点头像回主页** | 头像链到站点根目录 | 头像（桌面侧栏 + 移动端顶部两处）点击 → 播一次震动 → 回主页；已在首页则震一下并滚回顶部；Ctrl/Cmd/中键仍可新标签打开 |
 | **头像抖动** | `.profilepic:hover` 的 0.15s 快速抖动 + 蓝色辉光 | 同样的节奏（`translate` 实现，不触发重排）+ 主色辉光，`prefers-reduced-motion` 下自动关闭 |

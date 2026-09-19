@@ -79,6 +79,10 @@ const DEFAULTS = {
   comments: {
     enable: true,
     lazyload: true,
+    /* preload: false → 先显示一条「点击加载评论」的细栏（复刻原版 click2show），
+       true → 直接展开加载；collapsible: false → 不给「收起」按钮 */
+    preload: false,
+    collapsible: true,
     provider: 'giscus',
     hint: '',
     giscus: {
@@ -209,6 +213,7 @@ const LEGACY_MAP = [
   ['baidu_site', 'seo.baidu_site', AS_IS],
   ['google_site', 'seo.google_site', AS_IS],
 
+  ['preload_comment', 'comments.preload', BOOL],
   ['open_in_new.global', 'open_in_new', BOOL],
   ['open_in_new', 'open_in_new', AS_IS],
 

@@ -1,28 +1,48 @@
 <%
   /* ---------------------------------------------------------------------------
    * 评论区
-   * 只渲染一个挂载点，把后端配置以 JSON 塞进 data-config；第三方脚本由 app.js
-   * 在「滚动到评论区」时才注入 —— 首屏对 giscus/unpkg 零请求。
+   * 复刻原版 yelee 的 click2show 交互（老主题 _partial/comments/click2show.ejs）：
+   *   · comments.preload: false（默认）→ 先只给一条「点击加载评论」的细栏，
+   *     点了才展开并注入第三方脚本（首屏对 giscus/unpkg 零请求）
+   *   · comments.preload: true → 直接展开
+   *   · comments.collapsible: true（默认）→ 标题右侧给「收起」按钮，收起后只剩细栏，
+   *     正文区块用 [hidden] 整块移除占位，所以下面的页脚会自动顶上来，不留空白框
+   *   · comments.enable: false / 单篇 front-matter comments: false → 整个评论区不渲染
    * ------------------------------------------------------------------------ */
   var c = theme.comments;
   var enabled = c.enable && c.provider && page.comments !== false;
   var providerCfg = (c.provider && c[c.provider]) || {};
+  var preload = c.preload === true;
+  var collapsible = c.collapsible !== false;
 %>
-<section class="comments" id="comments" aria-label="<%= __('comments.title') %>">
-  <h2 class="comments__title">
-    <%- yn_icon('comment') %><span><%= __('comments.title') %></span>
-  </h2>
+<% if (enabled) { %>
+<div class="comments" id="comments" data-state="<%= preload ? 'open' : 'bar' %>" aria-label="<%= __('comments.title') %>">
+  <button class="comment-bar" type="button" data-load-comments <%= preload ? 'hidden' : '' %>>
+    <%- yn_icon('comment', {class: 'comment-bar__icon'}) %>
+    <span><%= __('comments.load') %></span>
+  </button>
 
-  <% if (!enabled) { %>
-  <p class="comments__note"><%= __('comments.disabled') %></p>
-  <% } else { %>
-  <% if (c.hint) { %><p class="comments__hint"><%= c.hint %></p><% } %>
-  <div class="comments__mount" id="comments-mount"
-       data-comments
-       data-provider="<%= c.provider %>"
-       data-lazyload="<%= c.lazyload === false ? '0' : '1' %>"
-       data-config="<%= yn_json(providerCfg) %>">
-    <p class="comments__loading"><%- yn_icon('comment') %><%= __('comments.loading') %></p>
-  </div>
-  <% } %>
-</section>
+  <section class="comments__panel" data-comments-panel <%= preload ? '' : 'hidden' %>>
+    <h2 class="comments__title">
+      <%- yn_icon('comment') %><span><%= __('comments.title') %></span>
+      <% if (collapsible) { %>
+      <button class="comments__toggle" type="button" data-toggle-comments
+              aria-expanded="<%= preload ? 'true' : 'false' %>"
+              aria-controls="comments-mount">
+        <span data-comments-toggle-label><%= __('comments.collapse') %></span>
+      </button>
+      <% } %>
+    </h2>
+
+    <% if (c.hint) { %><p class="comments__hint"><%= c.hint %></p><% } %>
+
+    <div class="comments__mount" id="comments-mount"
+         data-comments
+         data-provider="<%= c.provider %>"
+         data-lazyload="<%= c.lazyload === false ? '0' : '1' %>"
+         data-config="<%= yn_json(providerCfg) %>">
+      <p class="comments__loading"><%- yn_icon('comment') %><%= __('comments.loading') %></p>
+    </div>
+  </section>
+</div>
+<% } %>

@@ -56,6 +56,9 @@ comments:
   title: 評論
   hint: 說點什麼吧
   loading: 評論載入中…
+  load: 點擊載入評論
+  collapse: 收起
+  expand: 展開
   disabled: 評論已關閉
 
 footer:

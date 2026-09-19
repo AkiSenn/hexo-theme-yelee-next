@@ -58,6 +58,9 @@ comments:
   title: 评论
   hint: 说点什么吧
   loading: 评论加载中…
+  load: 点击加载评论
+  collapse: 收起
+  expand: 展开
   disabled: 评论已关闭
 
 footer:

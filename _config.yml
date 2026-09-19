@@ -124,6 +124,10 @@ search:
 comments:
   enable: true
   lazyload: true         # 滚到评论区才加载第三方脚本（首屏零请求）
+  preload: false         # false = 先只显示一条「点击加载评论」细栏（复刻原版 click2show）
+                         # true  = 进入页面就展开（旧配置的 preload_comment 会自动映射到这里）
+  collapsible: true      # 标题右侧显示「收起」按钮；收起后正文区块整块不占位，页脚自动顶上来
+                         # enable: false 或单篇 comments: false 时整个评论区都不渲染，不留空白框
   provider:              # giscus | waline | twikoo | disqus | valine | false，默认 giscus
                          # （旧配置里的 valine.on / disqus.shortname 会被自动识别成对应后端）
   hint:                  # 评论框上方提示，留空不显示
