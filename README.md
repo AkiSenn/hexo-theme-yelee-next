@@ -119,6 +119,9 @@ cp themes/yelee-next/docs/starter-config.yml  /path/to/hexo-site/_config.yelee-n
 | [`docs/migration.md`](./docs/migration.md) | 从原版 yelee 3.5 迁移：**旧 key 自动迁移**，对照表 + 手动处理清单 |
 | [`docs/caching.md`](./docs/caching.md) | 性能与缓存：指纹原理、Cloudflare `_headers`、验证方法 |
 
+> 仓库里的 `legacy` 分支存放原版 yelee 3.5 的全量源码，方便 `git diff legacy main` 对照检查重制了哪些东西。
+> The `legacy` branch keeps the full original yelee 3.5 source, so you can `git diff legacy main` to see exactly what changed.
+
 **「填了才显示」的项 · Render-on-demand**
 
 | 配置 | 不填时 |
