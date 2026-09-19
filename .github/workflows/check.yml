@@ -1,0 +1,158 @@
+name: Check
+
+# 主题仓库的轻量 CI：搭一个最小 Hexo 站点，用本主题生成一遍，再跑产物体检。
+# 目的：任何一次改动（模板 / 样式 / 脚本 / 构建插件）都不能把主题改坏。
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: 构建 + 体检
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 检出
+        uses: actions/checkout@v4
+
+      - name: 准备 Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: 密钥防呆（防止误提交凭据）
+        run: |
+          if grep -rInE '(ghp_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY-----)' \
+               --exclude-dir=.git --exclude-dir=node_modules . ; then
+            echo "::error::检测到疑似密钥，请移除后再提交"
+            exit 1
+          fi
+          echo "✓ 没有发现疑似密钥"
+
+      - name: 搭建最小测试站点（安装 Hexo）
+        run: |
+          mkdir -p .ci/source/_posts
+          cd .ci
+          # 注意：Hexo 靠 package.json 里的 "hexo" 键确定站点根目录；
+          # 缺了它 Hexo 会一路往上找到主题仓库的 package.json，把站点根认成仓库根目录。
+          cat > package.json <<'JSON'
+          { "name": "yelee-next-ci", "private": true, "hexo": { "version": "8.1.2" } }
+          JSON
+          # 生成器插件：首页/归档/标签/分类 页都由它们产出（Hexo 核心只产出文章页）
+          npm install --no-audit --no-fund hexo@8 hexo-renderer-ejs hexo-renderer-marked             hexo-generator-index hexo-generator-archive hexo-generator-tag hexo-generator-category             hexo-generator-feed
+
+      - name: 把本主题放进测试站点
+        run: |
+          mkdir -p .ci/themes/yelee-next
+          cp -r layout source languages scripts lib _config.yml README.md README.en.md \
+                docs tools LICENSE .ci/themes/yelee-next/
+
+      - name: 校验 YAML（主题配置 / 语言包 / 起步配置）
+        run: |
+          cd .ci
+          node -e "
+          const yaml = require('js-yaml'), fs = require('fs');
+          const files = ['../_config.yml','../languages/default.yml','../languages/en.yml',
+                         '../languages/zh-TW.yml','../docs/starter-config.yml'];
+          for (const f of files) { yaml.load(fs.readFileSync(f, 'utf8')); console.log('✓ ' + f); }
+          "
+
+      - name: 写站点配置与测试文章
+        run: |
+          cd .ci
+          cat > _config.yml <<'YAML'
+          title: yelee-next CI
+          subtitle: 构建自检
+          description: yelee-next theme CI
+          author: CI
+          language: zh-CN
+          url: https://example.com
+          root: /
+          permalink: post/:title.html
+          theme: yelee-next
+          highlight:
+            enable: true
+            line_number: true
+          index_generator:
+            per_page: 5
+          YAML
+
+          mkdir -p source/tags source/categories source/about
+          cat > source/tags/index.md <<'MD'
+          ---
+          title: 标签云
+          date: 2024-01-01 00:00:00
+          type: tags
+          ---
+          MD
+          cat > source/categories/index.md <<'MD'
+          ---
+          title: 分类
+          date: 2024-01-01 00:00:00
+          type: categories
+          ---
+          MD
+          cat > source/about/index.md <<'MD'
+          ---
+          title: 关于
+          date: 2024-01-01 00:00:00
+          ---
+          这是关于页，用来覆盖 page 模板。
+          MD
+
+          cat > source/_posts/hello.md <<'MD'
+          ---
+          title: CI 测试文章
+          date: 2024-01-01 00:00:00
+          tags: [Hexo, CI]
+          categories: [测试]
+          mathjax: true
+          ---
+
+          这是一篇用于自检的文章：验证中文、**加粗**、`行内代码`、公式 $E = mc^2$ 与代码块渲染。
+
+          <!-- more -->
+
+          ## 二级标题
+
+          | 列 A | 列 B |
+          | --- | --- |
+          | 1 | 2 |
+
+          - [x] 任务列表
+          - [ ] 未完成
+
+          ```js
+          const hello = 'yelee-next';
+          console.log(hello);
+          ```
+
+          > 引用块
+
+          ![首图（应 eager）](/img/avatar.png)
+
+          再来一张：
+
+          ![第二张图（应 lazy）](/img/avatar.png)
+          MD
+
+      - name: 构建主题（hexo generate）
+        run: |
+          cd .ci
+          npx hexo generate
+
+      - name: 产物体检（资源引用 / 阻塞请求 / 老依赖）
+        run: node tools/check.mjs .ci/public
+
+      - name: 关键页面签名检查
+        run: node .ci/tools/ci-signature-check.mjs .ci/public
+
+      - name: 清理（不留下测试站点）
+        if: always()
+        run: rm -rf .ci

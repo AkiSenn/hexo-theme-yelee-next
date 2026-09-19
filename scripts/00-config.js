@@ -18,6 +18,7 @@ const DEFAULTS = {
     subtitle: '',
     avatar: '/img/avatar.png',
     favicon: '/img/favicon.png',
+    apple_touch_icon: '',
     email: '',
     since: '',
     aboutme: ''

@@ -101,7 +101,7 @@
 <!-- 图标 -->
 <% if (cfg.profile.favicon) { %>
 <link rel="icon" href="<%= yn_img(cfg.profile.favicon) %>">
-<link rel="apple-touch-icon" href="<%= yn_img('/img/apple-touch-icon.png') %>">
+<link rel="apple-touch-icon" href="<%= yn_img(cfg.profile.apple_touch_icon || '/img/apple-touch-icon.png') %>">
 <% } %>
 <link rel="alternate" type="application/atom+xml" title="<%= site.title %>" href="<%= url_for('/atom.xml') %>">
 

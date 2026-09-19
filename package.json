@@ -18,10 +18,13 @@
     "link": "node tools/link.mjs",
     "check": "node tools/check.mjs"
   },
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "hexo": "^8.1.2",
+    "hexo-renderer-ejs": "^2.0.0",
+    "hexo-renderer-marked": "^7.0.1"
+  },
   "hexo": {
-    "version": ">=6.0.0"
+    "version": "8.1.2"
   },
   "repository": {
     "type": "git",

@@ -7,3 +7,6 @@ Thumbs.db
 .dev/
 .vscode/
 .idea/
+
+# CI 本地复现用的临时站点
+.ci/
