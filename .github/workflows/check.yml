@@ -39,7 +39,9 @@ jobs:
         run: |
           mkdir -p .ci/source/_posts
           cd .ci
-          # 注意：Hexo 靠 package.json 里的 "hexo" 键确定站点根目录；
+          # 注意 1：所有 npm install 都必须在这个 .ci 子目录里执行，
+          #         在主题仓库根目录跑 npm install 会生成 node_modules / package-lock.json 污染仓库。
+          # 注意 2：Hexo 靠 package.json 里的 "hexo" 键确定站点根目录；
           # 缺了它 Hexo 会一路往上找到主题仓库的 package.json，把站点根认成仓库根目录。
           cat > package.json <<'JSON'
           { "name": "yelee-next-ci", "private": true, "hexo": { "version": "8.1.2" } }
