@@ -106,13 +106,28 @@ const DEFAULTS = {
     custom: '',
     icp: '',
     icp_link: '',
+    /* 公安备案：police_icp 是展示文案，police_icp_code 是备案编号（纯数字/字母）。
+       链接留空时按编号自动生成 mps.gov.cn 的查询地址。 */
+    police_icp: '',
+    police_icp_code: '',
+    police_icp_link: '',
+    police_icp_icon: '',
+    /* 页脚署名：Hexo · Yelee（AkiSenn & MOxFIVE） */
+    credits: {
+      enable: true,
+      theme_author: '',
+      theme_author_url: '',
+      origin_author: 'MOxFIVE',
+      origin_author_url: 'https://github.com/MOxFIVE/hexo-theme-yelee'
+    },
     runtime: { enable: true, since: '', text: '' },
     visit_counter: {
       enable: true,
       provider: 'busuanzi',
+      today_pv: true,
       site_pv: true,
-      site_uv: true,
-      page_pv: true
+      site_uv: false,
+      page_pv: false
     }
   },
 
@@ -370,6 +385,22 @@ function normalize() {
   theme.subnav_items = normalizeSocial(theme.subnav);
   theme.friends_items = normalizeSocial(theme.friends);
   theme.background_list = toArrayOfPaths(theme.appearance.background_image, '/background');
+
+  /* 公安备案链接：给了就用手填的，否则用编号自动拼 mps.gov.cn 的查询地址 */
+  if (theme.footer.police_icp) {
+    const code = String(theme.footer.police_icp_code || (String(theme.footer.police_icp).match(/\d{6,}/) || [''])[0] || '');
+    theme.footer.police_icp_code = code;
+    if (!theme.footer.police_icp_link) {
+      theme.footer.police_icp_link = code
+        ? `https://beian.mps.gov.cn/#/query/webSearch?code=${code}`
+        : 'https://beian.mps.gov.cn/';
+    }
+  }
+
+  /* 页脚署名：主题作者默认跟 profile.author，链接默认跟站点 url */
+  const credits = theme.footer.credits;
+  if (!credits.theme_author) credits.theme_author = theme.profile.author || siteAuthor;
+  if (!credits.theme_author_url) credits.theme_author_url = site.url || '';
 
   theme.appearance.base_font_size = Number(theme.appearance.base_font_size) || 16;
   theme.appearance.sidebar_width = Number(theme.appearance.sidebar_width) || 300;

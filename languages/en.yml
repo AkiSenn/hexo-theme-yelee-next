@@ -59,9 +59,11 @@ comments:
   disabled: Comments are closed
 
 footer:
+  today_pv: Today
   site_pv: Views
   site_uv: Visitors
   page_pv: Page views
+  police_icp: Public security filing
   runtime: Running for
   runtime_format: '{d}d {h}h {m}m {s}s'
   license: License

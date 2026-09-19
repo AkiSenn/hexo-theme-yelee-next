@@ -164,14 +164,33 @@ comments:
 # -------------------------------------------------------------------- 页脚
 footer:
   copyright: true
-  powered_by: true               # 显示 Hexo / Yelee 徽标
+  powered_by: true               # 显示「Hexo · Yelee（你的名字 & 原作者）」这行署名
   custom:                        # 自定义 HTML，插在页脚信息下方
-  # ---- 备案号（留空则页脚不显示这块）-------------------------------------
+  # 页脚署名：Hexo · Yelee（AkiSenn & MOxFIVE）
+  #   theme_author  → 你（默认跟 profile.author），theme_author_url 一般填你的 GitHub 主页
+  #   origin_author → 原主题作者，origin_author_url 指向原主题仓库
+  credits:
+    enable: true
+    theme_author:                # 例如 AkiSenn
+    theme_author_url:            # 例如 https://github.com/AkiSenn
+    origin_author: MOxFIVE
+    origin_author_url: https://github.com/MOxFIVE/hexo-theme-yelee
+  # ---- 备案号（留空则页脚不显示这一项）-----------------------------------
+  # ① 工信部 / 萌ICP
   icp:                           # 备案号文案，例如：萌ICP备20220413号
                                  #   工信部备案就写：京ICP备2026000000号-1
   icp_link:                      # 点备案号跳转的地址
                                  #   萌ICP：https://icp.gov.moe/?keyword=20220413
                                  #   工信部：https://beian.miit.gov.cn/
+  # ② 公安备案（公网安备）—— 在公安部平台备案后会拿到一个编号
+  police_icp:                    # 👈 展示文案，例如：京公网安备11010502012345号
+  police_icp_code:               # 👈 备案编号（纯数字/字母），例如：11010502012345
+                                 #   填了编号，police_icp_link 留空会自动生成
+                                 #   https://beian.mps.gov.cn/#/query/webSearch?code=<编号>
+  police_icp_link:               # 想手动指定查询链接就填这里
+  police_icp_icon:               # 图标：留空用内置盾牌 SVG；
+                                 #   公安备案要求展示官方图标时，把官方 beian.png
+                                 #   放到 source/img/beian.png，这里写 /img/beian.png
   runtime:                       # 「本站已运行 N 天」
     enable: true
     since: 2020-08-25            # 起始日期
@@ -179,10 +198,15 @@ footer:
   visit_counter:
     enable:                      # 默认 true（不蒜子）
     provider: busuanzi           # busuanzi | false
-    site_pv:                     # 默认 true
-    site_uv:                     # 默认 true
-    page_pv:                     # 默认 true
+    today_pv:                    # 默认 true：今日访问量
+    site_pv:                     # 默认 true：总访问量
+    site_uv:                     # 默认 false：总访客数
+    page_pv:                     # 默认 false：本页阅读量（只在文章页显示）
     src:                         # 脚本地址，默认 //cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.min.js
+    # 关于「今日访问量」：不蒜子官方只有 总访问量 / 总访客数 / 本页阅读量 三项，
+    # 没有"今日"。主题的处理是：不蒜子若写了 #busuanzi_today_pv 就用官方的；
+    # 否则用本地基线推算（记录今天第一次打开本站时的总访问量，今日 = 当前总量 − 基线，
+    # 同一浏览器当天有效）。想要跨设备准确的今日数据需要自建统计。
 
 # -------------------------------------------------------------------- 数学
 # 默认按文章 opt-in：front-matter 写 `mathjax: true` 才加载，避免全站每页白拉公式库

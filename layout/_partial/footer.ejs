@@ -4,6 +4,8 @@
   var since = theme.profile.since;
   var showRange = since && !isNaN(since) && Number(since) < Number(year);
   var busuanzi = cfg.visit_counter.enable && cfg.visit_counter.provider === 'busuanzi';
+  var credits = cfg.credits || {};
+  var hasMeta = cfg.icp || cfg.police_icp || cfg.runtime.enable || busuanzi;
 %>
 <footer class="footer" role="contentinfo">
   <div class="footer__inner">
@@ -15,22 +17,23 @@
         <a href="<%= url_for('/') %>"><%= theme.profile.author %></a>
       </p>
       <% } %>
-      <% if (cfg.powered_by) { %>
+
+      <% if (cfg.powered_by && credits.enable) { %>
       <p class="footer__powered">
         <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>
         <span class="footer__sep">·</span>
-        <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" rel="noopener">Yelee</a>
-        <span class="footer__ver">Next <%= theme.version %></span>
+        <span class="footer__theme">Yelee</span>
+        <span class="footer__credits">（<% if (credits.theme_author_url) { %><a href="<%= credits.theme_author_url %>" target="_blank" rel="noopener"><%= credits.theme_author %></a><% } else { %><%= credits.theme_author %><% } %> &amp; <% if (credits.origin_author_url) { %><a href="<%= credits.origin_author_url %>" target="_blank" rel="noopener"><%= credits.origin_author %></a><% } else { %><%= credits.origin_author %><% } %>）</span>
         <span class="footer__heart" aria-hidden="true"><%- yn_icon('heart') %></span>
       </p>
       <% } %>
     </div>
 
-    <% if (busuanzi || cfg.runtime.enable || cfg.icp) { %>
+    <% if (hasMeta) { %>
     <div class="footer__row footer__row--meta">
       <% if (cfg.runtime.enable) { %>
       <%
-        /* YAML 会把 2020-08-25 解析成 Date 对象，这里统一格式化，避免输出 Date.toString() */
+        /* YAML 会把 2020-08-25 解析成 Date 对象，这里统一格式化 */
         var sinceValue = cfg.runtime.since ? date(cfg.runtime.since, 'YYYY-MM-DD') : (since ? since + '-01-01' : '');
       %>
       <span class="footer__meta-item" data-runtime
@@ -40,18 +43,45 @@
         <%- yn_icon('clock') %><span data-runtime-text><%= cfg.runtime.text || __('footer.runtime') %></span>
       </span>
       <% } %>
+
       <% if (busuanzi) { %>
-      <span class="footer__meta-item" data-busuanzi
+      <span class="footer__meta-item footer__stats" data-busuanzi
             data-src="<%= cfg.visit_counter.src || '//cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.min.js' %>">
         <%- yn_icon('fire') %>
-        <% if (cfg.visit_counter.site_pv) { %><span class="footer__stat"><%= __('footer.site_pv') %><b id="busuanzi_site_pv">–</b></span><% } %>
-        <% if (cfg.visit_counter.site_uv) { %><span class="footer__stat"><%= __('footer.site_uv') %><b id="busuanzi_site_uv">–</b></span><% } %>
-        <% if (cfg.visit_counter.page_pv && is_post()) { %><span class="footer__stat"><%= __('footer.page_pv') %><b id="busuanzi_page_pv">–</b></span><% } %>
+        <% if (cfg.visit_counter.today_pv) { %>
+        <span class="footer__stat"><%= __('footer.today_pv') %><b id="busuanzi_today_pv">–</b></span>
+        <% } %>
+        <% if (cfg.visit_counter.site_pv) { %>
+        <span class="footer__stat"><%= __('footer.site_pv') %><b id="busuanzi_site_pv">–</b></span>
+        <% } %>
+        <% if (cfg.visit_counter.site_uv) { %>
+        <span class="footer__stat"><%= __('footer.site_uv') %><b id="busuanzi_site_uv">–</b></span>
+        <% } %>
+        <% if (cfg.visit_counter.page_pv && is_post()) { %>
+        <span class="footer__stat"><%= __('footer.page_pv') %><b id="busuanzi_page_pv">–</b></span>
+        <% } %>
       </span>
       <% } %>
+
+      <% if (cfg.police_icp) { %>
+      <span class="footer__meta-item footer__filing">
+        <a href="<%= cfg.police_icp_link || 'https://beian.mps.gov.cn/' %>" target="_blank" rel="noopener"
+           title="<%= __('footer.police_icp') %>">
+          <% if (cfg.police_icp_icon) { %>
+          <img class="footer__filing-icon" src="<%= yn_img(cfg.police_icp_icon) %>" alt="" width="16" height="16" decoding="async" data-eager>
+          <% } else { %>
+          <%- yn_icon('shield') %>
+          <% } %>
+          <span><%= cfg.police_icp %></span>
+        </a>
+      </span>
+      <% } %>
+
       <% if (cfg.icp) { %>
-      <span class="footer__meta-item">
-        <a href="<%= cfg.icp_link || '#' %>" target="_blank" rel="noopener"><%= cfg.icp %></a>
+      <span class="footer__meta-item footer__filing">
+        <a href="<%= cfg.icp_link || 'https://beian.miit.gov.cn/' %>" target="_blank" rel="noopener">
+          <%- yn_icon('globe') %><span><%= cfg.icp %></span>
+        </a>
       </span>
       <% } %>
     </div>

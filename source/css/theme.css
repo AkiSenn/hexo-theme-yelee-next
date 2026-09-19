@@ -1352,3 +1352,79 @@ html.is-scrolled .topbar { box-shadow: 0 8px 24px -16px rgba(10, 14, 25, .55); }
   .footer__heart { animation: none; }
   .post-card::before { transition: none; }
 }
+
+/* ============================ 26. 页脚：署名 / 备案 / 统计（美化） ==========
+   · 署名行：Hexo · Yelee（AkiSenn & MOxFIVE），两个名字各自带链接
+   · 备案：公安备案（盾牌徽章） + 工信部/萌ICP，同一行小字排布
+   · 不蒜子：整块缩小一档，只用弱化色，避免和内容抢视线 */
+.footer__theme { color: var(--c-fg-soft); }
+.footer__credits {
+  color: var(--c-muted);
+  font-size: .78rem;
+  letter-spacing: .01em;
+}
+.footer__credits a {
+  color: var(--c-fg-soft);
+  text-decoration: none;
+  border-block-end: 1px dotted color-mix(in srgb, currentColor 55%, transparent);
+  transition: color .16s ease, border-color .16s ease;
+}
+.footer__credits a:hover {
+  color: var(--c-link);
+  border-block-end-color: currentColor;
+}
+
+/* 统计与备案整行：更小、更淡，居中排布 */
+.footer__row--meta {
+  margin-block-start: 6px;
+  font-size: .72rem;
+  color: var(--c-muted);
+}
+.footer__row--meta .footer__meta-item { gap: 4px; }
+.footer__row--meta .icon { inline-size: 12px; block-size: 12px; opacity: .8; }
+
+.footer__stats { gap: 8px; }
+.footer__stats .footer__stat {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+  padding-inline: 0;
+}
+.footer__stat b {
+  font-family: var(--font-code);
+  font-size: .74rem;
+  font-weight: 600;
+  color: var(--c-fg-soft);
+  font-variant-numeric: tabular-nums;
+}
+.footer__stat + .footer__stat::before {
+  content: '·';
+  margin-inline-end: 6px;
+  opacity: .45;
+}
+
+/* 备案号：图标 + 文案，hover 才点亮 */
+.footer__filing a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--c-muted);
+  text-decoration: none;
+  transition: color .16s ease;
+}
+.footer__filing a:hover { color: var(--c-link); }
+.footer__filing .icon { inline-size: 13px; block-size: 13px; }
+.footer__filing-icon {
+  inline-size: 13px;
+  block-size: 13px;
+  object-fit: contain;
+  vertical-align: -.15em;
+}
+/* 公安备案的盾牌用官方那种蓝，更接近备案要求的观感 */
+.footer__filing a[href*='mps.gov.cn'] .icon { color: #2b6cb0; }
+html[data-theme='dark'] .footer__filing a[href*='mps.gov.cn'] .icon { color: #7fb0e8; }
+
+@media (max-width: 639.98px) {
+  .footer__row--meta { font-size: .7rem; gap: 4px 10px; }
+  .footer__credits { font-size: .74rem; }
+}

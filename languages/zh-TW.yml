@@ -59,9 +59,11 @@ comments:
   disabled: 評論已關閉
 
 footer:
+  today_pv: 今日訪問
   site_pv: 總訪問
   site_uv: 訪客
   page_pv: 本頁閱讀
+  police_icp: 公安備案
   runtime: 本部落格已運行
   runtime_format: '{d} 天 {h} 小時 {m} 分 {s} 秒'
   license: 許可協議

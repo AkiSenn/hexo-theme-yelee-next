@@ -114,11 +114,23 @@ comments:
 # -------------------------------------------------------------------- 页脚
 footer:
   copyright: true
-  powered_by: true
+  powered_by: true                   # 页脚署名行：Hexo · Yelee（AkiSenn & MOxFIVE）
   custom:                            # 想加自己的页脚 HTML 写这里
+  credits:                           # 👈 署名：你的名字 + 原作者，各带链接
+    enable: true
+    theme_author: AkiSenn
+    theme_author_url: https://github.com/AkiSenn
+    origin_author: MOxFIVE
+    origin_author_url: https://github.com/MOxFIVE/hexo-theme-yelee
   # ---- 备案号：填这两行就会在页脚显示，留空则整块不显示 ------------------
   icp: 萌ICP备20220413号              # 👈 换成你的备案号（留空则页脚不显示这块）
   icp_link: https://icp.gov.moe/?keyword=20220413   # 👈 换成你的备案查询链接
+  # ---- 公安备案（公网安备）：把下面两行填上就会显示 ----------------------
+  police_icp:                        # 👈 展示文案，例如：京公网安备11010502012345号
+  police_icp_code:                   # 👈 备案编号，例如：11010502012345
+                                     #   填了编号后，查询链接会自动生成，不用手写
+  police_icp_link:                   # 想手动指定链接才填
+  police_icp_icon:                   # 留空 = 内置盾牌图标；要官方图标就写 /img/beian.png
   # 说明：
   #   · 萌ICP（icp.gov.moe）就把 icp_link 写成 https://icp.gov.moe/?keyword=你的编号
   #   · 以后换了工信部备案，icp 写成「京ICP备2026xxxxxx号」，icp_link 写 https://beian.miit.gov.cn/
@@ -126,12 +138,13 @@ footer:
     enable: true
     since: 2020-08-25
     text: 本博客已悄咪咪运行
-  visit_counter:                     # 访问统计（不蒜子，国内可用）
+  visit_counter:                     # 访问统计（不蒜子，国内可用；整行小字显示）
     enable: true
     provider: busuanzi
-    site_pv: true                    # 显示「总访问」
-    site_uv: true                    # 显示「访客数」
-    page_pv: true                    # 显示「本页阅读」
+    today_pv: true                   # 今日访问量
+    site_pv: true                    # 总访问量
+    site_uv: false                   # 总访客数（不想要就保持 false）
+    page_pv: false                   # 本页阅读量（只在文章页显示）
 
 # -------------------------------------------------------------------- 数学
 # 按文章 opt-in：front-matter 写 mathjax: true 才加载，避免全站每页都拉公式库

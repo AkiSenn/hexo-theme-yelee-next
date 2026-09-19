@@ -61,9 +61,11 @@ comments:
   disabled: 评论已关闭
 
 footer:
+  today_pv: 今日访问
   site_pv: 总访问
   site_uv: 访客
   page_pv: 本页阅读
+  police_icp: 公安备案
   runtime: 本博客已运行
   runtime_format: '{d} 天 {h} 小时 {m} 分 {s} 秒'
   license: 许可协议
