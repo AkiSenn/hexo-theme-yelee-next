@@ -257,3 +257,10 @@ body {
   .bg__img { display: none; }
   .sidebar { box-shadow: 0 0 44px rgba(0, 0, 0, .3); }
 }
+
+/* ---- 首页文章入场：起始态必须在内联 CSS 里就定好（原版是 head 里的
+   <style>.article{opacity:0}</style>），否则异步的 theme.css 到达时会
+   出现"卡片先显示、再突然消失"的闪烁。揭示动画本身在 theme.css。
+   JS 关闭时由 <head> 里的 <noscript> 覆盖回可见。 ---- */
+html[data-animate='1'] body.is-home .post-list > .post-card { opacity: 0; }
+html[data-animate='1'] body.is-home .post-list > .post-card.is-revealed { opacity: 1; }

@@ -1286,8 +1286,8 @@ html[data-theme='dark'] {
 @keyframes yelee-cd-bounce { 0% { opacity: 0; transform: scale(1); } 60% { opacity: 1; transform: scale(1.01); } 100% { transform: scale(1); } }
 @keyframes yelee-panel-in { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
 
-/* ---- 首页文章入场：初始透明，app.js 揭示时加 .is-revealed + .anim-<名字> ---- */
-html[data-animate='1'] body.is-home .post-list > .post-card { opacity: 0; }
+/* ---- 首页文章入场：初始透明的那条规则在 _critical.css（内联，防闪烁），
+   这里只补动画本身；app.js 揭示时加 .is-revealed + .anim-<名字> ---- */
 html[data-animate='1'] body.is-home .post-list > .post-card.is-revealed {
   opacity: 1;
   animation-duration: .6s;
