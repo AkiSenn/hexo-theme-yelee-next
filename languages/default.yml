@@ -62,7 +62,10 @@ comments:
 
 footer:
   today_pv: 今日访问
+  today_uv: 今日访客
   site_pv: 总访问
+  page_uv: 本页访客
+  times: 次
   site_uv: 访客
   page_pv: 本页阅读
   police_icp: 公安备案

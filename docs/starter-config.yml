@@ -140,13 +140,22 @@ footer:
     enable: true
     since: 2020-08-25
     text: 本博客已悄咪咪运行
-  visit_counter:                     # 访问统计（不蒜子，国内可用；整行小字显示）
+  visit_counter:                     # 访问统计（不蒜子，国内可用；单独一行小字显示）
     enable: true
     provider: busuanzi
-    today_pv: true                   # 今日访问量
-    site_pv: true                    # 总访问量
-    site_uv: false                   # 总访客数（不想要就保持 false）
-    page_pv: false                   # 本页阅读量（只在文章页显示）
+    today_pv: true                   # 今日总访问量
+    site_pv: true                    # 本站总访问量
+    today_uv: false                  # 今日访客数
+    site_uv: false                   # 本站访客数
+    page_pv: false                   # 本页阅读量（只在文章页）
+    page_uv: false                   # 本页访客数（只在文章页）
+    # 说明：新版不蒜子（cdn.busuanzi.cc）的 api.php 会直接返回这些字段：
+    #   busuanzi_today_pv 今日总访问量 / busuanzi_today_uv 今日访客数
+    #   busuanzi_site_pv  本站总访问量 / busuanzi_site_uv  本站访客数
+    #   busuanzi_page_pv  本页阅读量   / busuanzi_page_uv  本页访客数
+    # 脚本按「字段名 = 元素 id」回填，所以上面开一项就显示一项，不需要额外 JS。
+    # 注意：不蒜子会拒绝 localhost / 内网 IP（返回"域名/IP已被禁用"），上线后才看得到数字。
+
 
 # -------------------------------------------------------------------- 数学
 # 按文章 opt-in：front-matter 写 mathjax: true 才加载，避免全站每页都拉公式库

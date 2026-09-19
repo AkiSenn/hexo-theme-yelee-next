@@ -124,10 +124,17 @@ const DEFAULTS = {
     visit_counter: {
       enable: true,
       provider: 'busuanzi',
+      /* 新版不蒜子(cdn.busuanzi.cc) 的 api.php 会直接返回这些字段，
+         脚本按「字段名 = 元素 id」回填，所以模板里写上对应 id 就行，不需要额外 JS：
+           busuanzi_today_pv 今日总访问量 / busuanzi_today_uv 今日访客数
+           busuanzi_site_pv  本站总访问量 / busuanzi_site_uv  本站访客数
+           busuanzi_page_pv  本页阅读量   / busuanzi_page_uv  本页访客数 */
       today_pv: true,
+      today_uv: false,
       site_pv: true,
       site_uv: false,
-      page_pv: false
+      page_pv: false,
+      page_uv: false
     }
   },
 

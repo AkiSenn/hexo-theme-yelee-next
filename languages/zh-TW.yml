@@ -60,7 +60,10 @@ comments:
 
 footer:
   today_pv: 今日訪問
+  today_uv: 今日訪客
   site_pv: 總訪問
+  page_uv: 本頁訪客
+  times: 次
   site_uv: 訪客
   page_pv: 本頁閱讀
   police_icp: 公安備案

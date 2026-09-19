@@ -1408,53 +1408,6 @@ function initScrollState() {
   onViewportChange(sync);
 }
 
-/* ============================================ 17. 今日访问量（不蒜子） ======
-   不蒜子官方只提供 站点总访问量 / 站点访客数 / 本页阅读量 三项，没有"今日"。
-   所以这里两条路：
-     1) 若未来不蒜子往 #busuanzi_today_pv 写了数字，直接用官方的，不覆盖
-     2) 否则用本地基线推算：记录"今天第一次打开本站时看到的总访问量"，
-        今日 = 当前总量 − 基线（同一浏览器当天有效，跨设备不通用）
-   页脚那三项都靠不蒜子脚本异步写入，所以这里轮询等待（最多 10 秒）。 */
-
-function initTodayPv() {
-  const todayEl = document.getElementById('busuanzi_today_pv');
-  const totalEl = document.getElementById('busuanzi_site_pv');
-  if (!todayEl || !totalEl) return;
-  const KEY = 'yelee-pv';
-  const day = () => {
-    const d = new Date();
-    return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
-  };
-  let tries = 0;
-  const timer = window.setInterval(() => {
-    tries += 1;
-    const digits = String(totalEl.textContent || '').replace(/[^0-9]/g, '');
-    if (digits) {
-      const pv = Number(digits);
-      let store = null;
-      try {
-        store = JSON.parse(window.localStorage.getItem(KEY) || 'null');
-      } catch (err) {
-        store = null;
-      }
-      /* 换天 / 首次 / 总量回退（重新部署或统计重置）都要重设基线 */
-      if (!store || store.day !== day() || typeof store.base !== 'number' || pv < store.base) {
-        store = { day: day(), base: pv };
-        try {
-          window.localStorage.setItem(KEY, JSON.stringify(store));
-        } catch (err) {}
-      }
-      /* 官方给了今日值就不动它 */
-      if (!/[0-9]/.test(String(todayEl.textContent || ''))) {
-        todayEl.textContent = String(Math.max(0, pv - store.base));
-      }
-      window.clearInterval(timer);
-      return;
-    }
-    if (tries > 40) window.clearInterval(timer);
-  }, 250);
-}
-
 /* ============================================================== 启动 */
 
 function main() {
@@ -1468,7 +1421,6 @@ function main() {
   boot('comments', initComments);
   boot('runtime', initRuntime);
   boot('busuanzi', initBusuanzi);
-  boot('todayPv', initTodayPv);
   boot('lightbox', initLightbox);
   boot('search', initSearch);
   boot('avatar', initAvatarShake);

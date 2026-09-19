@@ -3,12 +3,15 @@
   var year = date(new Date(), 'YYYY');
   var since = theme.profile.since;
   var showRange = since && !isNaN(since) && Number(since) < Number(year);
-  var busuanzi = cfg.visit_counter.enable && cfg.visit_counter.provider === 'busuanzi';
+  var vc = cfg.visit_counter;
+  var busuanzi = vc.enable && vc.provider === 'busuanzi';
   var credits = cfg.credits || {};
-  var hasMeta = cfg.icp || cfg.police_icp || cfg.runtime.enable || busuanzi;
+  var showStats = busuanzi && (vc.today_pv || vc.today_uv || vc.site_pv || vc.site_uv || (is_post() && (vc.page_pv || vc.page_uv)));
+  var sinceValue = cfg.runtime.since ? date(cfg.runtime.since, 'YYYY-MM-DD') : (since ? since + '-01-01' : '');
 %>
 <footer class="footer" role="contentinfo">
   <div class="footer__inner">
+    <%# ---- 第 1 行：版权 + 署名 ------------------------------------------ %>
     <div class="footer__row">
       <% if (cfg.copyright) { %>
       <p class="footer__copy">
@@ -29,41 +32,61 @@
       <% } %>
     </div>
 
-    <% if (hasMeta) { %>
-    <div class="footer__row footer__row--meta">
-      <% if (cfg.runtime.enable) { %>
-      <%
-        /* YAML 会把 2020-08-25 解析成 Date 对象，这里统一格式化 */
-        var sinceValue = cfg.runtime.since ? date(cfg.runtime.since, 'YYYY-MM-DD') : (since ? since + '-01-01' : '');
-      %>
+    <%# ---- 第 2 行：访问统计（不蒜子按 id 直接回填，无需额外 JS）---------- %>
+    <% if (showStats) { %>
+    <div class="footer__row footer__row--stats">
+      <span class="footer__meta-item footer__stats" data-busuanzi
+            data-src="<%= vc.src || '//cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.min.js' %>">
+        <%- yn_icon('fire') %>
+        <% if (vc.today_pv) { %>
+        <span class="footer__stat"><%= __('footer.today_pv') %><b id="busuanzi_today_pv">–</b><%= __('footer.times') %></span>
+        <% } %>
+        <% if (vc.today_uv) { %>
+        <span class="footer__stat"><%= __('footer.today_uv') %><b id="busuanzi_today_uv">–</b><%= __('footer.times') %></span>
+        <% } %>
+        <% if (vc.site_pv) { %>
+        <span class="footer__stat"><%= __('footer.site_pv') %><b id="busuanzi_site_pv">–</b><%= __('footer.times') %></span>
+        <% } %>
+        <% if (vc.site_uv) { %>
+        <span class="footer__stat"><%= __('footer.site_uv') %><b id="busuanzi_site_uv">–</b><%= __('footer.times') %></span>
+        <% } %>
+        <% if (is_post() && vc.page_pv) { %>
+        <span class="footer__stat"><%= __('footer.page_pv') %><b id="busuanzi_page_pv">–</b><%= __('footer.times') %></span>
+        <% } %>
+        <% if (is_post() && vc.page_uv) { %>
+        <span class="footer__stat"><%= __('footer.page_uv') %><b id="busuanzi_page_uv">–</b><%= __('footer.times') %></span>
+        <% } %>
+      </span>
+    </div>
+    <% } %>
+
+    <%# ---- 第 3 行：本站已运行 ------------------------------------------ %>
+    <% if (cfg.runtime.enable) { %>
+    <div class="footer__row footer__row--runtime">
       <span class="footer__meta-item" data-runtime
             data-since="<%= sinceValue %>"
             data-text="<%= cfg.runtime.text || __('footer.runtime') %>"
             data-format="<%= __('footer.runtime_format') %>">
         <%- yn_icon('clock') %><span data-runtime-text><%= cfg.runtime.text || __('footer.runtime') %></span>
       </span>
-      <% } %>
+    </div>
+    <% } %>
 
-      <% if (busuanzi) { %>
-      <span class="footer__meta-item footer__stats" data-busuanzi
-            data-src="<%= cfg.visit_counter.src || '//cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.min.js' %>">
-        <%- yn_icon('fire') %>
-        <% if (cfg.visit_counter.today_pv) { %>
-        <span class="footer__stat"><%= __('footer.today_pv') %><b id="busuanzi_today_pv">–</b></span>
-        <% } %>
-        <% if (cfg.visit_counter.site_pv) { %>
-        <span class="footer__stat"><%= __('footer.site_pv') %><b id="busuanzi_site_pv">–</b></span>
-        <% } %>
-        <% if (cfg.visit_counter.site_uv) { %>
-        <span class="footer__stat"><%= __('footer.site_uv') %><b id="busuanzi_site_uv">–</b></span>
-        <% } %>
-        <% if (cfg.visit_counter.page_pv && is_post()) { %>
-        <span class="footer__stat"><%= __('footer.page_pv') %><b id="busuanzi_page_pv">–</b></span>
-        <% } %>
+    <%# ---- 第 4/5 行：ICP 备案、公安备案各自独占一行 ----------------------
+         开关就是「填 / 不填」：没填的整行不渲染（不输出空标签、不留空白），
+         所以只填了公安备案时它会自然顶到 ICP 备案的位置。 %>
+    <% if (cfg.icp) { %>
+    <div class="footer__row footer__row--filing">
+      <span class="footer__meta-item footer__filing">
+        <a href="<%= cfg.icp_link || 'https://beian.miit.gov.cn/' %>" target="_blank" rel="noopener">
+          <%- yn_icon('globe') %><span><%= cfg.icp %></span>
+        </a>
       </span>
-      <% } %>
+    </div>
+    <% } %>
 
-      <% if (cfg.police_icp) { %>
+    <% if (cfg.police_icp) { %>
+    <div class="footer__row footer__row--filing">
       <span class="footer__meta-item footer__filing">
         <a href="<%= cfg.police_icp_link || 'https://beian.mps.gov.cn/' %>" target="_blank" rel="noopener"
            title="<%= __('footer.police_icp') %>">
@@ -75,15 +98,6 @@
           <span><%= cfg.police_icp %></span>
         </a>
       </span>
-      <% } %>
-
-      <% if (cfg.icp) { %>
-      <span class="footer__meta-item footer__filing">
-        <a href="<%= cfg.icp_link || 'https://beian.miit.gov.cn/' %>" target="_blank" rel="noopener">
-          <%- yn_icon('globe') %><span><%= cfg.icp %></span>
-        </a>
-      </span>
-      <% } %>
     </div>
     <% } %>
 

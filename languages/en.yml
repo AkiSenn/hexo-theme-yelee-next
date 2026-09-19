@@ -60,7 +60,10 @@ comments:
 
 footer:
   today_pv: Today
+  today_uv: Today visitors
   site_pv: Views
+  page_uv: Page visitors
+  times: ''
   site_uv: Visitors
   page_pv: Page views
   police_icp: Public security filing

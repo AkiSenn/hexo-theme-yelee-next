@@ -1374,14 +1374,25 @@ html.is-scrolled .topbar { box-shadow: 0 8px 24px -16px rgba(10, 14, 25, .55); }
   border-block-end-color: currentColor;
 }
 
-/* 统计与备案整行：更小、更淡，居中排布 */
-.footer__row--meta {
-  margin-block-start: 6px;
+/* 页脚下半部分：统计 / 运行时间 / 备案各占一行，居中、小字、弱化
+   （对齐线上 516700.xyz 的排布：作者行 → 访问统计 → 运行时间 → ICP → 公安） */
+.footer__row--stats,
+.footer__row--runtime,
+.footer__row--filing {
+  justify-content: center;
+  text-align: center;
+  margin-block-start: 7px;
   font-size: .72rem;
   color: var(--c-muted);
 }
-.footer__row--meta .footer__meta-item { gap: 4px; }
-.footer__row--meta .icon { inline-size: 12px; block-size: 12px; opacity: .8; }
+.footer__row--stats { margin-block-start: 10px; }
+.footer__row--filing { margin-block-start: 4px; }
+.footer__row--stats .footer__meta-item,
+.footer__row--runtime .footer__meta-item { gap: 4px; }
+.footer__row--stats .icon,
+.footer__row--runtime .icon,
+.footer__row--filing .icon { inline-size: 12px; block-size: 12px; opacity: .8; }
+.footer__row--filing .footer__filing a { font-size: .72rem; }
 
 .footer__stats { gap: 8px; }
 .footer__stats .footer__stat {
@@ -1402,6 +1413,8 @@ html.is-scrolled .topbar { box-shadow: 0 8px 24px -16px rgba(10, 14, 25, .55); }
   margin-inline-end: 6px;
   opacity: .45;
 }
+/* 「次」这类量词比数字更淡一点 */
+.footer__stat { color: var(--c-muted); }
 
 /* 备案号：图标 + 文案，hover 才点亮 */
 .footer__filing a {
