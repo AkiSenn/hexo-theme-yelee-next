@@ -175,22 +175,26 @@ footer:
     theme_author_url:            # 例如 https://github.com/AkiSenn
     origin_author: MOxFIVE
     origin_author_url: https://github.com/MOxFIVE/hexo-theme-yelee
-  # ---- 备案号（留空则页脚不显示这一项）-----------------------------------
-  # ① 工信部 / 萌ICP
-  icp:                           # 备案号文案，例如：萌ICP备20220413号
-                                 #   工信部备案就写：京ICP备2026000000号-1
-  icp_link:                      # 点备案号跳转的地址
+  # ---- 备案区（两项互相独立）--------------------------------------------
+  # 开关就是「填 / 不填」：填了哪项就显示哪项，都不填则页脚**完全不出现**备案区，
+  # 不会留空白、也不会输出空标签。两项都填就并排显示。
+  #
+  # ① 工信部备案 / 萌ICP（国内站点通常必须有）
+  icp:                           # 备案号文案，留空 = 不显示这一项
+                                 #   萌ICP：萌ICP备20220413号
+                                 #   工信部：京ICP备2026000000号-1
+  icp_link:                      # 点击跳转地址（留空则用 https://beian.miit.gov.cn/）
                                  #   萌ICP：https://icp.gov.moe/?keyword=20220413
-                                 #   工信部：https://beian.miit.gov.cn/
-  # ② 公安备案（公网安备）—— 在公安部平台备案后会拿到一个编号
-  police_icp:                    # 👈 展示文案，例如：京公网安备11010502012345号
-  police_icp_code:               # 👈 备案编号（纯数字/字母），例如：11010502012345
-                                 #   填了编号，police_icp_link 留空会自动生成
+  # ② 公安备案（公网安备）—— 公安部平台备案后会拿到一个编号
+  police_icp:                    # 展示文案，留空 = 不显示这一项
+                                 #   例如：京公网安备11010502012345号
+  police_icp_code:               # 备案编号（纯数字/字母），例如：11010502012345
+                                 #   police_icp_link 留空时会自动拼
                                  #   https://beian.mps.gov.cn/#/query/webSearch?code=<编号>
   police_icp_link:               # 想手动指定查询链接就填这里
-  police_icp_icon:               # 图标：留空用内置盾牌 SVG；
-                                 #   公安备案要求展示官方图标时，把官方 beian.png
-                                 #   放到 source/img/beian.png，这里写 /img/beian.png
+  police_icp_icon:               # 图标：留空时自动探测 source/img/beian.png
+                                 #   （把公安部给的官方图标丢进去就自动用，无需改配置），
+                                 #   探测不到则用内置盾牌 SVG
   runtime:                       # 「本站已运行 N 天」
     enable: true
     since: 2020-08-25            # 起始日期

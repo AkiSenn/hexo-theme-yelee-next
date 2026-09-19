@@ -386,6 +386,19 @@ function normalize() {
   theme.friends_items = normalizeSocial(theme.friends);
   theme.background_list = toArrayOfPaths(theme.appearance.background_image, '/background');
 
+  /* 公安备案图标：配置留空时，若主题 source/img/beian.png 存在就自动用它
+     （把公安部给的官方图标丢进 themes/yelee-next/source/img/ 即可，无需改配置），
+     否则回落到内置的盾牌 SVG。 */
+  if (theme.footer.police_icp && !theme.footer.police_icp_icon) {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      if (fs.existsSync(path.join(hexo.theme_dir, 'source', 'img', 'beian.png'))) {
+        theme.footer.police_icp_icon = '/img/beian.png';
+      }
+    } catch (e) {}
+  }
+
   /* 公安备案链接：给了就用手填的，否则用编号自动拼 mps.gov.cn 的查询地址 */
   if (theme.footer.police_icp) {
     const code = String(theme.footer.police_icp_code || (String(theme.footer.police_icp).match(/\d{6,}/) || [''])[0] || '');

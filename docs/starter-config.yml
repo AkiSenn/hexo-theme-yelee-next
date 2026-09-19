@@ -123,14 +123,16 @@ footer:
     origin_author: MOxFIVE
     origin_author_url: https://github.com/MOxFIVE/hexo-theme-yelee
   # ---- 备案号：填这两行就会在页脚显示，留空则整块不显示 ------------------
-  icp: 萌ICP备20220413号              # 👈 换成你的备案号（留空则页脚不显示这块）
+  # ---- 备案区：填了才显示，没填的项完全不出现（不留空白）----------------
+  icp: 萌ICP备20220413号              # 👈 换成你的备案号（留空 = 不显示这一项）
   icp_link: https://icp.gov.moe/?keyword=20220413   # 👈 换成你的备案查询链接
-  # ---- 公安备案（公网安备）：把下面两行填上就会显示 ----------------------
+  # 公安备案（公网安备）：等你备案下来，把下面两行填上就自动出现
   police_icp:                        # 👈 展示文案，例如：京公网安备11010502012345号
   police_icp_code:                   # 👈 备案编号，例如：11010502012345
-                                     #   填了编号后，查询链接会自动生成，不用手写
+                                     #   填了编号后，查询链接自动生成，不用手写
   police_icp_link:                   # 想手动指定链接才填
-  police_icp_icon:                   # 留空 = 内置盾牌图标；要官方图标就写 /img/beian.png
+  police_icp_icon:                   # 留空 = 自动探测 source/img/beian.png，
+                                     #   没有就用内置盾牌图标
   # 说明：
   #   · 萌ICP（icp.gov.moe）就把 icp_link 写成 https://icp.gov.moe/?keyword=你的编号
   #   · 以后换了工信部备案，icp 写成「京ICP备2026xxxxxx号」，icp_link 写 https://beian.miit.gov.cn/
