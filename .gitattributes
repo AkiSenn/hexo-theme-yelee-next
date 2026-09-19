@@ -1,0 +1,6 @@
+# 统一用 LF 存储，避免 Windows 上的 CRLF 警告与 diff 噪声
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.webp binary
+*.ico binary
