@@ -89,7 +89,10 @@ search:
 
 # -------------------------------------------------------------------- 评论
 comments:
-  enable: true
+  # 🔒 本站备案类型是「非交互式」，不能有评论这类用户生成内容（UGC），所以整体关闭。
+  #    enable: false 时评论区、细栏、「跳到评论」按钮全都不渲染，HTML 里零痕迹。
+  #    以后改备案类型了，把这里改成 true 并填好下面的 giscus 两个 id 即可恢复。
+  enable: false
   preload: false                     # false = 先给一条「点击加载评论」细栏（点了才加载第三方脚本）
   collapsible: true                  # 展开后显示「收起」按钮；收起时不留空白、页脚自动上移
   provider: giscus                   # giscus | waline | twikoo | disqus | valine | false

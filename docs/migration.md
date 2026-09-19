@@ -75,6 +75,11 @@ hexo clean && hexo g && hexo s
 
 ## 三、迁移后建议手动做的事
 
+> **非交互式备案的站点请注意**：ICP 备案类型为「非交互式」时不能有评论这类用户生成
+> 内容（UGC），请保持 `comments.enable: false`。此时评论区（含「点击加载评论」细栏、
+> 「收起」按钮、「跳到评论」按钮、第三方脚本）**全部不渲染**，HTML 里零痕迹，
+> 页脚会直接跟在正文/上下篇导航后面。
+
 ### 1. 评论换成 giscus
 
 原版配的 `valine`（LeanCloud 国内版）和 `duoshuo`（多说已停服）、`youyan`（友言已停服）都不能用了。到 <https://giscus.app> 选仓库 → 生成配置 → 抄进 `_config.yelee-next.yml`：
