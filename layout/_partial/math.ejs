@@ -1,0 +1,25 @@
+<%
+  /* ---------------------------------------------------------------------------
+   * 数学公式
+   * 关键修复（沿用你在原主题里的补丁）：theme.math 是对象，恒为真，所以必须判断
+   * .enable 与 (.per_page ⇒ page.mathjax)，否则全站每页都会白拉 60KB+ 的数学库。
+   * 这里只在「文章 front-matter 写了 mathjax: true / katex: true」的页面加载。
+   * ------------------------------------------------------------------------ */
+  var engine = theme.math.engine;
+%>
+<% if (engine === 'katex') { %>
+<link rel="stylesheet" href="<%= theme.math.katex.css %>">
+<script defer src="<%= theme.math.katex.cdn %>"></script>
+<script defer src="<%= theme.math.katex.auto_render %>"
+        onload="renderMathInElement(document.querySelector('.post__content') || document.body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false},{left:'\\\\(',right:'\\\\)',display:false},{left:'\\\\[',right:'\\\\]',display:true}], throwOnError:false});"></script>
+<% } else { %>
+<script>
+window.MathJax = <%- yn_json(Object.assign({
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] },
+  svg: { fontCache: 'global' },
+  startup: { typeset: true }
+}, theme.math.mathjax.config || {})) %>;
+</script>
+<script id="MathJax-script" async src="<%= theme.math.mathjax.cdn %>"></script>
+<% } %>

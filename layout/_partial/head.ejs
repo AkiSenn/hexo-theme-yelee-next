@@ -1,0 +1,165 @@
+<%
+  /* ---------------------------------------------------------------------------
+   * <head>：标题 / SEO / 资源加载策略
+   * 性能要点：
+   *   - 关键 CSS 内联，主样式表异步加载（无渲染阻塞）
+   *   - 背景大图 preload（它是首屏 LCP 元素）
+   *   - 主题色在 head 内联脚本里定好，避免深色模式闪白
+   *   - 不加载任何网页字体（系统字体栈）
+   * ------------------------------------------------------------------------ */
+  var cfg = theme;
+  var site = config;
+  var pageTitle = yn_title();
+  var pageDesc = yn_description();
+  var ogImage = (page.photos && page.photos[0]) || yn_first_image(page) || cfg.seo.og_image;
+  var canonical = site.url + url_for(page.path || '');
+  var bg = yn_background();
+  var cssUrl = yn_asset('css/theme.css');
+  var pageType = page.layout === 'post' ? 'article' : (is_home() ? 'website' : 'website');
+%><%
+  /* ---------------------------------------------------------------
+   * 主题模式：appearance.color_scheme 是默认值，用户手动切换后以 localStorage 为准。
+   * 服务端先按默认值渲染 data-theme-mode / data-theme，保证禁用 JS 时也是对的。
+   * ------------------------------------------------------------- */
+  var scheme = ['light', 'dark', 'auto'].indexOf(String(cfg.appearance.color_scheme)) > -1
+    ? String(cfg.appearance.color_scheme)
+    : 'auto';
+  var initialTheme = scheme === 'dark' ? 'dark' : 'light';
+%><!DOCTYPE html>
+<html lang="<%= site.language || 'zh-CN' %>"
+      data-theme="<%= initialTheme %>"
+      data-theme-mode="<%= scheme %>"
+      data-i18n-copy="<%= __('a11y.copy_code') %>"
+      data-i18n-copied="<%= __('a11y.copied') %>"
+      data-i18n-search-empty="<%= __('search.empty') %>"
+      data-i18n-search-results="<%= __('search.results') %>"
+      data-i18n-search-loading="<%= __('search.loading') %>"
+      data-search-path="<%= url_for('/' + cfg.search.path) %>"
+      data-search-preload="<%= cfg.search.preload ? '1' : '0' %>"
+      data-search-shortcut="<%= cfg.search.shortcut === false ? '0' : '1' %>"
+      data-lightbox="<%= cfg.article.lightbox === false ? '0' : '1' %>"
+      data-root="<%= site.root %>">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f7f8fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14161a" media="(prefers-color-scheme: dark)">
+<meta name="format-detection" content="telephone=no">
+<meta name="generator" content="Hexo">
+
+<title><%= pageTitle %></title>
+<meta name="description" content="<%= pageDesc %>">
+<% if (cfg.profile.author) { %><meta name="author" content="<%= cfg.profile.author %>"><% } %>
+<link rel="canonical" href="<%= canonical %>">
+<% if (is_home() && cfg.seo.baidu_site) { %><meta name="baidu-site-verification" content="<%= cfg.seo.baidu_site %>"><% } %>
+<% if (is_home() && cfg.seo.google_site) { %><meta name="google-site-verification" content="<%= cfg.seo.google_site %>"><% } %>
+
+<!-- Open Graph / Twitter -->
+<meta property="og:type" content="<%= pageType %>">
+<meta property="og:title" content="<%= page.title || site.title %>">
+<meta property="og:description" content="<%= pageDesc %>">
+<meta property="og:url" content="<%= canonical %>">
+<meta property="og:site_name" content="<%= site.title %>">
+<meta property="og:locale" content="<%= (site.language || 'zh-CN').replace('-', '_') %>">
+<% if (ogImage) { %><meta property="og:image" content="<%= yn_abs(ogImage) %>"><% } %>
+<% if (!is_home() && page.date) { %><meta property="article:published_time" content="<%= yn_date(page.date, 'YYYY-MM-DDTHH:mm:ssZ') %>"><% } %>
+<% if (page.updated) { %><meta property="article:modified_time" content="<%= yn_date(page.updated, 'YYYY-MM-DDTHH:mm:ssZ') %>"><% } %>
+<meta name="twitter:card" content="<%= ogImage ? 'summary_large_image' : 'summary' %>">
+<% if (cfg.seo.twitter_id) { %><meta name="twitter:site" content="@<%= cfg.seo.twitter_id %>"><% } %>
+<meta name="twitter:title" content="<%= page.title || site.title %>">
+<meta name="twitter:description" content="<%= pageDesc %>">
+<% if (ogImage) { %><meta name="twitter:image" content="<%= yn_abs(ogImage) %>"><% } %>
+
+<% if (cfg.seo.json_ld) { %>
+<script type="application/ld+json"><%- yn_json(page.layout === 'post' ? {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: page.title,
+  description: pageDesc,
+  datePublished: page.date ? yn_date(page.date, 'YYYY-MM-DDTHH:mm:ssZ') : undefined,
+  dateModified: page.updated ? yn_date(page.updated, 'YYYY-MM-DDTHH:mm:ssZ') : undefined,
+  author: { '@type': 'Person', name: cfg.profile.author || site.author },
+  publisher: { '@type': 'Organization', name: site.title },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+  image: ogImage ? [yn_abs(ogImage)] : undefined,
+  keywords: page.tags && page.tags.length ? page.tags.map(function (t) { return t.name; }).join(',') : undefined
+} : {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: site.title,
+  description: pageDesc,
+  url: site.url,
+  inLanguage: (site.language || 'zh-CN')
+}) %></script>
+<% } %>
+
+<!-- 图标 -->
+<% if (cfg.profile.favicon) { %>
+<link rel="icon" href="<%= yn_img(cfg.profile.favicon) %>">
+<link rel="apple-touch-icon" href="<%= yn_img('/img/apple-touch-icon.png') %>">
+<% } %>
+<link rel="alternate" type="application/atom+xml" title="<%= site.title %>" href="<%= url_for('/atom.xml') %>">
+
+<!-- 资源预取 -->
+<% if (bg) { %><link rel="preload" as="image" href="<%= yn_img(bg) %>" fetchpriority="high"><% } %>
+<% (cfg.assets.preconnect || []).forEach(function (host) { %>
+<link rel="preconnect" href="<%= host %>" crossorigin>
+<% }); %>
+<% if (cfg.comments.enable && cfg.comments.giscus && cfg.comments.provider === 'giscus' && cfg.comments.giscus.loading !== 'eager') { %>
+<link rel="dns-prefetch" href="https://giscus.app">
+<% } %>
+
+<!-- 样式：关键 CSS 内联 + 主样式异步 -->
+<% if (cfg.assets.critical_css) { %>
+<style><%- yn_critical_css() %></style>
+<% } %>
+<%
+  /* 主题配置 → CSS 变量：这几个 token 只在这里覆盖，theme.css 里不再重复声明，
+     所以无论是「内联关键 CSS 先到」还是「外部样式表后到」，用户配置都生效。 */
+%>
+<style>
+:root{
+--font-size-base:<%= cfg.appearance.base_font_size %>px;
+--sidebar-w:<%= cfg.appearance.sidebar_width %>px;
+--content-w:<%= cfg.appearance.width %>px;
+--radius:<%= cfg.appearance.radius %>px;
+<% if (cfg.appearance.accent) { %>--c-accent:<%= cfg.appearance.accent %>;<% } %>
+<% if (cfg.appearance.font_family) { %>--font-sans:<%= cfg.appearance.font_family %>;<% } %>
+<% if (cfg.appearance.code_font) { %>--font-code:<%= cfg.appearance.code_font %>;<% } %>
+}
+</style>
+<% if (cfg.assets.critical_css) { %>
+<link rel="preload" as="style" href="<%= cssUrl %>" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="<%= cssUrl %>"></noscript>
+<% } else { %>
+<link rel="stylesheet" href="<%= cssUrl %>">
+<% } %>
+
+<!-- 主题引导：必须在样式之前，避免深色模式闪白 -->
+<script>
+(function () {
+  var el = document.documentElement, mode = el.getAttribute('data-theme-mode') || 'auto', dark = false;
+  try {
+    var saved = localStorage.getItem('yelee-theme');
+    if (saved === 'light' || saved === 'dark' || saved === 'auto') mode = saved;
+  } catch (e) {}
+  el.setAttribute('data-theme-mode', mode);
+  var mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  dark = mode === 'dark' || (mode === 'auto' && (!mq || mq.matches));
+  el.setAttribute('data-theme', dark ? 'dark' : 'light');
+  if (mq && mq.addEventListener) {
+    mq.addEventListener('change', function (e) {
+      if (el.getAttribute('data-theme-mode') !== 'auto') return;
+      el.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+    });
+  }
+})();
+</script>
+
+<% if (cfg.performance.instant_nav && !page.__404) { %>
+<script type="speculationrules">
+{"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/search.json*"}},{"not":{"href_matches":"/*atom.xml*"}}]},"eagerness":"moderate"}]}
+</script>
+<% } %>
+</head>

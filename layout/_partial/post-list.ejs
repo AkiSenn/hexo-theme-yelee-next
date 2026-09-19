@@ -1,0 +1,12 @@
+<%
+  /* 卡片列表（首页 / 分类 / 标签） */
+%>
+<div class="post-list">
+  <% if (!page.posts || !page.posts.length) { %>
+  <p class="empty"><%= __('search.empty') %></p>
+  <% } %>
+  <% page.posts.each(function (post) { %>
+  <%- partial('_partial/post-card', {post: post}) %>
+  <% }); %>
+</div>
+<%- partial('_partial/pager') %>

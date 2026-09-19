@@ -1,0 +1,35 @@
+<%
+  /* 分享：native(系统分享) / copy(复制链接) / 微博 / X / Telegram / QQ */
+  var list = theme.article.share || [];
+  var NETWORKS = {
+    weibo: { label: __('share.weibo'), icon: 'weibo' },
+    twitter: { label: __('share.twitter'), icon: 'twitter' },
+    telegram: { label: __('share.telegram'), icon: 'telegram' },
+    qq: { label: __('share.qq'), icon: 'qq' }
+  };
+  var nets = list.filter(function (n) { return NETWORKS[n]; });
+  var hasNative = list.indexOf('native') > -1;
+  var hasCopy = list.indexOf('copy') > -1;
+%>
+<% if (nets.length || hasNative || hasCopy) { %>
+<div class="share" data-share>
+  <span class="share__title"><%- yn_icon('share') %><%= __('share.title') %></span>
+  <div class="share__list">
+    <% if (hasNative) { %>
+    <button class="share__btn" type="button" data-share-native hidden>
+      <%- yn_icon('share') %><span><%= __('share.native') %></span>
+    </button>
+    <% } %>
+    <% if (hasCopy) { %>
+    <button class="share__btn" type="button" data-copy-link>
+      <%- yn_icon('link') %><span data-copy-label><%= __('share.copy') %></span>
+    </button>
+    <% } %>
+    <% nets.forEach(function (n) { %>
+    <a class="share__btn" href="<%= yn_share_url(n, page) %>" target="_blank" rel="noopener" title="<%= NETWORKS[n].label %>">
+      <%- yn_icon(NETWORKS[n].icon) %><span><%= NETWORKS[n].label %></span>
+    </a>
+    <% }); %>
+  </div>
+</div>
+<% } %>

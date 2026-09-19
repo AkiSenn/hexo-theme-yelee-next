@@ -1,0 +1,36 @@
+<%
+  /* 文章元信息：发布/更新/字数/阅读时长/分类 */
+  var cats = page.categories;
+%>
+<div class="article__meta">
+  <time class="article__meta-item" datetime="<%= yn_date(page.date, 'YYYY-MM-DDTHH:mm:ssZ') %>" itemprop="datePublished">
+    <%- yn_icon('calendar') %><%= yn_date(page.date) %>
+  </time>
+
+  <% if (theme.article.updated && page.updated && yn_date(page.updated, 'YYYY-MM-DD') !== yn_date(page.date, 'YYYY-MM-DD')) { %>
+  <time class="article__meta-item" datetime="<%= yn_date(page.updated, 'YYYY-MM-DDTHH:mm:ssZ') %>" itemprop="dateModified">
+    <%- yn_icon('pencil') %><%= __('post.updated') %> <%= yn_date(page.updated) %>
+  </time>
+  <% } %>
+
+  <% if (theme.article.word_count) { %>
+  <span class="article__meta-item"><%- yn_icon('file') %><%= __('post.words', yn_words(page)) %></span>
+  <% } %>
+
+  <% if (theme.article.reading_time) { %>
+  <span class="article__meta-item"><%- yn_icon('clock') %><%= __('post.minutes', yn_minutes(page)) %></span>
+  <% } %>
+
+  <% if (cats && cats.length) { %>
+  <span class="article__meta-item article__meta-item--cats">
+    <%- yn_icon('folder') %>
+    <% cats.each(function (cat, i) { %><% if (i) { %><span class="sep">/</span><% } %><a href="<%= url_for(cat.path) %>" itemprop="articleSection"><%= cat.name %></a><% }); %>
+  </span>
+  <% } %>
+
+  <% if (is_post() && theme.comments.enable && page.comments !== false) { %>
+  <button class="article__meta-item article__meta-link" type="button" data-goto-comments>
+    <%- yn_icon('comment') %><%= __('nav.comments') %>
+  </button>
+  <% } %>
+</div>

@@ -1,0 +1,5 @@
+<header class="list-head">
+  <h1 class="list-head__title"><%- yn_icon('tag') %><span><%= __('page.tag') %>: <%= page.tag %></span></h1>
+  <a class="list-head__aside" href="<%= url_for('/tags/') %>"><%- yn_icon('tag') %><%= __('nav.tags') %></a>
+</header>
+<%- partial('_partial/post-list') %>

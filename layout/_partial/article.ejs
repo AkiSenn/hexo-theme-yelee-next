@@ -1,0 +1,52 @@
+<%
+  /* 文章 / 独立页面正文 */
+  var isPost = is_post();
+  /* 标签云 / 分类索引页：type: tags(Hexo 约定) 或老站点的 tags/index.html */
+  var taxonomy = '';
+  if (!isPost) {
+    if (page.type === 'tags' || page.path === 'tags/index.html') taxonomy = 'tags';
+    else if (page.type === 'categories' || page.path === 'categories/index.html') taxonomy = 'categories';
+  }
+%>
+<article class="card article article--<%= isPost ? 'post' : 'page' %><%= taxonomy ? ' article--taxonomy' : '' %>" itemscope itemtype="https://schema.org/BlogPosting">
+  <header class="article__header">
+    <h1 class="article__title" itemprop="headline"><%= page.title %></h1>
+    <% if (!taxonomy) { %><%- partial('_partial/post/meta') %><% } %>
+  </header>
+
+  <% if (!isPost && page.description) { %>
+  <p class="article__lead"><%= page.description %></p>
+  <% } %>
+
+  <div class="article__content post__content markdown" id="post-content" itemprop="articleBody">
+    <% if (taxonomy) { %>
+    <%- partial('_partial/page-taxonomy', {taxonomy: taxonomy}) %>
+    <% } else { %>
+    <%- page.content %>
+    <% } %>
+  </div>
+
+  <% if (isPost) { %>
+  <footer class="article__footer">
+    <% if (page.tags && page.tags.length) { %>
+    <div class="article__tags">
+      <%- yn_icon('tag') %>
+      <% page.tags.each(function (tag) { %>
+      <a class="chip" href="<%= url_for(tag.path) %>" rel="tag">#<%= tag.name %></a>
+      <% }); %>
+    </div>
+    <% } %>
+
+    <%- partial('_partial/post/share') %>
+    <% if (theme.article.copyright) { %><%- partial('_partial/post/copyright') %><% } %>
+  </footer>
+  <% } %>
+</article>
+
+<% if (isPost && theme.article.post_nav) { %>
+<%- partial('_partial/post/nav') %>
+<% } %>
+
+<% if (isPost) { %>
+<%- partial('_partial/comments') %>
+<% } %>

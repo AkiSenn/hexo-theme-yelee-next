@@ -1,0 +1,43 @@
+<%
+  /* 文末版权声明（原版用表格，这里改成定义列表，移动端更好读） */
+  var permalink = config.url + url_for(page.path);
+  var license = theme.article.license;
+  var licenseUrl = theme.article.license_url;
+%>
+<div class="copyright" data-copyright>
+  <p class="copyright__notice"><%- yn_icon('alert') %><%= __('copyright.notice') %></p>
+  <dl class="copyright__list">
+    <div class="copyright__row">
+      <dt><%= __('copyright.title') %></dt>
+      <dd><%= page.title %></dd>
+    </div>
+    <div class="copyright__row">
+      <dt><%= __('copyright.author') %></dt>
+      <dd><a href="<%= url_for('/') %>"><%= theme.profile.author %></a></dd>
+    </div>
+    <div class="copyright__row">
+      <dt><%= __('copyright.date') %></dt>
+      <dd><%= yn_date(page.date, 'YYYY-MM-DD HH:mm') %></dd>
+    </div>
+    <% if (page.updated) { %>
+    <div class="copyright__row">
+      <dt><%= __('copyright.updated') %></dt>
+      <dd><%= yn_date(page.updated, 'YYYY-MM-DD HH:mm') %></dd>
+    </div>
+    <% } %>
+    <div class="copyright__row">
+      <dt><%= __('copyright.url') %></dt>
+      <dd><a href="<%= permalink %>" data-copy-text="<%= permalink %>"><%= permalink %></a></dd>
+    </div>
+    <% if (license) { %>
+    <div class="copyright__row">
+      <dt><%= __('copyright.license') %></dt>
+      <dd>
+        <% if (licenseUrl) { %><a href="<%= licenseUrl %>" target="_blank" rel="noopener license"><% } %>
+        <%- yn_icon('license') %> <%= license %>
+        <% if (licenseUrl) { %></a><% } %>
+      </dd>
+    </div>
+    <% } %>
+  </dl>
+</div>

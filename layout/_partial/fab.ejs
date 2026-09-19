@@ -1,0 +1,25 @@
+<%
+  /* 右下角悬浮操作条：目录 / 评论 / 复制链接 / 回到顶部
+     原版是左侧竖排的「回到顶部 + 评论」两个按钮，这里补齐常用动作，
+     并统一用 IntersectionObserver 控制显隐（不再依赖 jQuery 滚动事件）。 */
+  var hasToc = pageType === 'post' && theme.article.toc.enable;
+  var hasComments = pageType === 'post' && theme.comments.enable && page.comments !== false;
+%>
+<div class="fab" data-fab hidden>
+  <% if (hasToc) { %>
+  <button class="fab__btn" type="button" data-open-toc aria-label="<%= __('nav.toc') %>" title="<%= __('nav.toc') %>">
+    <%- yn_icon('book') %>
+  </button>
+  <% } %>
+  <% if (hasComments) { %>
+  <button class="fab__btn" type="button" data-goto-comments aria-label="<%= __('nav.comments') %>" title="<%= __('nav.comments') %>">
+    <%- yn_icon('comment') %>
+  </button>
+  <% } %>
+  <button class="fab__btn" type="button" data-copy-link aria-label="<%= __('nav.copy_link') %>" title="<%= __('nav.copy_link') %>">
+    <%- yn_icon('link') %>
+  </button>
+  <button class="fab__btn" type="button" data-to-top aria-label="<%= __('nav.back_top') %>" title="<%= __('nav.back_top') %>">
+    <%- yn_icon('arrow-up') %>
+  </button>
+</div>

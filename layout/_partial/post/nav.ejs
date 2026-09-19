@@ -1,0 +1,20 @@
+<%
+  /* 上/下一篇：Hexo 的 post.prev 是日期更新的一篇，post.next 是更早的一篇 */
+%>
+<% if (page.prev || page.next) { %>
+<nav class="post-nav" aria-label="<%= __('nav.post_nav') %>">
+  <% if (page.prev) { %>
+  <a class="post-nav__link post-nav__link--prev" href="<%= url_for(page.prev.path) %>" rel="prev">
+    <span class="post-nav__label"><%- yn_icon('chevron-left') %><%= __('nav.prev') %></span>
+    <span class="post-nav__title"><%= page.prev.title %></span>
+  </a>
+  <% } else { %><span class="post-nav__link is-empty" aria-hidden="true"></span><% } %>
+
+  <% if (page.next) { %>
+  <a class="post-nav__link post-nav__link--next" href="<%= url_for(page.next.path) %>" rel="next">
+    <span class="post-nav__label"><%= __('nav.next') %><%- yn_icon('chevron-right') %></span>
+    <span class="post-nav__title"><%= page.next.title %></span>
+  </a>
+  <% } else { %><span class="post-nav__link is-empty" aria-hidden="true"></span><% } %>
+</nav>
+<% } %>

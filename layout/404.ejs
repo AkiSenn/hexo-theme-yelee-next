@@ -1,0 +1,9 @@
+<section class="card notfound">
+  <p class="notfound__code" aria-hidden="true">404</p>
+  <h1 class="notfound__title"><%= __('notfound.title') %></h1>
+  <p class="notfound__desc"><%= page.description || __('notfound.description') %></p>
+  <p class="notfound__actions">
+    <a class="btn" href="<%= url_for('/') %>"><%- yn_icon('home') %><span><%= __('notfound.back_home') %></span></a>
+    <a class="btn btn--ghost" href="<%= url_for('/archives/') %>"><%- yn_icon('list') %><span><%= __('page.archives') %></span></a>
+  </p>
+</section>

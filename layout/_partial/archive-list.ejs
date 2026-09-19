@@ -1,0 +1,27 @@
+<%
+  /* 归档：按年份分组的时间线（yelee 的经典形态，改成更紧凑的列表） */
+  var lastYear = null;
+%>
+<div class="archive">
+  <% page.posts.each(function (post) {
+       var year = post.date.year();
+       if (year !== lastYear) {
+         if (lastYear !== null) { %></ul></section><% }
+         lastYear = year; %>
+  <section class="archive-group">
+    <h2 class="archive-group__year" id="year-<%= year %>">
+      <a href="<%= url_for('archives/' + year + '/') %>"><%= year %></a>
+    </h2>
+    <ul class="archive-list">
+  <%     } %>
+      <li class="archive-list__item">
+        <time class="archive-list__date" datetime="<%= yn_date(post.date, 'YYYY-MM-DD') %>"><%= yn_date(post.date, 'MM-DD') %></time>
+        <a class="archive-list__link" href="<%= url_for(post.path) %>"><%= post.title %></a>
+        <% if (post.categories && post.categories.length) { %>
+        <span class="archive-list__cat"><%= post.categories.first().name %></span>
+        <% } %>
+      </li>
+  <% }); %>
+  <% if (lastYear !== null) { %></ul></section><% } %>
+</div>
+<%- partial('_partial/pager') %>

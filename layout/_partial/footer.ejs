@@ -1,0 +1,61 @@
+<%
+  var cfg = theme.footer;
+  var year = date(new Date(), 'YYYY');
+  var since = theme.profile.since;
+  var showRange = since && !isNaN(since) && Number(since) < Number(year);
+  var busuanzi = cfg.visit_counter.enable && cfg.visit_counter.provider === 'busuanzi';
+%>
+<footer class="footer" role="contentinfo">
+  <div class="footer__inner">
+    <div class="footer__row">
+      <% if (cfg.copyright) { %>
+      <p class="footer__copy">
+        <span class="footer__license-icon"><%- yn_icon('license') %></span>
+        © <%= showRange ? since + '-' : '' %><%= year %>
+        <a href="<%= url_for('/') %>"><%= theme.profile.author %></a>
+      </p>
+      <% } %>
+      <% if (cfg.powered_by) { %>
+      <p class="footer__powered">
+        <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>
+        <span class="footer__sep">·</span>
+        <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" rel="noopener">Yelee</a>
+        <span class="footer__ver">Next <%= theme.version %></span>
+      </p>
+      <% } %>
+    </div>
+
+    <% if (busuanzi || cfg.runtime.enable || cfg.icp) { %>
+    <div class="footer__row footer__row--meta">
+      <% if (cfg.runtime.enable) { %>
+      <%
+        /* YAML 会把 2020-08-25 解析成 Date 对象，这里统一格式化，避免输出 Date.toString() */
+        var sinceValue = cfg.runtime.since ? date(cfg.runtime.since, 'YYYY-MM-DD') : (since ? since + '-01-01' : '');
+      %>
+      <span class="footer__meta-item" data-runtime
+            data-since="<%= sinceValue %>"
+            data-text="<%= cfg.runtime.text || __('footer.runtime') %>"
+            data-format="<%= __('footer.runtime_format') %>">
+        <%- yn_icon('clock') %><span data-runtime-text><%= cfg.runtime.text || __('footer.runtime') %></span>
+      </span>
+      <% } %>
+      <% if (busuanzi) { %>
+      <span class="footer__meta-item" data-busuanzi
+            data-src="<%= cfg.visit_counter.src || '//cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.min.js' %>">
+        <%- yn_icon('fire') %>
+        <% if (cfg.visit_counter.site_pv) { %><span class="footer__stat"><%= __('footer.site_pv') %><b id="busuanzi_site_pv">–</b></span><% } %>
+        <% if (cfg.visit_counter.site_uv) { %><span class="footer__stat"><%= __('footer.site_uv') %><b id="busuanzi_site_uv">–</b></span><% } %>
+        <% if (cfg.visit_counter.page_pv && is_post()) { %><span class="footer__stat"><%= __('footer.page_pv') %><b id="busuanzi_page_pv">–</b></span><% } %>
+      </span>
+      <% } %>
+      <% if (cfg.icp) { %>
+      <span class="footer__meta-item">
+        <a href="<%= cfg.icp_link || '#' %>" target="_blank" rel="noopener"><%= cfg.icp %></a>
+      </span>
+      <% } %>
+    </div>
+    <% } %>
+
+    <% if (cfg.custom) { %><div class="footer__custom"><%- cfg.custom %></div><% } %>
+  </div>
+</footer>

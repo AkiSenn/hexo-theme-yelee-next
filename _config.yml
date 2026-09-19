@@ -1,0 +1,208 @@
+# ============================================================================
+#  yelee-next · 主题配置
+#  ---------------------------------------------------------------------------
+#  配置优先级（从高到低）：
+#    1. 站点根目录的 _config.yelee-next.yml 里写的新式 key
+#    2. 站点根目录的 _config.yelee-next.yml 里写的旧式 key（原版 yelee 3.5 的写法）
+#    3. 本文件里写的值
+#    4. 主题内置默认值（scripts/00-config.js 的 DEFAULTS）
+#
+#  也就是说：**老配置可以直接照抄成 _config.yelee-next.yml，一律生效**；
+#  凡是能和旧 key 对应上的项，本文件里都留空（默认值写在注释里），
+#  就是为了不挡住你的旧配置。不想留空也可以，直接在这里改等价。
+#
+#  旧 key 对照表（自动迁移，无需手动改）：
+#    avatar/favicon/author/subtitle/since/aboutme → profile.*
+#    left_col_width → appearance.sidebar_width      base_font_size → appearance.base_font_size
+#    background_image → appearance.background_image color_scheme → appearance.color_scheme
+#    animate → appearance.animate                   progressBar.on → appearance.reading_progress
+#    limit_article_width.max_width → appearance.width
+#    toc.on/list_number/max_depth/nowrap → article.toc.*
+#    copyright → article.copyright                  fancybox → article.lightbox
+#    search.on/path/content → search.enable/path/excerpt_length
+#    share.on → article.share                       visit_counter.* → footer.visit_counter.*
+#    mathjax.enable/per_page → math.enable/per_page google_analytics/baidu_tongji → analytics.*
+#    disqus/valine/duoshuo/youyan.on → comments.provider
+#    baidu_site/google_site → seo.*                 open_in_new.global → open_in_new
+#  已废弃（新版不再使用，会打印提示）：CDN / jquery_ui / github_widget / ie_updater /
+#    tab_title_change / highlight_style / blockquote_style / heading_style / list_style /
+#    tagcloud / rss / search.field / root_url
+#
+#  改完建议 `hexo clean && hexo g`（主题配置变化不触发增量重建）。
+# ============================================================================
+
+# 主题版本，请勿修改（页脚展示用）
+version: 4.0.0
+
+# ----------------------------------------------------------------- 个人信息
+profile:
+  author:                # 默认：站点 config.author
+  subtitle:              # 默认：站点 config.subtitle
+  avatar:                # 默认：/img/avatar.png
+  favicon:               # 默认：/img/favicon.png
+  since:                 # 建站年份，页脚显示 © 2020-2026；默认取站点 config.since
+  aboutme:               # 侧栏「关于我」，支持一层 HTML
+  email:                 # 默认：站点 config.email
+
+# ------------------------------------------------------------------ 导航菜单
+# 支持两种写法：
+#   key: 路径                          —— 纯文字
+#   key: { path: /archives/, icon: archive, new_tab: false }
+# 内置图标名见 layout/_partial/icons.ejs（home/list/tag/folder/user/file/book/...）
+menu:
+  主页: /
+  所有文章: /archives/
+  标签云: /tags/
+  关于我: /about/
+
+# ---------------------------------------------------------------- 社交图标
+# key 按名字匹配内置 SVG 图标（GitHub / Email / RSS / bilibili / weibo / zhihu /
+# douban / netease / twitter / telegram / qq / wechat / jianshu / csdn / v2ex ...），
+# 匹配不到就显示名字首字母徽标。想换图标可以放 source/img/名字.svg 并改 icon 字段。
+subnav: {}
+
+# -------------------------------------------------------------------- 外观
+appearance:
+  base_font_size:        # 默认 16（px），正文按 rem 缩放
+  sidebar_width:         # 默认 300（px），>=1080px 时生效
+  background_image:      # 默认 6：从 source/background/bg-1..N.webp 按页面固定选一张；
+                         # 也可写路径数组，或 false 关闭背景大图
+  background_overlay: 0.3  # 背景遮罩强度 0~1，越大越暗（保证文字对比度）
+  color_scheme:          # auto | light | dark，默认 auto（跟随系统）
+  theme_switch: true     # 显示浅色/深色/跟随系统切换按钮
+  animate:               # 列表入场动画（保留 prefers-reduced-motion 支持），默认 true
+  reading_progress:      # 顶部阅读进度条，默认 true
+  accent:                # 主色，留空用内置色板（#5b8def 一族）
+  radius: 14             # 卡片圆角(px)
+  width:                 # 内容区最大宽度(px)，默认 1000
+  font_family:           # 正文字体，留空用系统字体栈（零字体请求）
+  code_font:             # 代码字体，同上
+
+# ---------------------------------------------------------------- 文章页
+article:
+  excerpt: auto          # auto=列表页摘要(取 <!-- more --> 或前 N 字) | false=全文
+  excerpt_length: 200    # auto 模式截断字数
+  more_link:             # 「阅读全文」文案，留空用语言包
+  toc:
+    enable:              # 文章目录，默认 true（桌面端在左侧栏，移动端抽屉）
+    min_depth: 2
+    max_depth:
+    list_number:         # 是否显示 1.1 / 1.2 编号，默认 true
+    expand: false        # 移动端浮层默认展开
+    nowrap: false        # true = 长标题不换行（横向滚动）
+  copyright:             # 文末版权声明，默认 true
+  license: CC BY-NC-SA 4.0
+  license_url: https://creativecommons.org/licenses/by-nc-sa/4.0/
+  lightbox:              # 图片点击放大（原生 <dialog>），默认 true
+  lazyload:              # 图片懒加载 + decoding=async，默认 true
+  updated: true          # 显示「最后更新」
+  word_count: true       # 显示字数
+  reading_time: true     # 显示预计阅读时间
+  post_nav: true         # 上一篇 / 下一篇
+  share:                 # 分享按钮，默认 [native, copy, weibo, twitter, telegram]
+                         # 可选：native / copy / weibo / twitter / telegram / qq；[] 关闭
+
+# -------------------------------------------------------------------- 搜索
+# 构建期生成 search.json，前端零依赖本地搜索（取代原来的 search.xml + jQuery）
+search:
+  enable:                # 默认 true
+  path: search.json
+  limit: 20              # 最多返回条数
+  excerpt_length: 140
+  preload: false         # true = 页面加载即拉索引；false = 首次唤起搜索时拉
+  shortcut: true         # 按 / 或 Ctrl/Cmd+K 唤起
+
+# -------------------------------------------------------------------- 评论
+comments:
+  enable: true
+  lazyload: true         # 滚到评论区才加载第三方脚本（首屏零请求）
+  provider:              # giscus | waline | twikoo | disqus | valine | false，默认 giscus
+                         # （旧配置里的 valine.on / disqus.shortname 会被自动识别成对应后端）
+  hint:                  # 评论框上方提示，留空不显示
+  # --- giscus：基于 GitHub Discussions，零服务器零成本 ---------------------
+  # 到 https://giscus.app 填仓库，把生成的 data-* 抄进来即可
+  giscus:
+    repo: AkiSenn/akisenn.github.io
+    repo_id:
+    category: Announcements
+    category_id:
+    mapping: pathname            # pathname | url | title | og:title | specific
+    strict: false
+    reactions_enabled: 1
+    input_position: top          # top | bottom
+    theme: preferred_color_scheme
+    lang: zh-CN
+    loading: lazy
+  # --- 其它可选后端（配了才会用）-----------------------------------------
+  waline:
+    serverURL:
+    lang: zh-CN
+  twikoo:
+    envId:
+  disqus:
+    shortname:
+  valine:                        # 兼容旧数据；LeanCloud 国内版已不稳，建议迁移
+    appid:
+    appkey:
+    serverURLs:
+
+# -------------------------------------------------------------------- 页脚
+footer:
+  copyright: true
+  powered_by: true               # 显示 Hexo / Yelee 徽标
+  custom:                        # 自定义 HTML，插在页脚信息下方
+  icp:                           # 备案号（留空不显示）
+  icp_link:
+  runtime:                       # 「本站已运行 N 天」
+    enable: true
+    since: 2020-08-25            # 起始日期
+    text: 本博客已悄咪咪运行
+  visit_counter:
+    enable:                      # 默认 true（不蒜子）
+    provider: busuanzi           # busuanzi | false
+    site_pv:                     # 默认 true
+    site_uv:                     # 默认 true
+    page_pv:                     # 默认 true
+    src:                         # 脚本地址，默认 //cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.min.js
+
+# -------------------------------------------------------------------- 数学
+# 默认按文章 opt-in：front-matter 写 `mathjax: true` 才加载，避免全站每页白拉公式库
+math:
+  enable:                # 默认 true
+  per_page:              # 默认 true
+  engine: mathjax        # mathjax | katex
+  mathjax:
+    cdn: https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js
+    config:              # 会序列化成 window.MathJax，例如：
+      tex:
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+  katex:
+    cdn: https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js
+    auto_render: https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js
+    css: https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css
+
+# ------------------------------------------------------------------ 统计
+analytics:
+  google_analytics:      # GA4 填 G-XXXXXXX（老 UA-XXXX 也能用）
+  baidu_tongji:
+
+# ------------------------------------------------------------------ 资源
+assets:
+  cdn:                   # 留空 = 自托管（推荐，少一个域名的 DNS/TLS 成本）
+  fingerprint: true      # 内容指纹 /css/theme.css?v=<hash>，配合长缓存
+  critical_css: true     # 内联关键 CSS，主样式表异步加载（去掉渲染阻塞）
+  preconnect: []         # 额外预连接域名，如 [https://giscus.app]
+
+# ------------------------------------------------------------------ 性能
+performance:
+  minify_html: true      # 保守压缩 HTML（跳过 pre/script/style）
+  instant_nav: true      # Speculation Rules：悬停即预渲染下一页
+  generate_headers: false  # true = 生成 public/_headers（Cloudflare 长缓存规则）
+
+# ---------------------------------------------------------------- 其他
+seo:
+  twitter_id:
+  og_image:              # 默认分享图，留空用头像
+  json_ld: true          # 输出 schema.org 结构化数据
+open_in_new:             # 站外链接新窗口打开（自动补 rel），默认 true
+open_in_new_exclude: []  # 不处理的域名

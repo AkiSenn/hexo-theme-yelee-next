@@ -1,0 +1,146 @@
+<%
+  /* ---------------------------------------------------------------------------
+   * 左侧栏
+   *  - 头像 / 署名 / 签名
+   *  - 分页签面板：目录(文章页) · 菜单 · 标签云 · 友链 · 关于
+   *  - 底部：社交图标 + 明暗切换 + 搜索
+   * 原版这里是「小鸟屋/丝带/回环/小人」四个手绘图标 + 横向滑动，移动端另有一套
+   * 逻辑；新版统一成无障碍的 tablist，桌面端与移动端抽屉共用同一份 DOM。
+   * ------------------------------------------------------------------------ */
+  /* 目录：文章默认开（theme.article.toc.enable）；独立页面要 front-matter 写 toc: true；
+     任何页面都能用 toc: false 单篇关掉。 */
+  var tocWanted = page.toc === true || (page.toc !== false && theme.article.toc.enable && is_post());
+  var tocHtml = tocWanted ? yn_toc(page) : '';
+  var tabs = [];
+  if (tocHtml) tabs.push({ id: 'toc', icon: 'book', label: __('nav.toc') });
+  tabs.push({ id: 'menu', icon: 'menu', label: __('nav.menu') });
+  if (site.tags && site.tags.length) tabs.push({ id: 'tags', icon: 'tag', label: __('nav.tags') });
+  if (theme.friends_items && theme.friends_items.length) tabs.push({ id: 'friends', icon: 'link', label: __('nav.friends') });
+  if (theme.profile.aboutme) tabs.push({ id: 'about', icon: 'user', label: __('nav.about') });
+  var activeTab = tabs[0].id;
+
+  var SOCIAL_ALIAS = {
+    email: 'mail', mail: 'mail', gmail: 'mail', 'e-mail': 'mail',
+    x: 'twitter', twitter: 'twitter', telegram: 'telegram', tg: 'telegram',
+    rss: 'rss', feed: 'rss', github: 'github',
+    '网易云音乐': 'netease', netease: 'netease', '新浪微博': 'weibo', weibo: 'weibo',
+    '知乎': 'zhihu', zhihu: 'zhihu', '豆瓣': 'douban', douban: 'douban',
+    '简书': 'jianshu', jianshu: 'jianshu', bilibili: 'bilibili', 'b站': 'bilibili',
+    qq: 'qq', wechat: 'wechat', weixin: 'wechat', '微信': 'wechat',
+    csdn: 'csdn', v2ex: 'v2ex', youtube: 'youtube', codepen: 'codepen', wordpress: 'wordpress'
+  };
+  function socialIcon(name) {
+    var key = String(name).trim().toLowerCase();
+    return SOCIAL_ALIAS[key] || SOCIAL_ALIAS[name] || '';
+  }
+%>
+<aside id="sidebar" class="sidebar" aria-label="<%= __('nav.sidebar') %>">
+  <div class="sidebar__scroll">
+    <div class="profile">
+      <a class="profile__avatar" href="<%= url_for('/') %>" aria-label="<%= __('nav.back_home') %>">
+        <img src="<%= yn_img(theme.profile.avatar) %>"
+             alt="<%= theme.profile.author %>"
+             width="96" height="96" decoding="async" data-eager>
+      </a>
+      <div class="profile__name"><a href="<%= url_for('/') %>"><%= theme.profile.author %></a></div>
+      <% if (theme.profile.subtitle) { %>
+      <p class="profile__desc"><%= theme.profile.subtitle %></p>
+      <% } %>
+    </div>
+
+    <div class="side-tabs" role="tablist" aria-label="<%= __('nav.sidebar') %>">
+      <% tabs.forEach(function (tab) { %>
+      <button class="side-tabs__btn<%= tab.id === activeTab ? ' is-active' : '' %>"
+              type="button" role="tab" id="tab-<%= tab.id %>"
+              aria-controls="panel-<%= tab.id %>"
+              aria-selected="<%= tab.id === activeTab ? 'true' : 'false' %>"
+              tabindex="<%= tab.id === activeTab ? '0' : '-1' %>"
+              data-tab="<%= tab.id %>"
+              title="<%= tab.label %>">
+        <%- yn_icon(tab.icon) %><span class="side-tabs__label"><%= tab.label %></span>
+      </button>
+      <% }); %>
+    </div>
+
+    <div class="side-panels">
+      <% if (tocHtml) { %>
+      <section class="side-panel<%= activeTab === 'toc' ? ' is-active' : '' %>" id="panel-toc" data-panel="toc" role="tabpanel" aria-labelledby="tab-toc" tabindex="0">
+        <nav class="toc-nav<%= theme.article.toc.nowrap ? ' toc-nav--nowrap' : '' %>" aria-label="<%= __('toc.title') %>">
+          <%- tocHtml %>
+        </nav>
+      </section>
+      <% } %>
+
+      <section class="side-panel<%= activeTab === 'menu' ? ' is-active' : '' %>" id="panel-menu" data-panel="menu" role="tabpanel" aria-labelledby="tab-menu" tabindex="0">
+        <ul class="side-menu">
+          <% theme.menu_items.forEach(function (item) { %>
+          <li class="side-menu__item<%= yn_is_active(item.path) ? ' is-active' : '' %>">
+            <a class="side-menu__link" href="<%= url_for(item.path) %>"<% if (item.new_tab) { %> target="_blank" rel="noopener"<% } %>>
+              <%- yn_icon(item.icon || 'chevron-right') %><%= item.name %>
+            </a>
+          </li>
+          <% }); %>
+        </ul>
+      </section>
+
+      <% if (site.tags && site.tags.length) { %>
+      <section class="side-panel<%= activeTab === 'tags' ? ' is-active' : '' %>" id="panel-tags" data-panel="tags" role="tabpanel" aria-labelledby="tab-tags" tabindex="0">
+        <%- list_tags({
+              orderby: 'count', order: -1, show_count: true, amount: 40,
+              class: { ul: 'taglist', li: 'taglist__item', a: 'taglist__link', count: 'taglist__count' }
+            }) %>
+      </section>
+      <% } %>
+
+      <% if (theme.friends_items && theme.friends_items.length) { %>
+      <section class="side-panel<%= activeTab === 'friends' ? ' is-active' : '' %>" id="panel-friends" data-panel="friends" role="tabpanel" aria-labelledby="tab-friends" tabindex="0">
+        <ul class="friendlist">
+          <% theme.friends_items.forEach(function (item) { %>
+          <li class="friendlist__item">
+            <a class="friendlist__link" href="<%= url_for(item.url) %>" target="_blank" rel="noopener">
+              <%- yn_icon('chevron-right') %><%= item.name %>
+            </a>
+          </li>
+          <% }); %>
+        </ul>
+      </section>
+      <% } %>
+
+      <% if (theme.profile.aboutme) { %>
+      <section class="side-panel<%= activeTab === 'about' ? ' is-active' : '' %>" id="panel-about" data-panel="about" role="tabpanel" aria-labelledby="tab-about" tabindex="0">
+        <div class="aboutme"><%- theme.profile.aboutme %></div>
+      </section>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="sidebar__foot">
+    <% if (theme.subnav_items && theme.subnav_items.length) { %>
+    <nav class="social" aria-label="<%= __('nav.social') %>">
+      <% theme.subnav_items.forEach(function (item) {
+           var icon = socialIcon(item.icon || item.name);
+      %>
+      <a class="social__item" href="<%= item.url %>" title="<%= item.name %>" aria-label="<%= item.name %>"
+         <% if (!/^(mailto:|#|\/)/.test(item.url)) { %>target="_blank" rel="noopener"<% } %>>
+        <% if (icon) { %><%- yn_icon(icon) %><% } else { %><span class="social__badge"><%= String(item.name).slice(0, 1) %></span><% } %>
+      </a>
+      <% }); %>
+    </nav>
+    <% } %>
+
+    <div class="sidebar__actions">
+      <% if (theme.search.enable) { %>
+      <button class="icon-btn" type="button" data-open-search aria-label="<%= __('search.title') %>" title="<%= __('search.title') %>">
+        <%- yn_icon('search') %>
+      </button>
+      <% } %>
+      <% if (theme.appearance.theme_switch) { %>
+      <div class="theme-switch" role="group" aria-label="<%= __('nav.theme') %>" data-theme-switch>
+        <button class="theme-switch__btn" type="button" data-theme-value="light" aria-label="<%= __('nav.theme_light') %>" title="<%= __('nav.theme_light') %>"><%- yn_icon('sun') %></button>
+        <button class="theme-switch__btn" type="button" data-theme-value="dark" aria-label="<%= __('nav.theme_dark') %>" title="<%= __('nav.theme_dark') %>"><%- yn_icon('moon') %></button>
+        <button class="theme-switch__btn" type="button" data-theme-value="auto" aria-label="<%= __('nav.theme_auto') %>" title="<%= __('nav.theme_auto') %>"><%- yn_icon('auto') %></button>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</aside>

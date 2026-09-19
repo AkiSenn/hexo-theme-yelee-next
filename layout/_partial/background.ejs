@@ -1,0 +1,15 @@
+<%
+  /* 背景大图：构建期按页面路径稳定选一张 —— 少了原版的运行时随机 JS，
+     图片地址在 HTML 里就能被 preload，也更利于 CDN 缓存。
+     移动端由 CSS 换成纯色/渐变（省流量）。 */
+  var bgPath = yn_background();
+  var overlay = theme.appearance.background_overlay;
+%>
+<% if (bgPath) { %>
+<div class="bg" aria-hidden="true" style="--bg-image:url('<%= yn_img(bgPath) %>');--bg-overlay:<%= overlay %>">
+  <div class="bg__img"></div>
+  <div class="bg__overlay"></div>
+</div>
+<% } else { %>
+<div class="bg bg--plain" aria-hidden="true"></div>
+<% } %>

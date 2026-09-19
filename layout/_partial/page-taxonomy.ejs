@@ -1,0 +1,48 @@
+<%
+  /* ---------------------------------------------------------------------------
+   * 标签 / 分类索引页
+   * Hexo 的通用写法是 source/tags/index.md 里写 `type: tags`；
+   * 老 yelee 站点没写 type，只有空内容 + 路径 tags/index.html，
+   * 所以这里两种都认，避免升级后 /tags/ 变成一张空白卡片。
+   * ------------------------------------------------------------------------ */
+  var kind = (typeof taxonomy !== 'undefined' && taxonomy) ? taxonomy : 'tags';
+  var hasCats = site.categories && site.categories.length;
+  var hasTags = site.tags && site.tags.length;
+%>
+<div class="taxonomy">
+  <% if (!hasCats && !(kind === 'tags' && hasTags)) { %>
+  <p class="empty"><%= __('taxonomy.empty') %></p>
+  <% } %>
+
+  <% if (hasCats) { %>
+  <section class="taxonomy__block">
+    <h2 class="taxonomy__title"><%- yn_icon('folder') %><span><%= __('page.category') %></span></h2>
+    <%- list_categories({
+          depth: kind === 'categories' ? 2 : 1,
+          show_count: true,
+          orderby: 'count',
+          order: -1,
+          class: 'catlist'
+        }) %>
+  </section>
+  <% } %>
+
+  <% if (kind === 'tags' && hasTags) { %>
+  <section class="taxonomy__block">
+    <h2 class="taxonomy__title"><%- yn_icon('tag') %><span><%= __('page.tag') %></span></h2>
+    <div class="tagcloud">
+      <%- tagcloud({
+            min_font: 13,
+            max_font: 25,
+            unit: 'px',
+            amount: 300,
+            orderby: 'count',
+            order: -1,
+            show_count: true,
+            count_class: 'tagcloud-count',
+            class: 'tagcloud'
+          }) %>
+    </div>
+  </section>
+  <% } %>
+</div>

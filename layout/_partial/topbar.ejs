@@ -1,0 +1,26 @@
+<%
+  /* 窄屏顶部栏：抽屉入口 + 站名 + 搜索/主题。宽屏下由 CSS 隐藏。 */
+%>
+<header class="topbar">
+  <button class="topbar__btn" type="button" data-open-sidebar
+          aria-label="<%= __('nav.menu') %>" aria-controls="sidebar" aria-expanded="false">
+    <%- yn_icon('menu') %>
+  </button>
+  <a class="topbar__title" href="<%= url_for('/') %>"><%= config.title %></a>
+  <div class="topbar__actions">
+    <% if (theme.search.enable) { %>
+    <button class="icon-btn" type="button" data-open-search aria-label="<%= __('search.title') %>">
+      <%- yn_icon('search') %>
+    </button>
+    <% } %>
+    <% if (theme.appearance.theme_switch) { %>
+    <button class="icon-btn" type="button" data-toggle-theme aria-label="<%= __('nav.theme') %>">
+      <span class="icon-btn__sun"><%- yn_icon('sun') %></span>
+      <span class="icon-btn__moon"><%- yn_icon('moon') %></span>
+    </button>
+    <% } %>
+  </div>
+  <% if (theme.appearance.reading_progress) { %>
+  <div class="progress" data-progress hidden><span class="progress__bar" data-progress-bar></span></div>
+  <% } %>
+</header>

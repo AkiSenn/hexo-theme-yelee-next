@@ -1,0 +1,17 @@
+<% if (page.total > 1) { %>
+<nav class="pager" aria-label="<%= __('nav.menu') %>">
+  <% if (page.prev) { %>
+  <a class="pager__btn pager__btn--prev" href="<%= url_for(page.prev_link) %>" rel="prev">
+    <%- yn_icon('chevron-left') %><%= __('nav.prev') %>
+  </a>
+  <% } else { %><span class="pager__btn is-disabled" aria-hidden="true"><%- yn_icon('chevron-left') %><%= __('nav.prev') %></span><% } %>
+
+  <span class="pager__info"><%= page.current %> / <%= page.total %></span>
+
+  <% if (page.next) { %>
+  <a class="pager__btn pager__btn--next" href="<%= url_for(page.next_link) %>" rel="next">
+    <%= __('nav.next') %><%- yn_icon('chevron-right') %>
+  </a>
+  <% } else { %><span class="pager__btn is-disabled" aria-hidden="true"><%= __('nav.next') %><%- yn_icon('chevron-right') %></span><% } %>
+</nav>
+<% } %>

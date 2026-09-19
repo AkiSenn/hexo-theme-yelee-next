@@ -1,0 +1,34 @@
+<%
+  /* 统计脚本：统一延迟到页面 load 之后再注入，不占首屏带宽和主线程 */
+  var ga = theme.analytics.google_analytics;
+  var baidu = theme.analytics.baidu_tongji;
+%>
+<% if (ga || baidu) { %>
+<script>
+window.addEventListener('load', function () {
+  var idle = window.requestIdleCallback || function (fn) { return setTimeout(fn, 1); };
+  idle(function () {
+    <% if (ga) { %>
+    (function () {
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=<%= ga %>';
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', '<%= ga %>', { anonymize_ip: true });
+    })();
+    <% } %>
+    <% if (baidu) { %>
+    (function () {
+      var hm = document.createElement('script');
+      hm.src = 'https://hm.baidu.com/hm.js?<%= baidu %>';
+      document.head.appendChild(hm);
+    })();
+    <% } %>
+  });
+});
+</script>
+<% } %>

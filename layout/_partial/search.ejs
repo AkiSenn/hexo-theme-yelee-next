@@ -1,0 +1,18 @@
+<%
+  /* 搜索浮层：原生 <dialog>，索引按需拉取（search.json） */
+%>
+<dialog class="search-dialog" data-search-dialog aria-label="<%= __('search.title') %>">
+  <form class="search-form" method="dialog" role="search" data-search-form>
+    <span class="search-form__icon"><%- yn_icon('search') %></span>
+    <input class="search-form__input" type="search" name="q" data-search-input
+           placeholder="<%= __('search.placeholder') %>" autocomplete="off" autocorrect="off"
+           spellcheck="false" aria-label="<%= __('search.placeholder') %>">
+    <kbd class="search-form__kbd">Esc</kbd>
+    <button class="search-form__close icon-btn" type="button" data-close-search aria-label="<%= __('search.close') %>">
+      <%- yn_icon('close') %>
+    </button>
+  </form>
+  <div class="search-results" data-search-results>
+    <p class="search-hint"><%= __('search.hint') %></p>
+  </div>
+</dialog>

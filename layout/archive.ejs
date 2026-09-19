@@ -1,0 +1,11 @@
+<%
+  /* 归档页：/archives/ 与 /archives/2026/ 、/archives/2026/07/ */
+  var heading = __('page.archives');
+  if (is_year()) heading += ': ' + page.year;
+  else if (is_month()) heading += ': ' + page.year + '/' + page.month;
+%>
+<header class="list-head">
+  <h1 class="list-head__title"><%- yn_icon('list') %><span><%= heading %></span></h1>
+  <a class="list-head__aside" href="<%= url_for('/tags/') %>"><%- yn_icon('tag') %><%= __('nav.tags') %></a>
+</header>
+<%- partial('_partial/archive-list') %>

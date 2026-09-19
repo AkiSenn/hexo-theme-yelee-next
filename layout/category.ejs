@@ -1,0 +1,5 @@
+<header class="list-head">
+  <h1 class="list-head__title"><%- yn_icon('folder') %><span><%= __('page.category') %>: <%= page.category %></span></h1>
+  <a class="list-head__aside" href="<%= url_for('/archives/') %>"><%- yn_icon('list') %><%= __('page.archives') %></a>
+</header>
+<%- partial('_partial/post-list') %>

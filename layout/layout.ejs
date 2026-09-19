@@ -1,0 +1,28 @@
+<%- partial('_partial/head') %>
+<%
+  var pageType = yn_page_type();
+%>
+<body class="page-<%= pageType %><% if (is_home()) { %> is-home<% } %>">
+<%- partial('_partial/icons') %>
+<a class="skip-link" href="#main"><%= __('a11y.skip_to_content') %></a>
+
+<%- partial('_partial/background') %>
+
+<div class="app">
+  <%- partial('_partial/sidebar', {pageType: pageType}) %>
+  <div class="col-main">
+    <%- partial('_partial/topbar') %>
+    <main id="main" class="main" tabindex="-1">
+      <%- body %>
+    </main>
+    <%- partial('_partial/footer') %>
+  </div>
+</div>
+
+<div class="mask" data-close-sidebar hidden></div>
+
+<%- partial('_partial/fab', {pageType: pageType}) %>
+<% if (theme.search.enable) { %><%- partial('_partial/search') %><% } %>
+<%- partial('_partial/scripts') %>
+</body>
+</html>

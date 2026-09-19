@@ -1,0 +1,11 @@
+<%
+  /* 脚本：全部自托管、原生 ESM、无 jQuery / require.js / FontAwesome */
+%>
+<script type="module" src="<%= yn_asset('js/app.js') %>"></script>
+<% if (theme.search.enable) { %>
+<script type="module" src="<%= yn_asset('js/search.js') %>"></script>
+<% } %>
+<%- partial('_partial/analytics') %>
+<% if (theme.math.enable && theme.math.engine !== 'none' && (!theme.math.per_page || page.mathjax)) { %>
+<%- partial('_partial/math') %>
+<% } %>

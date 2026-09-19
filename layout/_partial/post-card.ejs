@@ -1,0 +1,50 @@
+<%
+  /* 首页 / 归档 / 分类 / 标签 的列表卡片 */
+  var showStats = theme.article.word_count || theme.article.reading_time;
+  var pinned = post.sticky || post.top;
+%>
+<article class="card post-card" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="post-card__meta">
+    <time class="post-card__date" datetime="<%= yn_date(post.date, 'YYYY-MM-DDTHH:mm:ssZ') %>" itemprop="datePublished">
+      <%- yn_icon('calendar') %><%= yn_date(post.date) %>
+    </time>
+    <% if (pinned) { %>
+    <span class="badge badge--top" title="<%= __('post.pinned') %>"><%- yn_icon('fire') %><%= __('post.pinned') %></span>
+    <% } %>
+    <% if (post.categories && post.categories.length) { %>
+    <span class="post-card__cats">
+      <%- yn_icon('folder') %>
+      <% post.categories.each(function (cat, i) { %><% if (i) { %>, <% } %><a href="<%= url_for(cat.path) %>" itemprop="articleSection"><%= cat.name %></a><% }); %>
+    </span>
+    <% } %>
+  </div>
+
+  <h2 class="post-card__title" itemprop="headline">
+    <a href="<%= url_for(post.path) %>" rel="bookmark"><%= post.title %></a>
+  </h2>
+
+  <div class="post-card__excerpt markdown" itemprop="description">
+    <%- yn_excerpt(post) %>
+  </div>
+
+  <div class="post-card__foot">
+    <a class="read-more" href="<%= url_for(post.path) %>" aria-label="<%= __('post.read_more') %>: <%= post.title %>">
+      <span><%= theme.article.more_link || __('post.read_more') %></span><%- yn_icon('chevron-right') %>
+    </a>
+    <div class="post-card__aside">
+      <% if (showStats) { %>
+      <span class="post-card__stats">
+        <% if (theme.article.word_count) { %><span><%= __('post.words', yn_words(post)) %></span><% } %>
+        <% if (theme.article.reading_time) { %><span><%= __('post.minutes', yn_minutes(post)) %></span><% } %>
+      </span>
+      <% } %>
+      <% if (post.tags && post.tags.length) { %>
+      <span class="post-card__tags">
+        <% post.tags.each(function (tag) { %>
+        <a class="chip" href="<%= url_for(tag.path) %>" rel="tag">#<%= tag.name %></a>
+        <% }); %>
+      </span>
+      <% } %>
+    </div>
+  </div>
+</article>

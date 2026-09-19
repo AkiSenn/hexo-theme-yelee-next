@@ -1,0 +1,28 @@
+<%
+  /* ---------------------------------------------------------------------------
+   * 评论区
+   * 只渲染一个挂载点，把后端配置以 JSON 塞进 data-config；第三方脚本由 app.js
+   * 在「滚动到评论区」时才注入 —— 首屏对 giscus/unpkg 零请求。
+   * ------------------------------------------------------------------------ */
+  var c = theme.comments;
+  var enabled = c.enable && c.provider && page.comments !== false;
+  var providerCfg = (c.provider && c[c.provider]) || {};
+%>
+<section class="comments" id="comments" aria-label="<%= __('comments.title') %>">
+  <h2 class="comments__title">
+    <%- yn_icon('comment') %><span><%= __('comments.title') %></span>
+  </h2>
+
+  <% if (!enabled) { %>
+  <p class="comments__note"><%= __('comments.disabled') %></p>
+  <% } else { %>
+  <% if (c.hint) { %><p class="comments__hint"><%= c.hint %></p><% } %>
+  <div class="comments__mount" id="comments-mount"
+       data-comments
+       data-provider="<%= c.provider %>"
+       data-lazyload="<%= c.lazyload === false ? '0' : '1' %>"
+       data-config="<%= yn_json(providerCfg) %>">
+    <p class="comments__loading"><%- yn_icon('comment') %><%= __('comments.loading') %></p>
+  </div>
+  <% } %>
+</section>

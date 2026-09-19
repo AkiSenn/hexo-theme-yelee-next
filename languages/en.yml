@@ -1,0 +1,93 @@
+# yelee-next · English
+a11y:
+  skip_to_content: Skip to content
+  copy_code: Copy code
+  copied: Copied
+
+nav:
+  sidebar: Sidebar
+  menu: Menu
+  toc: Contents
+  tags: Tags
+  friends: Links
+  about: About
+  social: Social links
+  theme: Appearance
+  theme_light: Light
+  theme_dark: Dark
+  theme_auto: System
+  comments: Comments
+  copy_link: Copy link
+  back_top: Back to top
+  back_home: Home
+  prev: Newer
+  next: Older
+  post_nav: Post navigation
+
+search:
+  title: Search
+  placeholder: Search posts…
+  hint: Type to search, press Esc to close
+  empty: Nothing found
+  results: '{n} post(s) found'
+  close: Close
+  loading: Loading index…
+
+post:
+  read_more: Read more
+  pinned: Pinned
+  words: '%d words'
+  minutes: '%d min read'
+  updated: Updated on
+  published: Published on
+  categories: Categories
+  tags: Tags
+
+page:
+  archives: Archives
+  category: Category
+  tag: Tag
+
+toc:
+  title: Contents
+
+comments:
+  title: Comments
+  hint: Say something
+  loading: Loading comments…
+  disabled: Comments are closed
+
+footer:
+  site_pv: Views
+  site_uv: Visitors
+  page_pv: Page views
+  runtime: Running for
+  runtime_format: '{d}d {h}h {m}m {s}s'
+  license: License
+
+copyright:
+  title: Title
+  author: Author
+  date: Published
+  updated: Updated
+  url: Source
+  license: License
+  notice: Please keep the source link when reposting.
+
+share:
+  title: Share this post
+  native: Share
+  copy: Copy link
+  copied: Link copied
+  weibo: Weibo
+  twitter: X
+  telegram: Telegram
+  qq: QQ
+
+taxonomy:
+  empty: Nothing here yet
+
+notfound:
+  title: Page not found
+  description: The page you are looking for does not exist or has been moved.
+  back_home: Back to home
