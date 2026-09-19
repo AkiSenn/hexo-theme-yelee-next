@@ -142,6 +142,34 @@ docs/                    起步配置(照着填) / 迁移指南 / 性能与缓�
 
 ---
 
+## 部署（Cloudflare Workers / 任何云端 CI）
+
+云端 CI（Cloudflare Workers Builds、GitHub Actions…）从 GitHub 拉源码构建，**本地那种
+目录 junction 在云端不存在**，所以站点仓库里需要有一份主题副本。做法：
+
+```bash
+# 1) 改主题 → 在主题仓库提交
+cd E:/yelee-next && git add -A && git commit -m "..." && git push
+
+# 2) 把主题同步成站点仓库里的副本（自动解除 junction、清掉旧副本、写 SYNCED.json）
+node tools/sync.mjs E:/hexo
+
+# 3) 提交并推送站点仓库 → 云端自动构建部署
+cd E:/hexo && git add themes/yelee-next && git commit -m "chore: 同步 yelee-next 主题" && git push
+```
+
+`tools/sync.mjs` 是幂等的：**主题仓库始终是唯一真源**，站点里那份是纯生成物
+（目录里会有一份 `SYNCED.json` 标明来源与指纹，别直接改那份）。想检查副本是否最新：
+
+```bash
+node tools/sync.mjs E:/hexo --check
+```
+
+站点侧的配置放在站点根目录 `_config.yelee-next.yml`（Hexo 原生支持），
+升级/重新同步主题都不会丢 —— 起步模板见 [`docs/starter-config.yml`](./docs/starter-config.yml)。
+
+---
+
 ## 命令与环境
 
 ```bash
