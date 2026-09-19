@@ -9,7 +9,7 @@
 theme: yelee-next      # 原来是 yelee
 ```
 
-挂载方式见 README（推荐 `node tools/link.mjs E:/hexo`，用目录 junction，主题源码留在独立仓库里）。
+挂载方式见 README（推荐 `node tools/link.mjs E:/my-blog`，用目录 junction，主题源码留在独立仓库里）。
 
 ### 2. 老配置直接搬（或直接抄起步配置）
 
@@ -99,7 +99,7 @@ comments:
 
 ### 2. 统计
 
-`analytics.google_analytics` 现在同时支持 `UA-` 和 `G-`。原版 `head.ejs` 里硬编码的那个 `G-F61JPBRL9V` 已经删掉了 —— 那是写在模板里的，任何配置都改不动它，属于 bug。
+`analytics.google_analytics` 现在同时支持 `UA-` 和 `G-`。原版 `head.ejs` 里硬编码的那个 `G-XXXXXXXXXX` 已经删掉了 —— 那是写在模板里的，任何配置都改不动它，属于 bug。
 
 ### 3. 可以卸掉的 Hexo 插件
 
@@ -167,7 +167,7 @@ theme: yelee
 ```
 
 ```bash
-node E:/yelee-next/tools/link.mjs E:/hexo --unlink
+node <主题目录>/tools/link.mjs E:/my-blog --unlink
 hexo clean && hexo g
 ```
 

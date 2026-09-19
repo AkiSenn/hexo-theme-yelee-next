@@ -1375,7 +1375,7 @@ html.is-scrolled .topbar { box-shadow: 0 8px 24px -16px rgba(10, 14, 25, .55); }
 }
 
 /* 页脚下半部分：统计 / 运行时间 / 备案各占一行，居中、小字、弱化
-   （对齐线上 516700.xyz 的排布：作者行 → 访问统计 → 运行时间 → ICP → 公安） */
+   （对齐线上 example.com 的排布：作者行 → 访问统计 → 运行时间 → ICP → 公安） */
 .footer__row--stats,
 .footer__row--runtime,
 .footer__row--filing {

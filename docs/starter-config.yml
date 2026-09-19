@@ -1,31 +1,35 @@
 # ============================================================================
-#  yelee-next 起步配置（照着填就能用）
+#  yelee-next 起步配置示例（照着填就能用）
+#  Example starter config for hexo-theme-yelee-next
 #  ---------------------------------------------------------------------------
-#  用法（Git Bash / PowerShell 都可以）：
-#      cp docs/starter-config.yml  <你的Hexo站点>/_config.yelee-next.yml
-#  然后编辑 <你的Hexo站点>/_config.yelee-next.yml，把下面标了「👉 填这里」
-#  的几项补上即可。其余都是按你这套站点预先写好的。
+#  用法（Git Bash / PowerShell / cmd 都行）：
+#      cp themes/yelee-next/docs/starter-config.yml  <你的站点>/_config.yelee-next.yml
+#  然后编辑 <你的站点>/_config.yelee-next.yml，把标了「👈」的几项换成你自己的。
 #
-#  优先级（高 → 低）：
-#      本文件里的新式 key  >  本文件里的旧式 key(原版 yelee 写法)
-#      >  主题自带 _config.yml  >  主题内置默认值
-#  也就是说：本文件里写了什么就以什么为准，不用改主题目录里的任何文件。
+#  为什么放站点根目录：Hexo 原生支持 _config.<主题名>.yml，优先级高于主题里的
+#  _config.yml，而且升级 / 重新同步主题时不会丢。
+#
+#  优先级（高 → 低）：站点 _config.yelee-next.yml > 主题 _config.yml > 主题内置默认值
+#
+#  💡 本文件里的示例值都是占位符（yourname / example.com / 000000000）。
+#     没填的项一律不显示 —— 社交图标、友链、ICP、公安备案、统计、评论都是「填了才显示」。
 # ============================================================================
 
 # ----------------------------------------------------------------- 个人信息
 profile:
-  author: AutumnT                    # 侧栏署名 / 页脚版权署名
-  subtitle: 科技技术生活              # 侧栏签名，留空则不显示
-  avatar: /img/avatar.png            # 头像（放在 themes/yelee-next/source/img/ 下，
-                                     #   或写成 https://... 的完整外链）
-  favicon: /img/GitHub.png           # 浏览器标签页图标（你原来的配置就用的这个图）
-  since: 2020                        # 建站年份 → 页脚版权显示「© 2020-<当前年>」
-                                     #   结束年取构建时的当前年（网络/计算机时间），不用手改
-                                     #   例：填 2025 → © 2025-2026；留空则只显示 © 2026
-  aboutme: 这很草，我是个普通人，只会简简单单的代码   # 侧栏「关于我」，支持一层 HTML
-  email: admin@516700.xyz
+  author:                            # 👈 你的名字（侧栏署名 / 页脚版权署名）
+  subtitle:                          # 👈 一句话签名，留空则不显示
+  email:                             # 👈 联系邮箱，留空则不显示
+  avatar: /img/avatar.png            # 👈 头像：换成自己的图（放主题 source/img/ 下，
+                                     #    或写 https://... 的完整外链）
+  favicon: /img/favicon.png          # 👈 浏览器标签页图标
+  since: 2020                        # 👈 建站年份 → 页脚版权显示「© 2020-<当前年>」，
+                                     #    结束年取构建时的当前年，不用手改；
+                                     #    填 2025 → © 2025-2026；留空则只显示 © 2026
+  aboutme:                           # 👈 侧栏「关于我」页签，支持一层 HTML；留空则不显示该页签
 
 # ------------------------------------------------------------------ 导航菜单
+# key 是显示文案，value 是路径；也可写成 { path: /archives/, icon: archive }
 menu:
   主页: /
   所有文章: /archives/
@@ -33,26 +37,37 @@ menu:
   关于我: /about/
 
 # ---------------------------------------------------------------- 社交图标
-# key 按名字自动匹配内置图标；匹配不到就显示名字首字母。
-# 可用名字：Email / GitHub / RSS / bilibili / weibo / zhihu / douban / netease /
-#          Twitter / Telegram / QQ / WeChat / jianshu / csdn / v2ex / youtube ...
-subnav:
-  Email: mailto:admin@516700.xyz
-  GitHub: https://github.com/AkiSenn
-  RSS: /atom.xml
-  bilibili: https://space.bilibili.com/373096022
+# ⚠️ 这一块「填了才显示」：留空（或删掉整个 subnav）就不会出现社交图标区。
+# key 按名字匹配内置图标（GitHub / Email / RSS / bilibili / weibo / zhihu / douban /
+# netease / twitter / telegram / qq / wechat / jianshu / csdn / v2ex / youtube …），
+# 匹配不到就显示名字首字母徽标。想换图标就用 { url: ..., icon: github } 显式指定。
+subnav: {}                           # 👈 留空则不显示社交图标区；填几个显示几个
+# subnav:
+#   Email: mailto:you@example.com
+#   GitHub: https://github.com/yourname
+#   RSS: /atom.xml
+#   bilibili: https://space.bilibili.com/000000000
+
+# ---------------------------------------------------------------- 友情链接
+# 「填了才显示」：留空则侧栏不出现「友链」页签
+friends: {}
+# friends:
+#   Hexo: https://hexo.io
+#   某个朋友的博客: https://example.com
 
 # -------------------------------------------------------------------- 外观
 appearance:
   base_font_size: 16
   sidebar_width: 300                 # 左侧栏宽度（>=1080px 时生效）
-  background_image: 5                # 从 source/background/bg-1..5.webp 里按页面固定选一张
+  width: 1000                        # 内容区最大宽度
+  background_image: 6                # 背景大图：从主题 source/background/bg-1..6.webp
+                                     # 按页面固定选一张；也可写图片路径数组，false 关闭
   background_overlay: 0.3            # 背景遮罩 0~1，越大越暗（文字更清楚）
   color_scheme: auto                 # auto(跟随系统) | light | dark
   theme_switch: true                 # 显示浅色/深色切换按钮
-  animate: true
+  animate: true                      # 首页文章入场动画（原版同款：未进视口时不可见）
   reading_progress: true             # 顶部阅读进度条
-  accent:                            # 主题色，留空用内置蓝 #5b8def；想要别的色填 #ff6600 这种
+  accent:                            # 主题色，留空用内置蓝 #5b8def；想要别的色填 #ff6600
   radius: 14                         # 卡片圆角
 
 # ---------------------------------------------------------------- 文章页
@@ -60,12 +75,12 @@ article:
   excerpt: auto                      # 列表页摘要：auto(取 <!-- more --> 或前 N 字) | false(全文)
   excerpt_length: 200
   toc:
-    enable: true                     # 文章目录（桌面端在左侧栏「目录」页签里）
+    enable: true                     # 文章目录（桌面在左侧栏「目录」页签）
     min_depth: 2
     max_depth: 3
     list_number: true
   copyright: true                    # 文末版权声明
-  license: CC BY-NC-SA 4.0
+  license: CC BY-NC-SA 4.0           # 👈 换成你的许可协议
   license_url: https://creativecommons.org/licenses/by-nc-sa/4.0/
   lightbox: true                     # 图片点击放大
   lazyload: true
@@ -73,16 +88,12 @@ article:
   word_count: true
   reading_time: true
   post_nav: true
-  share: [native, copy, weibo, twitter, telegram]
+  share: [native, copy, weibo, twitter, telegram]   # 分享按钮，[] 关闭
 
 # -------------------------------------------------------------------- 搜索
-# 构建期生成 search.json，前端零依赖本地搜索（不再需要 hexo-generator-search）。
-#
-# ⚠️ 你原来的老配置里写着 search.on: false。如果那份老配置还留着，它会把搜索关掉，
-#    所以要么把老配置里的 search 段删掉，要么像下面这样用新式 key 明确打开
-#    （新式 key 优先级最高，一定赢过 search.on）。
+# 构建期生成 search.json，前端零依赖本地搜索（不需要 hexo-generator-search 之类插件）
 search:
-  enable: true                       # 👈 开搜索（顶栏/侧栏的放大镜，或按 / 与 Ctrl+K）
+  enable: true
   path: search.json
   limit: 20                          # 最多返回几条
   excerpt_length: 140                # 每条结果摘要字数
@@ -90,58 +101,55 @@ search:
   shortcut: true                     # 按 / 或 Ctrl/Cmd+K 唤起
 
 # -------------------------------------------------------------------- 评论
+# 默认关闭。要开评论：enable: true + 填好 provider 对应的必填项。
+# ⚠️ ICP 备案类型是「非交互式」的站点不能有 UGC（评论），请保持 enable: false。
 comments:
-  # 🔒 本站备案类型是「非交互式」，不能有评论这类用户生成内容（UGC），所以整体关闭。
-  #    enable: false 时评论区、细栏、「跳到评论」按钮全都不渲染，HTML 里零痕迹。
-  #    以后改备案类型了，把这里改成 true 并填好下面的 giscus 两个 id 即可恢复。
   enable: false
-  preload: false                     # false = 先给一条「点击加载评论」细栏（点了才加载第三方脚本）
+  provider: giscus
+  lazyload: true                     # 滚到评论区才加载第三方脚本
+  preload: false                     # false = 先显示「点击加载评论」细栏，点了才加载
   collapsible: true                  # 展开后显示「收起」按钮；收起时不留空白、页脚自动上移
-  provider: giscus                   # giscus | waline | twikoo | disqus | valine | false
-  lazyload: true                     # 滚到评论区才加载（首屏零请求）
   giscus:
-    repo: AkiSenn/akisenn.github.io  # 仓库（必须是公开仓库，且已开启 Discussions）
-    repo_id:                         # 👈 填这里
-    category: Announcements          # Discussions 分类名
-    category_id:                     # 👈 填这里
+    repo:                            # 👈 你的仓库，形如 owner/repo（公开 + 已开启 Discussions）
+    repo_id:                         # 👈 去 https://giscus.app 生成后填这里
+    category: Announcements
+    category_id:                     # 👈 同上
     mapping: pathname
     reactions_enabled: 1
     input_position: top
     theme: preferred_color_scheme
     lang: zh-CN
     loading: lazy
-# 两个 id 怎么拿：
-#   1) 打开 https://giscus.app
-#   2) 「仓库」填 AkiSenn/akisenn.github.io（先给仓库装上 giscus App 并开启 Discussions）
-#   3) 「Discussion 分类」选 Announcements
-#   4) 页面下方生成的 <script> 里，data-repo-id="R_xxx" 和 data-category-id="DIC_xxx"
-#      就是这两项（长这样：R_kgDOLxxxxx / DIC_kwDOLxxxxx）
-#   没填之前：构建时会 warning 提示，评论区显示「评论已关闭/加载失败」，不影响其它功能。
+  # 两个 id 怎么拿：
+  #   1) 给仓库装上 giscus App，并在仓库 Settings → General → Features 打开 Discussions
+  #   2) 打开 https://giscus.app ，「仓库」填 用户名/仓库名
+  #   3) 「Discussion 分类」选一个（默认 Announcements）
+  #   4) 页面下方生成的 <script> 里 data-repo-id="R_xxx"、data-category-id="DIC_xxx"
+  # 没填全时：评论不渲染，构建时给一条 warning，不影响其它功能。
+  #
+  # 其它可选后端（配了才生效）：
+  # waline:  { serverURL: https://your-waline.example.com, lang: zh-CN }
+  # twikoo:  { envId: https://your-twikoo.example.com }
+  # disqus:  { shortname: your-shortname }
 
 # -------------------------------------------------------------------- 页脚
 footer:
   copyright: true
-  powered_by: true                   # 页脚署名行：Hexo · Yelee Next <version>（AkiSenn & MOxFIVE）
+  powered_by: true                   # 署名行：Hexo · Yelee Next <version>（AkiSenn & MOxFIVE）
                                      #   署名与两个链接写死在主题里（构建者署名，不可配置）
   custom:                            # 想加自己的页脚 HTML 写这里
-  # ---- 备案号：填这两行就会在页脚显示，留空则整块不显示 ------------------
-  # ---- 备案区：填了才显示，没填的项完全不出现（不留空白）----------------
-  icp: 萌ICP备20220413号              # 👈 换成你的备案号（留空 = 不显示这一项）
-  icp_link: https://icp.gov.moe/?keyword=20220413   # 👈 换成你的备案查询链接
-  # 公安备案（公网安备）：等你备案下来，把下面两行填上就自动出现
-  police_icp:                        # 👈 展示文案，例如：京公网安备11010502012345号
-  police_icp_code:                   # 👈 备案编号，例如：11010502012345
-                                     #   填了编号后，查询链接自动生成，不用手写
+  # ---- 备案区：两项互相独立，填了才显示（留空则整行不渲染，不留空白）------
+  icp:                               # 👈 例如「京ICP备2026000000号-1」或「萌ICP备20260000号」
+  icp_link:                          # 👈 查询链接，留空则用 https://beian.miit.gov.cn/
+  # 公安备案（公网安备）：等备案下来把下面两行填上就会自动出现
+  police_icp:                        # 👈 展示文案，例如「京公网安备11010502012345号」
+  police_icp_code:                   # 👈 备案编号，例如 11010502012345（链接自动生成）
   police_icp_link:                   # 想手动指定链接才填
-  police_icp_icon:                   # 留空 = 自动探测 source/img/beian.png，
-                                     #   没有就用内置盾牌图标
-  # 说明：
-  #   · 萌ICP（icp.gov.moe）就把 icp_link 写成 https://icp.gov.moe/?keyword=你的编号
-  #   · 以后换了工信部备案，icp 写成「京ICP备2026xxxxxx号」，icp_link 写 https://beian.miit.gov.cn/
+  police_icp_icon:                   # 留空 = 自动探测 source/img/beian.png，没有就用内置盾牌
   runtime:                           # 「本站已运行 N 天」
     enable: true
-    since: 2020-08-25
-    text: 本博客已悄咪咪运行
+    since:                           # 👈 建站日期，例如 2020-08-25；留空则整块不显示
+    text:                            # 前缀文案，留空用语言包默认值
   visit_counter:                     # 访问统计（不蒜子，国内可用；单独一行小字显示）
     enable: true
     provider: busuanzi
@@ -151,20 +159,14 @@ footer:
     site_uv: false                   # 本站访客数
     page_pv: false                   # 本页阅读量（只在文章页）
     page_uv: false                   # 本页访客数（只在文章页）
-    # 说明：新版不蒜子（cdn.busuanzi.cc）的 api.php 会直接返回这些字段：
-    #   busuanzi_today_pv 今日总访问量 / busuanzi_today_uv 今日访客数
-    #   busuanzi_site_pv  本站总访问量 / busuanzi_site_uv  本站访客数
-    #   busuanzi_page_pv  本页阅读量   / busuanzi_page_uv  本页访客数
-    # 脚本按「字段名 = 元素 id」回填，所以上面开一项就显示一项，不需要额外 JS。
-    # 注意：不蒜子会拒绝 localhost / 内网 IP（返回"域名/IP已被禁用"），上线后才看得到数字。
-
+    # 不想用不蒜子就 enable: false（或 provider: false），页脚不会留空行。
 
 # -------------------------------------------------------------------- 数学
 # 按文章 opt-in：front-matter 写 mathjax: true 才加载，避免全站每页都拉公式库
 math:
   enable: true
   per_page: true
-  engine: mathjax
+  engine: mathjax                    # mathjax | katex
   mathjax:
     cdn: https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js
     config:
@@ -172,29 +174,16 @@ math:
         inlineMath: [['$', '$'], ['\\(', '\\)']]
 
 # ------------------------------------------------------------------ 统计
+# 留空 = 完全不加载对应脚本
 analytics:
-  # ---- Google Analytics ------------------------------------------------
-  # 👈 在这里填你的 GA4 衡量 ID（形如 G-XXXXXXXXXX）
-  google_analytics:
-  # google_analytics: UA-176074678-1   # ← 你原来用的老 ID（UA 已停收数据，仅供参考）
-  # 怎么拿：
-  #   1) 打开 https://analytics.google.com/ → 左下角「管理」
-  #   2) 「数据收集和修改」→「数据流」→ 点你的网站
-  #   3) 右侧「衡量 ID」就是 G- 开头那串，复制粘到上面
-  # 说明：
-  #   · 老的 UA-XXXXXXX-X 也认（你原来填的是 UA-176074678-1），
-  #     但 Google 已停止处理 UA 数据，建议换成 GA4 的 G- ID。
-  #   · 留空 = 完全不加载 GA（主题默认不再像旧版那样在模板里硬编码一段 GA 代码）。
-  #   · 脚本是页面 load 之后再注入的，不影响首屏速度。
-
-  # ---- 百度统计 --------------------------------------------------------
-  baidu_tongji:
-  # 怎么拿：https://tongji.baidu.com → 管理 → 代码获取 → 代码里 hm.js? 后面那串
-  # （形如 a1b2c3d4e5f6... 的 32 位字符串）
+  google_analytics:                  # 👈 GA4 衡量 ID（G-XXXXXXXXXX）
+                                     #    在哪拿：analytics.google.com → 管理 →
+                                     #    数据收集和修改 → 数据流 → 选你的网站 → 衡量 ID
+  baidu_tongji:                      # 👈 百度统计 id（tongji.baidu.com → 管理 → 代码获取）
 
 # ------------------------------------------------------------------ 资源
 assets:
-  cdn:                               # 留空 = 自托管（推荐）；要 CDN 填 https://cdn.jsdelivr.net/gh/用户/仓库@v4
+  cdn:                               # 留空 = 自托管（推荐）
   fingerprint: true                  # 内容指纹 ?v=<hash>，配合长缓存
   critical_css: true                 # 内联关键 CSS，主样式表异步加载
   preconnect: []                     # 额外预连接，如 [https://giscus.app]
@@ -205,10 +194,14 @@ performance:
   instant_nav: true                  # 悬停即预渲染下一页（Speculation Rules）
   generate_headers: false            # true = 生成 public/_headers（Cloudflare 长缓存规则）
 
-# ---------------------------------------------------------------- 其他
+# ---------------------------------------------------------------- SEO
 seo:
-  twitter_id:
+  twitter_id:                        # 👈 例如 yourname（不带 @）
   og_image:                          # 分享卡片大图，留空用头像
   json_ld: true
+  baidu_site:                        # 百度站长验证码（仅首页）
+  google_site:                       # Google 站长验证码（仅首页）
+
+# ---------------------------------------------------------------- 其他
 open_in_new: true                    # 站外链接新窗口
 open_in_new_exclude: []

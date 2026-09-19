@@ -1,7 +1,7 @@
 {
   "name": "hexo-theme-yelee-next",
   "version": "4.0.0",
-  "description": "Yelee Next —— yelee 主题的现代化重制版：零 jQuery / 零 require.js / 零 CDN 依赖，原生 ESM + 现代 CSS + 内容指纹长缓存",
+  "description": "Yelee Next —— yelee 主题的现代化重制版：零 jQuery / 零 CDN 依赖，原生 ESM + 现代 CSS + 内容指纹长缓存 / A modernized remake of hexo-theme-yelee",
   "keywords": [
     "hexo",
     "theme",
@@ -10,7 +10,7 @@
     "blog"
   ],
   "license": "MIT",
-  "private": true,
+  "private": false,
   "engines": {
     "node": ">=18"
   },

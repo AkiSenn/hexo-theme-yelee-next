@@ -1,37 +1,37 @@
 # ============================================================================
-#  yelee-next · 主题配置
+#  yelee-next · 主题默认配置
 #  ---------------------------------------------------------------------------
-#  · 这里只写「新式配置」。原版 yelee 3.5 的旧 key 对照表见 docs/migration.md，
-#    旧配置放在站点根目录的 _config.yelee-next.yml 里仍会被自动识别并迁移。
-#  · 优先级（高 → 低）：
-#        站点 _config.yelee-next.yml 的新式 key
-#      > 站点 _config.yelee-next.yml 的旧式 key（自动迁移）
-#      > 本文件
-#      > 主题内置默认值（scripts/00-config.js 的 DEFAULTS）
-#    所以自定义配置建议写在站点根目录的 _config.yelee-next.yml，
-#    升级主题时不会丢；本文件留着当参考与兜底。
-#  · 照抄起步配置：cp docs/starter-config.yml <站点>/_config.yelee-next.yml
+#  /  Theme default configuration  /
+#
+#  · 这里只放「主题默认值」。凡是需要你自己填的内容（作者、社交链接、备案号、
+#    统计 ID、评论仓库…）一律留空 —— 留空就不显示，填了才出现，不会留空白框。
+#  · 推荐把自定义配置写在**站点根目录**的 _config.yelee-next.yml（Hexo 原生支持，
+#    升级主题不会丢）。可直接复制示例：
+#        cp themes/yelee-next/docs/starter-config.yml  <站点>/_config.yelee-next.yml
+#  · 优先级：站点 _config.yelee-next.yml  >  本文件  >  内置默认值
+#    （内置默认值见 themes/yelee-next/scripts/00-config.js 的 DEFAULTS）
 #  · 改完配置建议 hexo clean && hexo g（主题配置变化不触发增量重建）。
 # ============================================================================
 
-# 主题版本号，会显示在页脚署名里（Hexo · Yelee Next 4.0.0（AkiSenn & MOxFIVE））
+# 主题版本号，会显示在页脚署名里：Hexo · Yelee Next 4.0.0（AkiSenn & MOxFIVE）
 version: 4.0.0
 
 # ----------------------------------------------------------------- 个人信息
+# / Profile /  需要你自己填的内容默认留空
 profile:
-  author:                        # 侧栏署名 / 页脚版权署名，留空则用站点 config.author
-  subtitle:                      # 侧栏签名，留空则用站点 config.subtitle
+  author:                        # 侧栏署名 / 页脚版权署名；留空则用站点 config.author
+  subtitle:                      # 侧栏签名；留空则用站点 config.subtitle
   email:                         # 留空则用站点 config.email
   avatar: /img/avatar.png        # 头像：主题 source/img/ 下的相对路径，或完整外链
   favicon: /img/favicon.png      # 站点图标
   since:                         # 建站年份，决定页脚版权起始年：
                                  #   填 2020 → © 2020-2026（结束年取构建时的当前年）
-                                 #   填 2025 → © 2025-2026；留空则只显示当前年
-                                 #   留空时也接受 footer.runtime.since 的年份作为兜底
-  aboutme:                       # 侧栏「关于我」，支持一层 HTML
+                                 #   填 2025 → © 2025-2026；留空则只显示 © 2026
+                                 #   留空时也会回落到 footer.runtime.since 的年份
+  aboutme:                       # 侧栏「关于我」，支持一层 HTML；留空则不显示该页签
 
 # ------------------------------------------------------------------ 导航菜单
-# key 是显示文案，value 是路径；也可写成 { path: /archives/, icon: archive, new_tab: false }
+# key 是显示文案，value 是路径。也可写成 { path: /archives/, icon: archive, new_tab: false }
 # 内置图标名见 layout/_partial/icons.ejs（home/list/tag/folder/user/file/book/...）
 menu:
   主页: /
@@ -40,8 +40,9 @@ menu:
   关于我: /about/
 
 # ---------------------------------------------------------------- 社交图标
-# key 按名字匹配内置 SVG，匹配不到就显示名字首字母徽标。
-# 内置名字：GitHub / Email(mail) / RSS / Twitter(X) / Telegram / bilibili / weibo /
+# 留空（或删掉）就不显示社交图标区 —— 填几个显示几个。
+# key 按名字匹配内置 SVG 图标，匹配不到则显示名字首字母徽标。
+# 可用名字：GitHub / Email(mail) / RSS / Twitter(X) / Telegram / bilibili / weibo /
 #          zhihu / douban / netease(网易云音乐) / qq / wechat / jianshu / csdn /
 #          v2ex / youtube / codepen / wordpress / globe(通用)
 subnav: {}
@@ -50,6 +51,7 @@ subnav: {}
 #   Email: mailto:you@example.com
 #   GitHub: https://github.com/yourname
 #   RSS: /atom.xml
+#   bilibili: https://space.bilibili.com/000000000
 
 # 友情链接（侧栏「友链」页签；留空则不显示该页签）
 friends: {}
@@ -98,7 +100,7 @@ article:
   share: [native, copy, weibo, twitter, telegram]   # 也可只留 [copy]，[] 关闭
 
 # -------------------------------------------------------------------- 搜索
-# 构建期把文章正文压成 search.json，前端原生 JS 本地搜索（无需任何搜索插件）。
+# 构建期把文章正文压成 search.json，前端原生 JS 本地搜索（不需要任何搜索插件）。
 # 交互：放大镜 / 按 / 或 Ctrl+K 唤起浮层，↑↓ 选择，Enter 打开，Esc 关闭。
 search:
   enable: true
@@ -109,15 +111,17 @@ search:
   shortcut: true                 # 按 / 或 Ctrl/Cmd+K 唤起
 
 # -------------------------------------------------------------------- 评论
-# ⚠️ 备案小贴士：ICP 备案类型为「非交互式」时不能出现评论这类用户生成内容（UGC），
-#    请保持 enable: false —— 此时整个评论区（含「点击加载评论」细栏、「收起」按钮、
-#    「跳到评论」按钮、第三方脚本）都不渲染，页面里零痕迹。
+# 默认关闭：不填 provider 仓库信息就不会渲染任何评论区内容（页面里零痕迹，不留空白框）。
+# 开启方法：enable: true + 填好 provider 对应的必填项（giscus 需要 repo / repo_id /
+#           category_id，见下方说明）。
+# ⚠️ 备案小贴士：ICP 备案类型为「非交互式」时不能有评论这类用户生成内容（UGC），
+#    请保持 enable: false。
 comments:
-  enable: true
+  enable: false
   lazyload: true                 # 滚到评论区才加载第三方脚本（首屏零请求）
   preload: false                 # false = 先显示一条「点击加载评论」细栏（复刻原版 click2show）
                                  # true  = 进入页面就展开
-  collapsible: true              # 标题右侧「收起」按钮；收起后正文区块整块不占位，页脚自动上移
+  collapsible: true              # 标题右侧「收起」按钮；收起后区块整块不占位，页脚自动上移
   provider: giscus               # giscus | waline | twikoo | disqus | valine | false
   hint:                          # 评论框上方提示，留空不显示
   # --- giscus：基于 GitHub Discussions，零服务器零成本 ---------------------
@@ -127,7 +131,7 @@ comments:
   #   3) 「Discussion 分类」选一个（默认 Announcements）
   #   4) 生成的 <script> 里 data-repo-id="R_xxx"、data-category-id="DIC_xxx" 抄到下面
   giscus:
-    repo: AkiSenn/akisenn.github.io
+    repo:                        # 形如 owner/repo，留空则评论不可用
     repo_id:
     category: Announcements
     category_id:
@@ -159,9 +163,8 @@ footer:
   custom:                        # 自定义 HTML，插在页脚最下方
   # ---- 备案区：两项互相独立，填了才显示（留空则整行不渲染，不留空白）------
   # ① 工信部备案 / 萌ICP
-  icp:                           # 例如：萌ICP备20220413号 / 京ICP备2026000000号-1
+  icp:                           # 例如：京ICP备2026000000号-1 / 萌ICP备20260000号
   icp_link:                      # 留空则用 https://beian.miit.gov.cn/
-                                 #   萌ICP：https://icp.gov.moe/?keyword=20220413
   # ② 公安备案（公网安备）
   police_icp:                    # 例如：京公网安备11010502012345号
   police_icp_code:               # 编号，例如 11010502012345（police_icp_link 留空时自动拼查询链接）
@@ -170,8 +173,8 @@ footer:
                                  #   探测不到则用内置盾牌 SVG
   runtime:                       # 「本站已运行 N 天」
     enable: true
-    since: 2020-08-25            # 起始日期（也用于版权起始年的兜底）
-    text: 本博客已悄咪咪运行
+    since:                       # 起始日期，例如 2020-08-25；留空则整块不显示
+    text:                        # 自定义前缀文案，留空用语言包里的「本站已运行」
   visit_counter:                 # 访问统计（不蒜子），单独一行小字显示
     enable: true
     provider: busuanzi           # busuanzi | false
@@ -204,6 +207,7 @@ math:
     css: https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css
 
 # ------------------------------------------------------------------ 统计
+# 留空 = 完全不加载对应脚本（默认留空）
 analytics:
   # GA4 的「衡量 ID」（形如 G-XXXXXXXXXX）：
   #   https://analytics.google.com → 管理 → 数据收集和修改 → 数据流 → 选你的网站

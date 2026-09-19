@@ -7,9 +7,9 @@
  * 本脚本保证「主题仓库是唯一真源」，站点里那份是纯生成物。
  *
  * 用法：
- *   node tools/sync.mjs E:/hexo                    # 同步到 E:/hexo/themes/yelee-next
- *   node tools/sync.mjs E:/hexo yelee-next         # 指定主题目录名
- *   node tools/sync.mjs E:/hexo --check            # 只对比差异，不写入
+ *   node tools/sync.mjs E:/my-blog                    # 同步到 E:/my-blog/themes/yelee-next
+ *   node tools/sync.mjs E:/my-blog yelee-next         # 指定主题目录名
+ *   node tools/sync.mjs E:/my-blog --check            # 只对比差异，不写入
  *
  * 行为：
  *   · 目标若是指向本仓库的 junction/软链接 → 先自动解除（不会动到源目录）

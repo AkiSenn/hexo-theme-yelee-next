@@ -101,7 +101,7 @@ curl -sI https://你的域名/ | grep -i cache-control
 ## 六、构建期体检
 
 ```bash
-node tools/check.mjs E:/hexo/public
+node tools/check.mjs E:/my-blog/public
 ```
 
 输出每页 HTML 体积、本地资源引用是否有缺失、还有多少阻塞渲染的 `<link rel=stylesheet>`、以及是否残留 jQuery / require.js / FontAwesome / fancybox / MathJax2 的引用。

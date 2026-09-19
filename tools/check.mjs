@@ -3,7 +3,7 @@
  * 生成产物体检：检查 public/ 里每个 HTML 引用的本地资源是否真的存在，
  * 顺手统计体积/阻塞请求/是否还残留 jQuery、require.js、FontAwesome 等老依赖。
  *
- *   node tools/check.mjs E:\hexo\public
+ *   node tools/check.mjs E:\my-blog\public
  */
 import fs from 'node:fs';
 import path from 'node:path';

@@ -3,9 +3,9 @@
  * 把本主题挂到一个 Hexo 站点的 themes/ 下（Windows 用目录 junction，其它平台用 symlink）。
  * 主题代码始终留在本仓库里，站点目录里只多一个链接，`hexo g` 直接生效。
  *
- *   node tools/link.mjs E:\hexo                 # 挂成 E:\hexo\themes\yelee-next
- *   node tools/link.mjs E:\hexo yelee-next      # 指定主题名
- *   node tools/link.mjs E:\hexo --unlink        # 移除链接
+ *   node tools/link.mjs E:\my-blog                 # 挂成 E:\my-blog\themes\yelee-next
+ *   node tools/link.mjs E:\my-blog yelee-next      # 指定主题名
+ *   node tools/link.mjs E:\my-blog --unlink        # 移除链接
  */
 import fs from 'node:fs';
 import path from 'node:path';
