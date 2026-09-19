@@ -9,6 +9,7 @@
     <img src="https://img.shields.io/badge/license-MIT-blue.svg">
     <img src="https://img.shields.io/badge/PRs-welcome-ff69b4.svg">
     <img src="https://img.shields.io/badge/AI%20pair-DeepSeek--V4.1--Flash-2b6cb0.svg">
+    <a href="https://github.com/AkiSenn/hexo-theme-yelee-next/stargazers"><img src="https://img.shields.io/github/stars/AkiSenn/hexo-theme-yelee-next?style=flat"></a>
 </p>
 
 &emsp;&emsp;主题 **yelee-next** 是 [hexo-theme-yelee][1]（原作者 [MOxFIVE][2]，其前身是 [hexo-theme-yilia][3] by [Litten][4]）的**全套重制版**：保留左侧头像栏、全屏背景大图、半透明卡片这些一眼认得出来的老味道，把 2016 年的技术栈整个换掉 —— 零 jQuery、零 require.js、零 FontAwesome、零外部 CDN，原生 ESM + 现代 CSS + 内容指纹长缓存。
@@ -61,7 +62,7 @@ node <主题目录>/tools/link.mjs  /path/to/hexo-site
 cp -r <主题目录> /path/to/hexo-site/themes/yelee-next
 
 # C. 作为 git submodule（需要主题有远端仓库）
-git submodule add <仓库地址> /path/to/hexo-site/themes/yelee-next
+git submodule add https://github.com/AkiSenn/hexo-theme-yelee-next.git /path/to/hexo-site/themes/yelee-next
 ```
 
 2. 在站点 `_config.yml` 里指向它：`theme: yelee-next`
@@ -86,7 +87,7 @@ node <theme-dir>/tools/link.mjs  /path/to/hexo-site
 cp -r <theme-dir> /path/to/hexo-site/themes/yelee-next
 
 # C. As a git submodule
-git submodule add <repo-url> /path/to/hexo-site/themes/yelee-next
+git submodule add https://github.com/AkiSenn/hexo-theme-yelee-next.git /path/to/hexo-site/themes/yelee-next
 ```
 
 2. Point the site at it — `theme: yelee-next`
