@@ -1,0 +1,18 @@
+<% if (theme.github_widget){ %>
+    <%- js('js/GithubRepoWidget') %>
+<% } %>
+<script data-main="<%-config.root%>js/main.js" src="<%- theme.CDN.require %>"></script>
+<%- partial('_partial/background') %>
+<%- partial('comments/count-comment') %>
+<%- partial('google-analytics') %>
+<%# 修复：theme.mathjax 是对象，恒为真，导致 enable/per_page 从来没生效、全站每页都加载 MathJax %>
+<% if (theme.mathjax && theme.mathjax.enable && (!theme.mathjax.per_page || page.mathjax)) { %>
+    <%- partial('mathjax') %>
+<% } %>
+<%- partial('scrolling-button') %>
+<%- partial('open-in-new-tab', {
+        global: theme.open_in_new.global
+    }) %>
+<%- partial('tab-title-change') %>
+<script src="//cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.min.js" defer>
+</script>

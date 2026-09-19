@@ -1,0 +1,125 @@
+Yelee: '3.5'
+menu:
+  主页: /
+  所有文章: /archives/
+  标签云: /tags/
+  关于我: /about/
+avatar: /img/avatar.png
+favicon: /img/GitHub.png
+author: AutumnT
+root_url: null
+since: 2020
+subnav:
+  Email: mailto:admin@516700.xyz
+  GitHub: https://www.github.com/AkiSenn
+  RSS: /atom.xml
+  bilibili: https://space.bilibili.com/373096022
+preload_comment: true
+show_count: true
+disqus:
+  shortname: null
+duoshuo:
+  domain: null
+youyan:
+  id: null
+background_image: 5
+base_font_size: 16
+color_scheme: null
+highlight_style:
+  inline_code: 1
+  code_block: 1
+blockquote_style:
+  blockquote: 1
+heading_style: 0
+list_style: 0
+left_col_width: 300
+copyright: true
+toc:
+  'on': false
+  list_number: true
+  max_depth: 3
+  nowrap: false
+animate: true
+jquery_ui: false
+limit_article_width:
+  'on': false
+  max_width: 60
+tagcloud: true
+friends:
+  Hexo: https://hexo.io
+  GitHub: https://www.github.com/AkiSenn
+  MOxFIVE: http://moxfive.xyz/
+aboutme: 这很草，我是个普通人，只会简简单单的代码
+open_in_new:
+  global: 0
+  title: false
+  post: false
+  tags: false
+  categories: false
+  article_nav: false
+  archives: true
+  mini_archives: true
+  menu: false
+  friends: true
+  socail: true
+rss: /atom.xml
+ie_updater:
+  'on': false
+  link: //outdatedbrowser.com/
+tab_title_change:
+  'on': false
+  left_tab_title: '(つェ⊂) 我藏好了哦~ '
+  return_tab_title: '(*´∇｀*) 被你发现啦~ '
+search:
+  'on': false
+  path: search.xml
+  field: all
+  content: true
+fancybox: true
+mathjax:
+  enable: true
+  # per_page: true 时只在文章 front-matter 写了 mathjax: true 的页面加载 MathJax，
+  # 避免全站每页白拉 60KB+ 的数学库（本站目前没有公式文章）
+  per_page: true
+  cdn: //cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+share:
+  'on': false
+  baidu: true
+  addthis: false
+  addthis_pubid: ra-56ff76c972fc0cf9
+baidu_site: null
+google_site: null
+google_analytics: UA-176074678-1
+baidu_tongji: null
+visit_counter:
+  'on': true
+  site_visit: true
+  page_visit: true
+github_widget: false
+progressBar:
+  'on': false
+  type: minimal
+  color: blue
+CDN:
+  jquery: //cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js
+  require: //cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js
+  fontawesome: //cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css
+  fancybox_js: //cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js
+  fancybox_css: //cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css
+  animate_css: //cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.1/animate.min.css
+  jquery_ui_js: //cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
+  jquery_ui_css: //cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/css/jquery-ui.min.css
+  pace_js: //cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js
+  clipboard: //cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js
+  mathjax: //cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/MathJax.js
+  scrollreveal: //cdnjs.cloudflare.com/ajax/libs/scrollReveal.js/3.1.4/scrollreveal.min.js
+  valine: //cdnjs.cloudflare.com/ajax/libs/valine/1.5.1/Valine.min.js
+valine:
+  'on': false
+  appid: hVlTJN1FPoFmEfPsVhLwWBXH-gzGzoHsz
+  appkey: ceM3de4gJBm5jtEiobFAAEi9
+  verify: true
+  notify: true
+  avatar: mp
+  placeholder: Just go go!
+  serverURLs: https://hvltjn1f.api.lncldglobal.com/
