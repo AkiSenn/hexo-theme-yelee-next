@@ -153,7 +153,8 @@ jobs:
         run: node tools/check.mjs .ci/public
 
       - name: 关键页面签名检查
-        run: node .ci/tools/ci-signature-check.mjs .ci/public
+        # 脚本在仓库根的 tools/ 下（主题副本在 .ci/themes/yelee-next/）
+        run: node tools/ci-signature-check.mjs .ci/public
 
       - name: 清理（不留下测试站点）
         if: always()

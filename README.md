@@ -130,6 +130,15 @@ node <主题目录>/tools/check.mjs  /path/to/hexo-site/public
 
 **主题仓库始终是唯一真源**，站点里那份是生成物 —— 目录里的 `SYNCED.json` 会标明来源、时间与指纹。
 
+### 持续集成
+
+仓库自带 GitHub Actions 自检（`.github/workflows/check.yml`）：密钥防呆 → 校验 YAML → 搭最小 Hexo 站点生成一遍 → 产物体检 → 18 项关键签名检查。
+推之前想先在本地跑同样的步骤：
+
+```bash
+node tools/local-ci.mjs
+```
+
 ---
 
 ## 性能

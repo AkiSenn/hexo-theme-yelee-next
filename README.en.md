@@ -130,6 +130,15 @@ node <theme-dir>/tools/check.mjs  /path/to/hexo-site/public
 
 The theme repo stays the single source of truth; the copy in the site repo is generated, and its `SYNCED.json` records origin, timestamp and fingerprint.
 
+### CI
+
+The repo ships a GitHub Actions check (`.github/workflows/check.yml`): secret guard → YAML validation → build a minimal Hexo site → asset audit → 18 signature checks.
+To run the very same steps locally before pushing:
+
+```bash
+node tools/local-ci.mjs
+```
+
 ---
 
 ## Performance
