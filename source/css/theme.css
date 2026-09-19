@@ -1164,3 +1164,86 @@ html[data-theme='dark'] {
 .markdown :is(.strong, .hljs-strong) { font-weight: 600; }
 /* Prism 的 token 背景会跟主题打架，统一去掉 */
 .markdown .token { background: none; box-shadow: none; }
+
+/* ==================================== 23. 头像：hover 抖动 + 点击回首页 ====
+   复刻原版 yelee 的招牌细节（老主题 main.styl 的 .profilepic:hover）：
+     · 悬停：边框点亮 + 主色辉光 + 0.15s 快速抖动（原来用 right/top 偏移实现，
+       这里改用 translate，不触发重排、更省性能）
+     · 点击：播一次更明显的「震动」，然后回首页（非首页时等动画播完再跳，
+       已在首页则滚动回顶部，见 app.js 的 initAvatarShake）
+   手感参数与原版一致：位移 ~2px、0.15s、linear、alternate 无限循环。 */
+.profile__avatar {
+  transition: border-color .25s ease, box-shadow .25s ease, transform .2s ease;
+}
+@media (hover: hover) {
+  .profile__avatar:hover {
+    border-color: var(--c-accent);
+    box-shadow: 0 0 1.5em color-mix(in srgb, var(--c-accent) 55%, transparent);
+    animation: yelee-avatar-jitter .15s linear infinite alternate;
+  }
+}
+.profile__avatar:active { transform: scale(.96); }
+
+/* 点击时的一次性震动（由 JS 加 .is-shaking，动画结束自动去掉） */
+.profile__avatar.is-shaking {
+  animation: yelee-avatar-shake .46s cubic-bezier(.36, .07, .19, .97) both;
+  border-color: var(--c-accent);
+  box-shadow: 0 0 1.6em color-mix(in srgb, var(--c-accent) 60%, transparent);
+}
+
+@keyframes yelee-avatar-jitter {
+  from { translate: 1.5px 1px; }
+  to { translate: -1.5px -1px; }
+}
+@keyframes yelee-avatar-shake {
+  0% { transform: translateX(0) rotate(0) scale(1); }
+  15% { transform: translateX(-4px) rotate(-5deg) scale(.96); }
+  35% { transform: translateX(4px) rotate(5deg) scale(1.03); }
+  55% { transform: translateX(-3px) rotate(-3deg) scale(.99); }
+  75% { transform: translateX(3px) rotate(3deg) scale(1.01); }
+  100% { transform: translateX(0) rotate(0) scale(1); }
+}
+
+/* 动效敏感的用户：不抖，直接跳转 */
+@media (prefers-reduced-motion: reduce) {
+  .profile__avatar:hover,
+  .profile__avatar.is-shaking { animation: none; }
+  .profile__avatar:active { transform: none; }
+}
+
+/* ==================== 24. 移动端「头像区」= 顶部独立模块（不塞进侧栏抽屉） ==
+   对齐原版 yelee 的移动端结构：窄屏下桌面侧栏整体隐藏
+   （原版是 .left-col{display:none}），另有一个位于文档流最上方的模块承载
+   头像 / 署名 / 签名 / 社交图标；侧栏抽屉只负责导航。
+   桌面端这个模块不出现，头像仍在左侧栏里。 */
+.mobile-head { display: none; }
+
+.mobile-head__band {
+  block-size: 72px;
+  background:
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--c-accent) 38%, transparent),
+      color-mix(in srgb, var(--c-accent) 12%, transparent) 55%,
+      transparent);
+}
+
+.mobile-head__body {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  margin-block-start: -46px;      /* 头像压在色带上，露出一半 */
+  padding: 0 16px 14px;
+  text-align: center;
+}
+.mobile-head__body .profile__avatar { inline-size: 88px; block-size: 88px; }
+.mobile-head__body .profile__name { font-size: 1.06rem; margin-block-start: 2px; }
+.mobile-head__body .profile__desc { font-size: .82rem; }
+.mobile-head__body .social { margin-block-start: 8px; }
+
+@media (max-width: 1079.98px) {
+  .mobile-head { display: block; }
+  /* 头像区与社交已经上移到顶部模块，抽屉里不再重复，只留导航 */
+  .sidebar .profile,
+  .sidebar .social { display: none; }
+  .sidebar__scroll { padding-block-start: 14px; }
+}

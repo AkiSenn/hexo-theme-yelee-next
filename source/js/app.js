@@ -1281,6 +1281,58 @@ function initSearch() {
   });
 }
 
+/* ================================================== 14. 头像抖动 / 回首页 ==
+   复刻原版 yelee 的招牌细节：头像悬停会快速抖动（CSS 里做的），点击时
+   再震一下然后回首页。要点：
+     · 在文章页点：先播 0.46s 震动，再跳转（不然动画一闪而过看不见）
+     · 已在首页点：不刷新页面（避免整页重载），震一下并平滑滚回顶部
+     · Ctrl/Cmd/中键点击：不拦截，保留「新标签打开」的原生行为
+     · prefers-reduced-motion：跳过动画，立即执行跳转/滚动 */
+
+function initAvatarShake() {
+  /* 桌面是侧栏里的头像，移动端是顶部的独立头像模块，两处 DOM 都要挂 */
+  const avatars = $$('.profile__avatar');
+  if (!avatars.length) return;
+  const root = (html.getAttribute('data-root') || '/').replace(/index\.html$/, '');
+  const SHAKE_MS = 460;
+
+  function isHome() {
+    const p = location.pathname.replace(/index\.html$/, '');
+    return p === root || p === root.replace(/\/$/, '') || p === '' || p === '/';
+  }
+
+  function bind(avatar) {
+  avatar.addEventListener('click', e => {
+    /* 新标签 / 新窗口 / 中键：交给浏览器，不动 */
+    if (e.defaultPrevented || e.button > 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+    const href = avatar.getAttribute('href') || root;
+    const still = reduced();
+
+    if (!still) {
+      avatar.classList.add('is-shaking');
+      window.setTimeout(() => avatar.classList.remove('is-shaking'), SHAKE_MS);
+    }
+
+    if (isHome()) {
+      /* 已经在首页：震一下就当"回到顶部"，不重新加载 */
+      e.preventDefault();
+      if (still) scrollToY(0);
+      else window.setTimeout(() => scrollToY(0), SHAKE_MS - 180);
+      return;
+    }
+
+    /* 不在首页：让动画播完再走，跳转前 120ms 就开始，视觉上更连贯 */
+    e.preventDefault();
+    window.setTimeout(() => {
+      location.href = href;
+    }, still ? 0 : SHAKE_MS - 120);
+  });
+  }
+
+  avatars.forEach(bind);
+}
+
 /* ============================================================== 启动 */
 
 function main() {
@@ -1296,6 +1348,7 @@ function main() {
   boot('busuanzi', initBusuanzi);
   boot('lightbox', initLightbox);
   boot('search', initSearch);
+  boot('avatar', initAvatarShake);
 }
 
 if (document.readyState === 'loading') {

@@ -5,6 +5,7 @@ a11y:
   copied: Copied
 
 nav:
+  profile: Profile
   sidebar: Sidebar
   menu: Menu
   toc: Contents

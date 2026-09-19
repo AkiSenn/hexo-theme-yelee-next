@@ -1,0 +1,26 @@
+<%
+  /* ---------------------------------------------------------------------------
+   * 移动端顶部「头像区」——独立模块
+   * 对齐原版 yelee 的移动端结构：桌面侧栏在窄屏隐藏（.left-col{display:none}），
+   * 另有一个位于文档流最上方的模块承载头像 / 署名 / 签名 / 社交图标；
+   * 抽屉只负责导航（目录·菜单·标签云·友链·关于），不再塞头像。
+   *
+   * 复用 .profile__avatar / .profile__name / .profile__desc 的类名，
+   * 所以头像的悬停抖动、点击震动回首页（app.js initAvatarShake）在两端都生效。
+   * ------------------------------------------------------------------------ */
+%>
+<section class="mobile-head" aria-label="<%= __('nav.profile') %>">
+  <div class="mobile-head__band" aria-hidden="true"></div>
+  <div class="mobile-head__body">
+    <a class="profile__avatar" href="<%= url_for('/') %>" aria-label="<%= __('nav.back_home') %>">
+      <img src="<%= yn_img(theme.profile.avatar) %>"
+           alt="<%= theme.profile.author %>"
+           width="88" height="88" decoding="async" data-eager>
+    </a>
+    <div class="profile__name"><a href="<%= url_for('/') %>"><%= theme.profile.author %></a></div>
+    <% if (theme.profile.subtitle) { %>
+    <p class="profile__desc"><%= theme.profile.subtitle %></p>
+    <% } %>
+    <%- partial('_partial/social', {socialClass: 'social--head'}) %>
+  </div>
+</section>

@@ -1,0 +1,30 @@
+<%
+  /* ---------------------------------------------------------------------------
+   * 社交图标（侧栏底部 与 移动端顶部头像模块 共用，避免两处维护）
+   * key 按名字匹配内置 SVG；匹配不到就显示名字首字母徽标。
+   * ------------------------------------------------------------------------ */
+  var SOCIAL_ALIAS = {
+    email: 'mail', mail: 'mail', gmail: 'mail', 'e-mail': 'mail',
+    x: 'twitter', twitter: 'twitter', telegram: 'telegram', tg: 'telegram',
+    rss: 'rss', feed: 'rss', github: 'github',
+    '网易云音乐': 'netease', netease: 'netease', '新浪微博': 'weibo', weibo: 'weibo',
+    '知乎': 'zhihu', zhihu: 'zhihu', '豆瓣': 'douban', douban: 'douban',
+    '简书': 'jianshu', jianshu: 'jianshu', bilibili: 'bilibili', 'b站': 'bilibili',
+    qq: 'qq', wechat: 'wechat', weixin: 'wechat', '微信': 'wechat',
+    csdn: 'csdn', v2ex: 'v2ex', youtube: 'youtube', codepen: 'codepen', wordpress: 'wordpress'
+  };
+  var socials = theme.subnav_items || [];
+%>
+<% if (socials.length) { %>
+<nav class="social<%= typeof socialClass !== 'undefined' && socialClass ? ' ' + socialClass : '' %>" aria-label="<%= __('nav.social') %>">
+  <% socials.forEach(function (item) {
+       var key = String(item.icon || item.name).trim().toLowerCase();
+       var icon = SOCIAL_ALIAS[key] || SOCIAL_ALIAS[item.name] || '';
+  %>
+  <a class="social__item" href="<%= item.url %>" title="<%= item.name %>" aria-label="<%= item.name %>"
+     <% if (!/^(mailto:|#|\/)/.test(item.url)) { %>target="_blank" rel="noopener"<% } %>>
+    <% if (icon) { %><%- yn_icon(icon) %><% } else { %><span class="social__badge"><%= String(item.name).slice(0, 1) %></span><% } %>
+  </a>
+  <% }); %>
+</nav>
+<% } %>
