@@ -49,6 +49,8 @@ menu:
 #          zhihu / douban / netease(网易云音乐) / qq / wechat / jianshu / csdn /
 #          v2ex / youtube / codepen / wordpress / globe(通用)
 subnav: {}
+# ⚠️ 填你自己的账号 —— 不要照抄文档/演示里出现过的任何链接，那些都不是你的。
+#    留空（或删掉整个 subnav）→ 侧栏**不显示社交图标区**，页面上不会留空白。
 # 例：
 # subnav:
 #   Email: mailto:you@example.com

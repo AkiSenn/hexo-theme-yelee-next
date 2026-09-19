@@ -42,6 +42,8 @@ menu:
 # netease / twitter / telegram / qq / wechat / jianshu / csdn / v2ex / youtube …），
 # 匹配不到就显示名字首字母徽标。想换图标就用 { url: ..., icon: github } 显式指定。
 subnav: {}                           # 👈 留空则不显示社交图标区；填几个显示几个
+# ⚠️ 填你自己的账号 —— 不要照抄文档/演示里出现过的任何链接，那些都不是你的。
+#    留空（或删掉整个 subnav）→ 侧栏**不显示社交图标区**，页面上不会留空白。
 # subnav:
 #   Email: mailto:you@example.com
 #   GitHub: https://github.com/yourname
