@@ -13,3 +13,6 @@ Thumbs.db
 
 # 主题零依赖，不需要锁文件（防误提交 npm install 产物）
 package-lock.json
+
+# 本地交接记录（给新对话读，不进公开仓库）
+.handoff.md
