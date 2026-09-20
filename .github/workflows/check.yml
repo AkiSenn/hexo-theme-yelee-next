@@ -35,6 +35,9 @@ jobs:
           fi
           echo "✓ 没有发现疑似密钥"
 
+      - name: 版本号一致性（package.json / _config.yml / 00-config.js）
+        run: node tools/version-check.mjs
+
       - name: 搭建最小测试站点（安装 Hexo）
         run: |
           mkdir -p .ci/source/_posts

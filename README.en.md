@@ -42,7 +42,8 @@ A two-column theme designed for reading. Sensible defaults work out of the box �
 - **Reading experience**: scroll-spy TOC, reading progress bar, native `<dialog>` lightbox, code-block language label + copy button
 - **Comments**: giscus / waline / twikoo / disqus / valine — off by default and lazy-loaded
 - **Accessibility**: semantic markup, tablist, focus-visible, skip-link, `prefers-reduced-motion`
-- **SEO**: OG, Twitter Card, schema.org JSON-LD, canonical, automatic demotion of in-post H1
+- **SEO**: OG, Twitter Card, schema.org JSON-LD, canonical, automatic demotion of in-post H1; **a unique, long-enough meta description per page** (separate templates for posts / tags / categories / archives / index pages)
+- **Optional precompression**: with `performance.precompress` enabled, the build emits `brotli-11` `.br` files next to css/js (off by default — only useful behind nginx `brotli_static` or a Worker that serves them; see [`docs/caching.md`](./docs/caching.md))
 - **i18n**: ships 简体中文 / English / 繁體中文 — add a file under `languages/` to extend
 
 ---
@@ -91,7 +92,8 @@ Precedence:
 | [`_config.yml`](./_config.yml) | Theme defaults, fully commented (comments are in Chinese) |
 | [`docs/starter-config.yml`](./docs/starter-config.yml) | Starter config template — copy it and fill in the 👈 fields |
 | [`docs/migration.md`](./docs/migration.md) | Migrating from yelee 3.5: legacy keys are migrated automatically (doc in Chinese) |
-| [`docs/caching.md`](./docs/caching.md) | Performance & caching: fingerprinting, Cloudflare `_headers` (doc in Chinese) |
+| [`docs/caching.md`](./docs/caching.md) | Performance & caching: fingerprinting, Cloudflare `_headers`, optional `.br` precompression + Worker snippet (doc in Chinese) |
+| [`CHANGELOG.md`](./CHANGELOG.md) | Release notes (Chinese) |
 
 > The `legacy` branch keeps the full original yelee 3.5 source, so you can `git diff legacy main` to see exactly what changed.
 
@@ -147,6 +149,10 @@ Measured on a real site (21 pages, 3 posts):
 
 First visit: about **8 requests / 87 KB**. The original theme shipped jQuery + require.js + FontAwesome + four CDN stylesheets + site-wide MathJax — an order of magnitude more.
 `node tools/check.mjs <public>` reproduces these numbers.
+
+> Turning on `performance.precompress: true` and having your host serve the `.br` files shrinks the css/js further:
+> measured first visit **47.36K → 38.85K (−8.51K, −18%)**. See section 7 of [`docs/caching.md`](./docs/caching.md) for the how-to and pitfalls.
+> Note: Cloudflare Workers static assets do **not** pick up sibling `.br` files automatically — you need a Worker script to serve them.
 
 ---
 

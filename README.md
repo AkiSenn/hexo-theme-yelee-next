@@ -42,7 +42,8 @@
 - **阅读体验**：目录滚动高亮、阅读进度条、图片点击放大（原生 `<dialog>`）、代码块语言标签 + 复制按钮
 - **评论**：支持 giscus / waline / twikoo / disqus / valine，默认关闭且按需加载
 - **无障碍**：语义化标签、tablist、focus-visible、skip-link、`prefers-reduced-motion`
-- **SEO**：OG / Twitter Card / schema.org JSON-LD / canonical，正文 H1 自动降级
+- **SEO**：OG / Twitter Card / schema.org JSON-LD / canonical，正文 H1 自动降级；**每页生成唯一且够长的 meta description**（文章 / 标签 / 分类 / 归档 / 索引页各有模板）
+- **可选预压缩**：`performance.precompress` 打开后，构建时给 css/js 生成 `brotli-11` 的 `.br`（默认关闭 —— 只有 nginx `brotli_static` 或自己写 Worker 下发才用得上，见 [`docs/caching.md`](./docs/caching.md)）
 - **多语言**：内置简体中文 / English / 繁體中文，往 `languages/` 加文件即可扩展
 
 ---
@@ -91,7 +92,8 @@ cp themes/yelee-next/docs/starter-config.yml  /path/to/hexo-site/_config.yelee-n
 | [`_config.yml`](./_config.yml) | 主题默认配置，每一项都有中文注释 |
 | [`docs/starter-config.yml`](./docs/starter-config.yml) | 起步配置示例（复制即用，占位符标了 👈） |
 | [`docs/migration.md`](./docs/migration.md) | 从原版 yelee 3.5 迁移：**旧 key 自动迁移**，对照表 + 手动处理清单 |
-| [`docs/caching.md`](./docs/caching.md) | 性能与缓存：指纹原理、Cloudflare `_headers`、验证方法 |
+| [`docs/caching.md`](./docs/caching.md) | 性能与缓存：指纹原理、Cloudflare `_headers`、**可选预压缩 `.br` 与 Worker 片段**、验证方法 |
+| [`CHANGELOG.md`](./CHANGELOG.md) | 版本变更记录 |
 
 > 仓库里的 `legacy` 分支存放原版 yelee 3.5 的全量源码，方便 `git diff legacy main` 对照检查重制了哪些东西。
 
@@ -147,6 +149,10 @@ node tools/local-ci.mjs
 
 首屏约 **8 个请求 / 87 KB**；原版是 jQuery + require.js + FontAwesome + 4 个 CDN 样式表 + 全站 MathJax，属于数量级下降。
 `node tools/check.mjs <public>` 可以复现这些数字。
+
+> 打开 `performance.precompress: true` 并让托管方下发 `.br` 后，上表的 css/js 还能再小一截：
+> 实测首屏合计 **47.36K → 38.85K（省 8.51K / 18%）**。做法与坑见 [`docs/caching.md`](./docs/caching.md) 第七节。
+> 注意 Cloudflare Worker 静态资产**不会**自动使用同名 `.br`，必须用 Worker 脚本自己发。
 
 ---
 
