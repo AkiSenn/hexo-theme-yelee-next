@@ -137,8 +137,8 @@ comments:
 # -------------------------------------------------------------------- 页脚
 footer:
   copyright: true
-  powered_by: true                   # 署名行：Hexo · Yelee Next <version>（AkiSenn & MOxFIVE）
-                                     #   署名与两个链接写死在主题里（构建者署名，不可配置）
+  powered_by: true                   # 署名行：Yelee-Next by AkiSenn, based on Yelee & Yilia
+                                     #   署名与四个链接写死在主题里（构建者署名，不可配置）
   custom:                            # 想加自己的页脚 HTML 写这里
   # ---- 备案区：两项互相独立，填了才显示（留空则整行不渲染，不留空白）------
   icp:                               # 👈 例如「京ICP备2026000000号-1」或「萌ICP备20260000号」

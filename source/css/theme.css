@@ -903,6 +903,9 @@ figure.highlight .line { display: inline; }
 .footer a:hover { color: var(--c-link); }
 .footer__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 14px; }
 .footer__copy, .footer__powered { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 5px; }
+/* 署名行是「Yelee-Next by AkiSenn, based on Yelee & Yilia」整句：词间空隙由 flex 的 gap 提供，
+   标点必须跟在前一个词同一个 flex 项里 —— 否则 gap 会给逗号前面插出一个空格，
+   而 HTML 压缩又会把标签间的空白吃掉，所以不能靠文本节点里的空格。 */
 .footer__license-icon { display: inline-flex; color: var(--c-link); }
 .footer__license-icon .icon { inline-size: 15px; block-size: 15px; }
 .footer__sep { opacity: .5; }

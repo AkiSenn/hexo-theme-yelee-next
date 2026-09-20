@@ -165,7 +165,7 @@ node tools/local-ci.mjs
 - **重制版作者 / 维护者**：[AkiSenn](https://github.com/AkiSenn) —— 提出目标、定义细节、验收每一处改动。
 - **原主题作者**：[MOxFIVE](https://github.com/MOxFIVE) —— [hexo-theme-yelee](https://github.com/MOxFIVE/hexo-theme-yelee)，本主题的视觉与交互原型都来自他。
 - **更早的源头**：[Litten](https://github.com/litten) —— [hexo-theme-yilia](https://github.com/litten/hexo-theme-yilia)，yelee 的双栏布局与侧栏交互承自 yilia。
-- 页脚的 `Hexo · Yelee Next <version>（AkiSenn & MOxFIVE）` 是主题构建者署名，写在模板里、不提供配置项。
+- 页脚的 `Yelee-Next by AkiSenn, based on Yelee & Yilia` 是主题构建者署名，写在模板里、不提供配置项（四个名字分别链到本主题仓库、重制版作者与原作仓库）。
 - 默认可视化素材：主题自带一张**鲸鱼占位头像**（`source/img/avatar.png`），换成自己的图即可。
 
 ---

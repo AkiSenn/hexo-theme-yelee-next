@@ -13,8 +13,9 @@
 #  · 改完配置建议 hexo clean && hexo g（主题配置变化不触发增量重建）。
 # ============================================================================
 
-# 主题版本号，会显示在页脚署名里：Hexo · Yelee Next 4.0.0（AkiSenn & MOxFIVE）
-version: 4.0.0
+# 主题版本号（package.json 与 GitHub Release 用同一版本号）。
+# 页脚署名的 Yelee-Next 链接 title 里会显示它，鼠标悬停可见。
+version: 1.0.0
 
 # ----------------------------------------------------------------- 个人信息
 # / Profile /  需要你自己填的内容默认留空
@@ -163,8 +164,8 @@ comments:
 # -------------------------------------------------------------------- 页脚
 footer:
   copyright: true                # 版权行：© <起始年>-<当前年> <profile.author>
-  powered_by: true               # 署名行：Hexo · Yelee Next <version>（AkiSenn & MOxFIVE）
-                                 #   署名与两个 GitHub 链接写死在模板里，不提供配置项
+  powered_by: true               # 署名行：Yelee-Next by AkiSenn, based on Yelee & Yilia
+                                 #   署名与四个 GitHub 链接写死在模板里，不提供配置项
   custom:                        # 自定义 HTML，插在页脚最下方
   # ---- 备案区：两项互相独立，填了才显示（留空则整行不渲染，不留空白）------
   # ① 工信部备案 / 萌ICP

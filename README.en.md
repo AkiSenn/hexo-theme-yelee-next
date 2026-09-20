@@ -165,7 +165,7 @@ First visit: about **8 requests / 87 KB**. The original theme shipped jQuery + r
 - **Remake author / maintainer**: [AkiSenn](https://github.com/AkiSenn).
 - **Original theme**: [MOxFIVE](https://github.com/MOxFIVE) — [hexo-theme-yelee](https://github.com/MOxFIVE/hexo-theme-yelee); the visual and interaction language of this theme is his.
 - **Earlier ancestor**: [Litten](https://github.com/litten) — [hexo-theme-yilia](https://github.com/litten/hexo-theme-yilia).
-- The footer line `Hexo · Yelee Next <version>（AkiSenn & MOxFIVE）` is the theme's authorship credit, hard-coded in the template on purpose.
+- The footer line `Yelee-Next by AkiSenn, based on Yelee & Yilia` is the authorship credit, hard-coded in the template on purpose (each name links to the theme repo, the remake author, and the two upstream projects).
 - Default visual asset: the theme ships a **whale placeholder avatar** (`source/img/avatar.png`) — replace it with your own image.
 
 ---

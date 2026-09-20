@@ -26,14 +26,21 @@
 
       <% if (cfg.powered_by) { %>
       <%
-        /* 署名写死（不提供配置项）：主题构建者是 AkiSenn 与原作者 MOxFIVE。
-           版本号取自 _config.yml 的 version，例：Hexo · Yelee Next 4.0.0（AkiSenn & MOxFIVE） */
+        /* 页脚署名（写死，不提供配置项）：
+             Yelee-Next by AkiSenn, based on Yelee & Yilia
+           · Yelee-Next → 本主题仓库
+           · AkiSenn    → 重制版作者
+           · Yelee      → 原主题（MOxFIVE）
+           · Yilia      → 更早的源头（Litten）
+           主题版本号放在 Yelee-Next 链接的 title 里（鼠标悬停可见），取自 _config.yml 的 version。 */
       %>
       <p class="footer__powered">
-        <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>
-        <span class="footer__sep">·</span>
-        <span class="footer__theme">Yelee Next <span class="footer__ver"><%= theme.version %></span></span>
-        <span class="footer__credits">（<a href="https://github.com/AkiSenn" target="_blank" rel="noopener">AkiSenn</a> &amp; <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" rel="noopener">MOxFIVE</a>）</span>
+        <a href="https://github.com/AkiSenn/hexo-theme-yelee-next" target="_blank" rel="noopener"
+           title="hexo-theme-yelee-next v<%= theme.version %>">Yelee-Next</a>
+        <span>by</span>
+        <span><a href="https://github.com/AkiSenn" target="_blank" rel="noopener">AkiSenn</a>,</span>
+        <span>based on</span>
+        <span><a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" rel="noopener">Yelee</a> &amp; <a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="noopener">Yilia</a></span>
         <span class="footer__heart" aria-hidden="true"><%- yn_icon('heart') %></span>
       </p>
       <% } %>
