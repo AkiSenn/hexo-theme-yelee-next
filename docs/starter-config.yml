@@ -195,6 +195,8 @@ performance:
   minify_html: true
   instant_nav: true                  # 悬停即预渲染下一页（Speculation Rules）
   generate_headers: false            # true = 生成 public/_headers（Cloudflare 长缓存规则）
+  precompress: false                 # true = 构建时给 css/js 生成 .br（仅当托管方会用它）
+  precompress_quality: 11            # brotli 质量 0-11
 
 # ---------------------------------------------------------------- SEO
 seo:

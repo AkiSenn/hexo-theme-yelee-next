@@ -235,6 +235,13 @@ performance:
   minify_html: true              # 保守压缩 HTML（跳过 pre/script/style）
   instant_nav: true              # Speculation Rules：悬停即预渲染下一页
   generate_headers: false        # true = 生成 public/_headers（Cloudflare 长缓存规则）
+  # 预压缩：构建时给 css/js 各写一份同名 .br（brotli），交给托管方直接下发。
+  #   ⚠️ 仅当托管方**会使用**同名 .br 时才开：nginx(brotli_static on)，或自己写
+  #      Worker 把 .br 发出去（片段见 docs/caching.md 第五节）。
+  #      Cloudflare Worker 静态资产不会自动使用它，GitHub Pages 也不会 —— 那些
+  #      环境下开了只是多几十 KB 死文件，所以默认关。
+  precompress: false             # true = 生成 .br 预压缩文件
+  precompress_quality: 11        # brotli 质量 0-11（11 最小但最慢，只在构建期跑）
 
 # ---------------------------------------------------------------- SEO
 seo:

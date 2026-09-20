@@ -159,6 +159,36 @@ jobs:
         # 脚本在仓库根的 tools/ 下（主题副本在 .ci/themes/yelee-next/）
         run: node tools/ci-signature-check.mjs .ci/public
 
+      - name: 预压缩自检（.br 生成 + 解压还原）
+        # performance.precompress 默认关闭，所以这里显式打开再构建一遍：
+        # 既要确认 .br 生成了，也要确认它解压后与原文件逐字节一致（压坏了就是线上白屏）。
+        run: |
+          cd .ci
+          cat > _config.yelee-next.yml <<'YAML'
+          performance:
+            precompress: true
+          YAML
+          npx hexo clean >/dev/null
+          npx hexo generate >/dev/null
+          node -e "
+          const fs = require('fs'), zlib = require('zlib');
+          const files = ['public/css/theme.css', 'public/js/app.js', 'public/js/search.js'];
+          let bad = 0;
+          for (const f of files) {
+            if (!fs.existsSync(f)) { console.error('✗ 产物缺失 ' + f); bad++; continue; }
+            if (!fs.existsSync(f + '.br')) { console.error('✗ 没有生成 ' + f + '.br'); bad++; continue; }
+            const raw = fs.readFileSync(f), br = fs.readFileSync(f + '.br');
+            let back = null;
+            try { back = zlib.brotliDecompressSync(br); } catch (e) { console.error('✗ ' + f + '.br 不是合法 brotli：' + e.message); bad++; continue; }
+            const smaller = br.length < raw.length;
+            const same = back.equals(raw);
+            console.log((same && smaller ? '✓ ' : '✗ ') + f + '.br  ' + raw.length + 'B → ' + br.length + 'B，解压一致：' + same);
+            if (!same || !smaller) bad++;
+          }
+          if (bad) { console.error(bad + ' 项预压缩自检未通过'); process.exit(1); }
+          console.log('预压缩自检通过');
+          "
+
       - name: 清理（不留下测试站点）
         if: always()
         run: rm -rf .ci

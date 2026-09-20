@@ -151,7 +151,13 @@ const DEFAULTS = {
 
   assets: { cdn: '', fingerprint: true, critical_css: true, preconnect: [] },
 
-  performance: { minify_html: true, instant_nav: true, generate_headers: false },
+  performance: {
+    minify_html: true,
+    instant_nav: true,
+    generate_headers: false,
+    precompress: false,
+    precompress_quality: 11
+  },
 
   seo: { twitter_id: '', og_image: '', json_ld: true, baidu_site: '', google_site: '' },
 

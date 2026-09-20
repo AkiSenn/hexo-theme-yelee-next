@@ -106,9 +106,95 @@ node tools/check.mjs E:/my-blog/public
 
 输出每页 HTML 体积、本地资源引用是否有缺失、还有多少阻塞渲染的 `<link rel=stylesheet>`、以及是否残留 jQuery / require.js / FontAwesome / fancybox / MathJax2 的引用。
 
-## 七、还能再快的地方（没做，留给你）
+## 七、预压缩（Brotli-11，可选）
 
-- Cloudflare 侧：开 Brotli（默认开）、Tiered Cache、早提示（Early Hints）。
+`performance.precompress: true` 时，构建结束会给 css/js 各写一份同名的 `.br`（质量 11）。实测首屏三个资源的对比：
+
+| 资源 | 原始 | CF 动态 zstd | CF 动态 brotli | 本主题 brotli-11 |
+| --- | --- | --- | --- | --- |
+| HTML（不预压缩） | 43.28K | 11.51K | 10.65K | — |
+| `theme.css` | 59.57K | 17.05K | 16.17K | **12.58K** |
+| `app.js` | 47.59K | 16.71K | 16.29K | **13.01K** |
+| `search.js` | 4.62K | 2.09K | 2.02K | **1.60K** |
+
+### 为什么默认关闭：托管方不一定用它
+
+**Cloudflare Worker 静态资产不会自动使用同名 `.br`**。实测（用哨兵内容验证）：站点里放 `x.txt` 与内容无关的 `x.txt.br`，请求 `/x.txt` 带 `Accept-Encoding: br` 时返回的是**边缘自己压的原文**，那个 `.br` 文件只会以 `/x.txt.br` 的路径公开可访问。GitHub Pages 同样不用。
+
+所以 `.br` 只有在两种情况下有意义，其余情况开了只是多几十 KB 死文件：
+
+- nginx 配了 `brotli_static on;`（或 `gzip_static`）；
+- **自己写 Worker 把 `.br` 发出去** —— 见下面的片段。
+
+### Cloudflare Workers 完整片段
+
+主题已经把 `.br` 生成好了，站点侧再加一个 Worker 接管 css/js 即可（`wrangler.jsonc`）：
+
+```jsonc
+{
+  "main": "worker.js",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    // 只让 css/js 进 Worker，其余路径完全保持原来的纯静态资产行为
+    "run_worker_first": ["/css/*", "/js/*"],
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}
+```
+
+```js
+// worker.js
+const PREFIXES = ['/css/', '/js/'];
+const TYPES = { '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8' };
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const ext = url.pathname.slice(url.pathname.lastIndexOf('.'));
+    if (request.method !== 'GET' || !PREFIXES.some(p => url.pathname.startsWith(p)) || !TYPES[ext]) {
+      return env.ASSETS.fetch(request);
+    }
+    if (!/\bbr\b/.test(request.headers.get('Accept-Encoding') || '')) {
+      return env.ASSETS.fetch(request);           // 不支持 br → 交回资产层动态压缩
+    }
+    const res = await env.ASSETS.fetch(new Request(new URL(url.pathname + '.br', url.origin), {
+      headers: { 'Accept-Encoding': 'identity' }   // 别让边缘对 .br 文件再压一层
+    }));
+    if (!res.ok) return env.ASSETS.fetch(request); // 没有 .br → 回退
+
+    const headers = new Headers({
+      'Content-Type': TYPES[ext],                  // 必须是原文件的类型，否则浏览器不认
+      'Content-Encoding': 'br',
+      'Vary': 'Accept-Encoding',                   // 少了它，缓存可能把 br 发给不支持 br 的客户端
+      'Cache-Control': 'public, max-age=31536000, immutable'
+    });
+    const etag = res.headers.get('ETag');
+    if (etag) headers.set('ETag', etag);
+
+    // ⚠️ encodeBody: 'manual' 是关键，别漏！
+    //    运行时默认会把 body「按你声明的 Content-Encoding 再编码一次」，
+    //    于是浏览器收到 br(br(css))，解一层只拿到 br 流 —— 样式表直接报废。
+    //    实测：不加 → 12881B（双重压缩，坏）；加了 → 12877B（与本地 .br 逐字节一致）。
+    return new Response(res.body, { status: 200, headers, encodeBody: 'manual' });
+  }
+};
+```
+
+部署后这样验证（解一层必须精确等于原文件）：
+
+```bash
+curl -s -H 'Accept-Encoding: br' https://你的域名/css/theme.css -o /tmp/a.br
+node -e "const z=require('zlib'),f=require('fs');
+console.log(z.brotliDecompressSync(f.readFileSync('/tmp/a.br')).length)  # 应等于原 CSS 字节数"
+```
+
+## 八、还能再快的地方（没做，留给你）
+
 - 背景图用 Cloudflare Images / 图片变换按设备下发不同分辨率（现在统一 1600px 宽）。
 - 站内搜索索引超过几百篇再考虑分片或换成预构建的倒排索引。
 - 若在意 LCP，可把首屏背景图换成更低分辨率的占位（LQIP）+ 模糊过渡。
+- Cloudflare 侧：Tiered Cache、早提示（Early Hints）。注意它给现代浏览器优先发 **zstd**
+  （实测比它自己的动态 brotli 还大 2.2KB），且 zstd 是 Workers 产品侧默认、不是 zone 配置出来的
+  —— 想换回 brotli 只能靠上面的预压缩方案。
