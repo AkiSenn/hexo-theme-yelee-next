@@ -93,18 +93,6 @@ cp themes/yelee-next/docs/starter-config.yml  /path/to/hexo-site/_config.yelee-n
 | [`docs/migration.md`](./docs/migration.md) | 从原版 yelee 3.5 迁移：**旧 key 自动迁移**，对照表 + 手动处理清单 |
 | [`docs/caching.md`](./docs/caching.md) | 性能与缓存：指纹原理、Cloudflare `_headers`、验证方法 |
 
-**「填了才显示」的项**
-
-| 配置 | 不填时 |
-| --- | --- |
-| `subnav`（社交图标） | 侧栏底部不出现图标区 |
-| `friends`（友链） | 不出现「友链」页签 |
-| `profile.aboutme` | 不出现「关于我」页签 |
-| `footer.icp` / `footer.police_icp` | 页脚不出现对应备案行（两项独立，填一项显示一项） |
-| `footer.runtime.since` | 不显示「本站已运行」 |
-| `analytics.*` | 完全不加载统计脚本 |
-| `comments.enable: false`（默认） | 评论区、加载细栏、「跳到评论」按钮全部不渲染，页面里零痕迹 |
-
 > 仓库里的 `legacy` 分支存放原版 yelee 3.5 的全量源码，方便 `git diff legacy main` 对照检查重制了哪些东西。
 
 ---
@@ -165,7 +153,6 @@ node tools/local-ci.mjs
 - **重制版作者 / 维护者**：[AkiSenn](https://github.com/AkiSenn) —— 提出目标、定义细节、验收每一处改动。
 - **原主题作者**：[MOxFIVE](https://github.com/MOxFIVE) —— [hexo-theme-yelee](https://github.com/MOxFIVE/hexo-theme-yelee)，本主题的视觉与交互原型都来自他。
 - **更早的源头**：[Litten](https://github.com/litten) —— [hexo-theme-yilia](https://github.com/litten/hexo-theme-yilia)，yelee 的双栏布局与侧栏交互承自 yilia。
-- 页脚的 `Yelee-Next by AkiSenn, based on Yelee & Yilia` 是主题构建者署名，写在模板里、不提供配置项（四个名字分别链到本主题仓库、重制版作者与原作仓库）。
 - 默认可视化素材：主题自带一张**鲸鱼占位头像**（`source/img/avatar.png`），换成自己的图即可。
 
 ---

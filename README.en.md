@@ -93,18 +93,6 @@ Precedence:
 | [`docs/migration.md`](./docs/migration.md) | Migrating from yelee 3.5: legacy keys are migrated automatically (doc in Chinese) |
 | [`docs/caching.md`](./docs/caching.md) | Performance & caching: fingerprinting, Cloudflare `_headers` (doc in Chinese) |
 
-**Render-on-demand options**
-
-| Config | When left empty |
-| --- | --- |
-| `subnav` (social icons) | no icon row at the bottom of the sidebar |
-| `friends` (friend links) | no “Links” tab |
-| `profile.aboutme` | no “About” tab |
-| `footer.icp` / `footer.police_icp` | no filing line in the footer (the two are independent) |
-| `footer.runtime.since` | no “running for N days” line |
-| `analytics.*` | no analytics script is loaded at all |
-| `comments.enable: false` (default) | comment area, load bar and “jump to comments” buttons are not rendered at all |
-
 > The `legacy` branch keeps the full original yelee 3.5 source, so you can `git diff legacy main` to see exactly what changed.
 
 ---
@@ -165,7 +153,6 @@ First visit: about **8 requests / 87 KB**. The original theme shipped jQuery + r
 - **Remake author / maintainer**: [AkiSenn](https://github.com/AkiSenn).
 - **Original theme**: [MOxFIVE](https://github.com/MOxFIVE) — [hexo-theme-yelee](https://github.com/MOxFIVE/hexo-theme-yelee); the visual and interaction language of this theme is his.
 - **Earlier ancestor**: [Litten](https://github.com/litten) — [hexo-theme-yilia](https://github.com/litten/hexo-theme-yilia).
-- The footer line `Yelee-Next by AkiSenn, based on Yelee & Yilia` is the authorship credit, hard-coded in the template on purpose (each name links to the theme repo, the remake author, and the two upstream projects).
 - Default visual asset: the theme ships a **whale placeholder avatar** (`source/img/avatar.png`) — replace it with your own image.
 
 ---
