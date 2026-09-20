@@ -159,7 +159,7 @@ node tools/local-ci.mjs
 
 ## 许可
 
-[MIT](./LICENSE) © AkiSenn（重制版）· MOxFIVE（原主题）· Litten（yilia）
+[MIT](./LICENSE) © 2026 AkiSenn（hexo-theme-yelee-next）· 基于 Yelee（MOxFIVE）与 Yilia（Litten）
 
 <!--
 截图占位（等有图了再放开）：

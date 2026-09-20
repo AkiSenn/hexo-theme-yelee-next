@@ -159,7 +159,7 @@ First visit: about **8 requests / 87 KB**. The original theme shipped jQuery + r
 
 ## License
 
-[MIT](./LICENSE) © AkiSenn (remake) · MOxFIVE (original theme) · Litten (yilia)
+[MIT](./LICENSE) © 2026 AkiSenn (hexo-theme-yelee-next) · based on Yelee (MOxFIVE) & Yilia (Litten)
 
 <!--
 Screenshot placeholder (enable when available):
