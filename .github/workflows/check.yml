@@ -81,6 +81,12 @@ jobs:
           root: /
           permalink: post/:title.html
           theme: yelee-next
+          # 高亮器用 Prism（与站点线上一致）：验证主题对 Prism 的语言标签与
+          # line-numbers 行号容器的支持，别只测 Hexo 内置高亮那一条路径。
+          syntax_highlighter: prismjs
+          prismjs:
+            preprocess: true
+            line_number: true
           highlight:
             enable: true
             line_number: true

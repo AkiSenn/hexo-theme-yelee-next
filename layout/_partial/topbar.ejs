@@ -1,5 +1,7 @@
 <%
-  /* 窄屏顶部栏：抽屉入口 + 站名 + 搜索/主题。宽屏下由 CSS 隐藏。 */
+  /* 窄屏顶部栏：抽屉入口 + 站名 + 搜索/主题。
+     宽屏（≥1080px）只留里面的阅读进度条，其余由 CSS 隐藏 ——
+     侧栏已经有站名、搜索与主题开关，顶栏再重复一遍既冗余又突兀。 */
 %>
 <header class="topbar">
   <button class="topbar__btn" type="button" data-open-sidebar

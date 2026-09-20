@@ -32,11 +32,28 @@ const COPY_ICON =
 const CHECK_ICON =
   '<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-check"></use></svg>';
 
+/* 不是语言名的类名（高亮器/主题自己加的标记）。
+   ⚠️ Prism 的输出是 <pre class="line-numbers language-bash">，早前会把 line-numbers
+   当成语言名，代码块左上角就显示成「line-numbers language-bash」。 */
+const NON_LANG = new Set(['highlight', 'codeblock', 'line-numbers', 'line-numbers-rows', 'prism', 'prismjs', 'language',
+  /* Prism 给「没写语言的围栏」加的是 language-none，当语言名显示成「none」很怪，按无语言处理（回落 text） */
+  'none', 'plain', 'plaintext', 'text']);
+
 function langFromClasses(cls) {
-  return String(cls || '')
-    .split(/\s+/)
-    .filter(c => c && c !== 'highlight' && c !== 'codeblock' && !c.startsWith('language-'))
-    .map(c => c.replace(/^language-/, ''))[0] || '';
+  const classes = String(cls || '').split(/\s+/).filter(Boolean);
+  /* 优先认显式的 language-xxx（Prism / 各渲染器的通用写法）；
+     但 language-none / language-text 这类「等于没写语言」的要回落到空，
+     否则代码块左上角会显示成「none」。 */
+  const explicit = classes.find(c => /^language-/i.test(c));
+  if (explicit) {
+    const name = explicit.replace(/^language-/i, '');
+    return NON_LANG.has(name.toLowerCase()) ? '' : name;
+  }
+  return (
+    classes
+      .filter(c => !NON_LANG.has(c.toLowerCase()))
+      .map(c => c.replace(/^language-/, ''))[0] || ''
+  );
 }
 
 function codeBar(lang) {
@@ -71,7 +88,11 @@ function enhancePre(pre) {
   const inner = pre.slice(open[0].length, pre.length - '</pre>'.length);
   const codeOpen = inner.match(/^<code\b([^>]*)>/i);
   const cls = codeOpen ? (codeOpen[1].match(/class="([^"]*)"/i) || [, ''])[1] : '';
-  const lang = langFromClasses(cls) || (open[1].match(/class="([^"]*)"/i) || [, ''])[1] || '';
+  /* 语言名先看内层 code 的 class，再退回 pre 的 class —— 两处都走 langFromClasses，
+     不要把原始 class 串直接当语言名（那正是「line-numbers language-bash」的来源）。 */
+  const lang =
+    langFromClasses(cls) ||
+    langFromClasses((open[1].match(/class="([^"]*)"/i) || [, ''])[1]);
   /* 已经是我们自己的结构就不动 */
   if (/class="codeblock"/.test(open[1])) return pre;
   return `<div class="codeblock" data-yn-code="1" data-lang="${lang || 'text'}">${codeBar(lang)}<pre${open[1]}>${inner}</pre></div>`;

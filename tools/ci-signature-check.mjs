@@ -39,6 +39,11 @@ const checks = {
   '无 jQuery / require.js': !/jquery|require\.js/i.test(index),
   '页脚署名（写死）': index.includes('AkiSenn') && index.includes('MOxFIVE'),
   '文章页代码块增强': post.includes('codeblock'),
+  /* 高亮器是 Prism（见 check.yml 站点配置）：语言标签必须取 language-xxx，
+     不能被 Prism 的 line-numbers 类名顶掉（曾出现 data-lang="line-numbers language-js"）；
+     行号容器 .line-numbers-rows 也必须存在，否则行号是空的不可见 span。 */
+  '代码块语言标签（Prism）': /data-lang="(js|javascript)"/.test(post) && !/data-lang="line-numbers/.test(post),
+  'Prism 行号容器': post.includes('line-numbers-rows'),
   '文章页表格包裹': post.includes('table-wrap'),
   '正文首图 eager（LCP 优化）': /fetchpriority="high"/.test(post) && /loading="eager"/.test(post),
   '正文次图 lazy': /loading="lazy"/.test(post),

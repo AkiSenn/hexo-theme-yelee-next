@@ -248,8 +248,19 @@ body {
   .app { grid-template-columns: var(--sidebar-w) minmax(0, 1fr); }
   .sidebar { position: sticky; inset-block-start: 0; inline-size: auto; block-size: 100dvh; transform: none; transition: none; }
   .main { padding: 28px 32px 8px; }
-  /* 宽屏用不到抽屉入口；站名标题保留，顶栏不至于空 */
-  .topbar__btn { display: none; }
+  /* 宽屏：抽屉入口、站名、搜索/主题开关全部收掉。侧栏本来就有站名、搜索和主题开关，
+     再在内容栏顶上压一条带模糊底的方框栏属于纯重复（用户反馈「很突兀」）。
+     顶栏因此只剩阅读进度条：去掉内外边距/底色/模糊，它就是内容栏顶部的一条 2px 细线，
+     滚动阅读时才出现（.progress 默认 hidden）。 */
+  .topbar {
+    padding: 0;
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .topbar__btn,
+  .topbar__title,
+  .topbar__actions { display: none; }
   .mask { display: none !important; }
 }
 @media (max-width: 1079.98px) {

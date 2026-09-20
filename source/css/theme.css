@@ -551,6 +551,38 @@ figure.highlight td.gutter pre { padding: 14px 10px 14px 14px; }
 figure.highlight td.code pre { padding: 14px 16px; }
 figure.highlight .line { display: inline; }
 
+/* Prism 行号：Prism 的 line-numbers 插件输出的是 <pre class="line-numbers"> +
+   里层 .line-numbers-rows（每行一个空 span，靠 CSS 计数器显示行号）。
+   主题不引 Prism 的插件 CSS，缺了这段这些 span 就是空的、行号直接没有 —— 
+   Hexo 内置高亮走的是 td.gutter（上面那段），两套机制都要支持。
+   尺寸与 gutter 对齐：3em 编号区 + 右侧 1px 分隔线。 */
+.codeblock pre.line-numbers,
+pre[class*='language-'].line-numbers {
+  position: relative;
+  padding-inline-start: 3.8em;
+  counter-reset: linenumber;
+}
+.codeblock pre.line-numbers > code { position: relative; white-space: inherit; }
+.codeblock .line-numbers-rows {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: -3.8em;
+  inline-size: 3em;
+  pointer-events: none;
+  font-size: 100%;
+  letter-spacing: -1px;
+  border-inline-end: 1px solid var(--c-border);
+  user-select: none;
+}
+.codeblock .line-numbers-rows > span { display: block; counter-increment: linenumber; }
+.codeblock .line-numbers-rows > span::before {
+  content: counter(linenumber);
+  display: block;
+  padding-inline-end: .8em;
+  text-align: end;
+  color: var(--c-muted);
+}
+
 /* -------- 语法 token（Hexo 内置高亮生成的是不带 hljs- 前缀的类名） -------- */
 :is(.codeblock, figure.highlight) :is(.comment, .quote) { color: var(--c-code-comment); font-style: italic; }
 :is(.codeblock, figure.highlight) :is(.keyword, .selector-tag, .literal, .section, .doctag, .type, .template-tag, .subst) { color: var(--c-code-keyword); }
@@ -1338,9 +1370,13 @@ html[data-animate='1'] body.is-home .post-list > .post-card.is-revealed {
   animation: yelee-pulse 1.1s ease-in-out infinite;
 }
 
-/* ---- 顶栏滚动态（原版移动端滚过 69px 后 overlay 固定成细条，这里等价处理）---- */
-.topbar { transition: box-shadow .25s ease, background-color .25s ease; }
-html.is-scrolled .topbar { box-shadow: 0 8px 24px -16px rgba(10, 14, 25, .55); }
+/* ---- 顶栏滚动态（原版移动端滚过 69px 后 overlay 固定成细条，这里等价处理）----
+   只在窄屏生效：宽屏顶栏已收成一条 2px 进度线（见 _critical.css 的断点块），
+   再给它加投影就成了一条带阴影的怪线。 */
+@media (max-width: 1079.98px) {
+  .topbar { transition: box-shadow .25s ease, background-color .25s ease; }
+  html.is-scrolled .topbar { box-shadow: 0 8px 24px -16px rgba(10, 14, 25, .55); }
+}
 
 /* ---- 打印：入场动画没跑完的卡片也要印出来 ---- */
 @media print {

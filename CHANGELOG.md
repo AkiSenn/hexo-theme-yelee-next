@@ -6,6 +6,39 @@
 
 ---
 
+## [1.3.0] - 2026-09-20
+
+### 变更
+
+- **宽屏（≥1080px）下顶栏不再显示站名、搜索框与主题开关**。侧栏本来就有站名、搜索框和三档主题开关（浅色 / 深色 / 跟随系统），顶栏再重复一遍既冗余，又在内容区顶上压出一条与圆角卡片风格不符的方框栏。现在宽屏下顶栏只剩**阅读进度条** —— 去掉内外边距、底色与模糊后，它就是内容栏顶部的一条 2px 细线，滚动阅读时才出现（`appearance.reading_progress` 仍可整体关闭）。
+
+  窄屏（<1080px）顶栏维持原样：抽屉入口 + 站名 + 搜索 + 主题。那里的抽屉是唯一入口，删不得。
+
+  > 顺带对齐了一处注释与实现不符：`_critical.css` 里写着「宽屏下由 CSS 隐藏」，但当时只隐藏了抽屉按钮，顶栏本体一直显示着。
+
+  想恢复宽屏顶栏的话，加几行自定义 CSS 即可：
+
+  ```css
+  @media (min-width: 1080px) {
+    .topbar { padding: 8px 12px; background: color-mix(in srgb, var(--c-bg) 80%, transparent); backdrop-filter: blur(14px); }
+    .topbar__title { display: inline; }   /* 默认已 hidden */
+    .topbar__actions { display: flex; }
+  }
+  ```
+
+### 修复
+
+- **Prism 下代码块的语言标签显示错误**：Prism 输出的是 `<pre class="line-numbers language-bash">`，主题把 `line-numbers` 当成了语言名，标签显示成「line-numbers language-bash」。现在优先取 `language-xxx`，并忽略高亮器与主题自己的标记类。
+- **补齐 Prism 的行号样式**：Prism 的 line-numbers 插件输出 `.line-numbers-rows`（每行一个空 `<span>`，靠 CSS 计数器显示编号），主题此前没有对应样式 —— 这些 span 是空的、不可见，**等于没有行号**。现在按官方实现适配到主题变量（3em 编号区 + 右侧 1px 分隔线），与 Hexo 内置高亮的 `td.gutter` 视觉对齐。
+
+  > 附带说明：Hexo 内置的 highlight.js 对 bash **几乎不着色** —— `npm install x --save` 这类纯命令行一个 token 都没有，看起来就像没高亮；Prism 会把命令（`npm` / `install`）、`--参数`、`&&` 都标出来。站点侧把 `syntax_highlighter` 换成 `prismjs` 即可获得更好的命令行高亮，主题对三套类名（内置 / hljs / Prism）都已支持。
+
+### 工程
+
+- CI 的测试站点改用 Prism 构建（与线上一致），并新增两条签名断言：语言标签必须取 `language-xxx`、行号容器 `.line-numbers-rows` 必须存在 —— 避免以后只测内置高亮那一条路径。
+
+---
+
 ## [1.2.0] - 2026-09-20
 
 无破坏性变更：`profile.favicon` 仍可只写一个路径，行为与 1.1.0 相同。
