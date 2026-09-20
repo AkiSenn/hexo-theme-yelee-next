@@ -15,7 +15,7 @@
 
 # 主题版本号（package.json 与 GitHub Release 用同一版本号）。
 # 页脚署名的 Yelee-Next 链接 title 里会显示它，鼠标悬停可见。
-version: 1.3.0
+version: 1.3.1
 
 # ----------------------------------------------------------------- 个人信息
 # / Profile /  需要你自己填的内容默认留空
@@ -231,7 +231,10 @@ analytics:
 # ------------------------------------------------------------------ 资源
 assets:
   cdn:                           # 留空 = 自托管（推荐）；要 CDN 填 https://cdn.jsdelivr.net/gh/用户/仓库@v4
-  fingerprint: true              # 内容指纹 /css/theme.css?v=<hash>，配合长缓存
+  fingerprint: true              # 内容指纹：css/js 加 ?v=<hash>，图片（头像/图标/背景图/OG 图/
+                                 #   正文配图）也自动加 —— 换图不用再手动改文件名或写 ?v=N。
+                                 #   外链与查不到文件的地址（如文章资源目录里的图）保持原样。
+                                 #   ⚠️ 增量构建会复用已渲染的 HTML，换图后建议 hexo clean 再 generate。
   critical_css: true             # 内联关键 CSS，主样式表异步加载（去掉渲染阻塞）
   preconnect: []                 # 额外预连接域名，如 [https://giscus.app]
 

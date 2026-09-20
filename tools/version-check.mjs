@@ -61,7 +61,27 @@ if (unique.length > 1) {
   console.log(`\n✓ 三处版本号一致：${unique[0]}`);
 }
 
+/* CHANGELOG 也要跟着走：首条必须是当前版本，且不能有重复条目
+   （改 CHANGELOG 时把上一条的标题吃掉过好几次，这里兜住）。 */
+try {
+  const md = fs.readFileSync(path.join(repoRoot, 'CHANGELOG.md'), 'utf8');
+  const heads = [...md.matchAll(/^## \[([0-9]+\.[0-9]+\.[0-9]+)\]/gm)].map(m => m[1]);
+  if (!heads.length) {
+    console.error('✗ CHANGELOG.md 里没找到任何 "## [x.y.z]" 版本小节');
+    bad++;
+  } else {
+    const okFirst = unique.length === 1 && heads[0] === unique[0];
+    const okUnique = new Set(heads).size === heads.length;
+    console.log(`${okFirst ? '✓' : '✗'} CHANGELOG.md 首条 ${heads[0]}（应为当前版本）`);
+    console.log(`${okUnique ? '✓' : '✗'} CHANGELOG.md 版本小节无重复（${heads.length} 条：${heads.join(' / ')}）`);
+    if (!okFirst || !okUnique) bad++;
+  }
+} catch (e) {
+  console.error(`✗ CHANGELOG.md 读取失败：${e.message}`);
+  bad++;
+}
+
 if (bad) {
-  console.error(`${bad} 项版本号检查未通过。改版本时记得三处一起改：package.json、_config.yml、scripts/00-config.js`);
+  console.error(`${bad} 项版本号检查未通过。改版本时记得三处一起改（package.json、_config.yml、scripts/00-config.js），并在 CHANGELOG.md 顶部加一节`);
   process.exit(1);
 }

@@ -190,7 +190,8 @@ analytics:
 # ------------------------------------------------------------------ 资源
 assets:
   cdn:                               # 留空 = 自托管（推荐）
-  fingerprint: true                  # 内容指纹 ?v=<hash>，配合长缓存
+  fingerprint: true                  # 内容指纹 ?v=<hash>：css/js + 图片（头像/图标/正文配图）
+                                     # 换图后建议 hexo clean 再 generate（增量构建会复用旧 HTML）
   critical_css: true                 # 内联关键 CSS，主样式表异步加载
   preconnect: []                     # 额外预连接，如 [https://giscus.app]
 

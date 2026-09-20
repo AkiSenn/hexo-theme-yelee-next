@@ -10,6 +10,10 @@
  */
 
 const { URL } = require('url');
+const path = require('path');
+/* 与 10-helpers.js 共用同一份内容指纹实现（同一个文件只算一次哈希） */
+const { configure, fingerprintSrc } = require(path.join(hexo.theme_dir, 'lib', 'assets.js'));
+configure(hexo.theme_dir, hexo.source_dir);
 
 /* 需要原样保留、不能被压缩逻辑碰的块 */
 const PROTECT = /<(pre|textarea|script|style)\b[\s\S]*?<\/\1>/gi;
@@ -111,10 +115,23 @@ function enhanceCodeBlocks(html) {
 
 /* -------------------------------------------------------------------- 图片 */
 
-function enhanceImages(html, lazyload, isPostPage) {
+/** <img src> 加内容指纹：外链 / data: / 查不到文件（如文章资源目录里的图）原样保留 */
+function fingerprintImg(tag, enabled) {
+  if (!enabled) return tag;
+  const m = tag.match(/\bsrc="([^"]*)"/i);
+  if (!m) return tag;
+  const raw = m[1];
+  /* 属性里的 & 是 &amp;，先还原再解析，拼回去时再转义（否则会被当成查询参数） */
+  const plain = raw.replace(/&amp;/g, '&');
+  const next = fingerprintSrc(plain);
+  if (next === plain) return tag;
+  return tag.replace(m[0], 'src="' + next.replace(/&/g, '&amp;') + '"');
+}
+
+function enhanceImages(html, lazyload, isPostPage, fingerprint) {
   let out = html.replace(/<img\b[^>]*>/gi, tag => {
     if (/data-eager/.test(tag) || /fetchpriority="high"/.test(tag)) return tag;
-    let t = tag;
+    let t = fingerprintImg(tag, fingerprint);
     if (lazyload && !/\bloading=/i.test(t)) t = t.replace(/<img\b/i, '<img loading="lazy"');
     if (!/\bdecoding=/i.test(t)) t = t.replace(/<img\b/i, '<img decoding="async"');
     if (!/\balt=/i.test(t)) t = t.replace(/<img\b/i, '<img alt=""');
@@ -250,7 +267,12 @@ hexo.extend.filter.register(
     if (/<table\b/i.test(out)) out = enhanceTables(out);
     if (/<h[2-6]\b/i.test(out)) out = ensureHeadingIds(out);
     if (/<img\b/i.test(out)) {
-      out = enhanceImages(out, cfg.article.lazyload !== false, /<body[^>]*class="[^"]*page-post/i.test(out));
+      out = enhanceImages(
+        out,
+        cfg.article.lazyload !== false,
+        /<body[^>]*class="[^"]*page-post/i.test(out),
+        !cfg.assets || cfg.assets.fingerprint !== false
+      );
     }
     if (cfg.open_in_new) {
       out = enhanceExternalLinks(out, cfg, hexo.config.url, cfg.open_in_new_exclude || []);

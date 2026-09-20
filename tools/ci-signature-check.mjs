@@ -53,8 +53,15 @@ const checks = {
   /* 站点图标：CI 站点配了 ['/img/favicon.svg', '/img/favicon.png']，
      两行 link 都要在，且 type/sizes 按扩展名自动补（浏览器据此直接挑合适的，
      不必先把文件下回来再猜格式）。 */
-  '站点图标 SVG 声明': /<link rel="icon" type="image\/svg\+xml" sizes="any" href="\/img\/favicon\.svg">/.test(index),
-  '站点图标 PNG 兜底声明': /<link rel="icon" type="image\/png" href="\/img\/favicon\.png">/.test(index)
+  /* 站点图标：CI 站点配了 ['/img/favicon.svg', '/img/favicon.png']，
+     两行 link 都要在，且 type/sizes 按扩展名自动补；两个文件都能在 source 里
+     定位到，所以必须带上内容指纹 ?v=<8 位哈希>。 */
+  '站点图标 SVG 声明': /<link rel="icon" type="image\/svg\+xml" sizes="any" href="\/img\/favicon\.svg\?v=[0-9a-f]{8}">/.test(index),
+  '站点图标 PNG 兜底声明': /<link rel="icon" type="image\/png" href="\/img\/favicon\.png\?v=[0-9a-f]{8}">/.test(index),
+  /* 图片内容指纹：头像 / 图标这类图片也要带 ?v=<8 位哈希>，
+     否则长缓存（Cloudflare _headers 里 /img/* 是一年 immutable）会让换图永远不生效。 */
+  '图片内容指纹（头像）': /\/img\/avatar\.png\?v=[0-9a-f]{8}/.test(index),
+  '图片内容指纹（图标）': /\/img\/favicon\.png\?v=[0-9a-f]{8}/.test(index)
 };
 
 let bad = 0;

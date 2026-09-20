@@ -15,9 +15,11 @@ const { plainText, countWords, readingMinutes, stableHash } = require(path.join(
   'lib',
   'text.js'
 ));
+const { configure, assetHash, fingerprintSrc } = require(path.join(hexo.theme_dir, 'lib', 'assets.js'));
+/* 必须显式注入：lib/ 下被 require 的模块看不到 Hexo 注入的 hexo 全局 */
+configure(hexo.theme_dir, hexo.source_dir);
 
 const helper = hexo.extend.helper;
-const hashCache = new Map();
 const fileCache = new Map();
 
 /* ------------------------------------------------------------------ 基础工具 */
@@ -35,17 +37,9 @@ function readThemeFile(rel) {
   return content;
 }
 
+/** 主题静态资源的内容指纹（css/js 用；走 lib/assets.js 的共享缓存） */
 function fileHash(rel) {
-  const abs = path.join(hexo.theme_dir, 'source', rel.replace(/^\/+/, ''));
-  if (hashCache.has(abs)) return hashCache.get(abs);
-  let hash = '';
-  try {
-    hash = crypto.createHash('md5').update(fs.readFileSync(abs)).digest('hex').slice(0, 8);
-  } catch (e) {
-    hash = '';
-  }
-  hashCache.set(abs, hash);
-  return hash;
+  return assetHash(rel);
 }
 
 /* ------------------------------------------------------------------ 资源相关 */
@@ -73,12 +67,15 @@ helper.register('yn_critical_css', function () {
   return readThemeFile('css/_critical.css').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s*\n\s*/g, '').trim();
 });
 
-/** 图片地址：绝对 URL 原样返回，站内相对路径走 url_for */
+/** 图片地址：绝对 URL 原样返回；站内路径走 url_for，并按内容加指纹（assets.fingerprint）
+    头像 / 图标 / 背景图 / OG 图都从这里过，所以换图不用再手动改 ?v=N。 */
 helper.register('yn_img', function (src) {
   if (!src) return '';
   const s = String(src);
   if (/^(https?:)?\/\//.test(s) || s.startsWith('data:')) return s;
-  return this.url_for(s.startsWith('/') ? s : '/' + s);
+  const assets = (this.theme && this.theme.assets) || {};
+  const out = assets.fingerprint === false ? s : fingerprintSrc(s);
+  return this.url_for(out.startsWith('/') ? out : '/' + out);
 });
 
 /** 绝对地址（OG / Twitter Card / JSON-LD 必须用绝对 URL） */
@@ -86,8 +83,10 @@ helper.register('yn_abs', function (src) {
   if (!src) return '';
   const s = String(src);
   if (/^https?:\/\//.test(s)) return s;
+  const assets = (this.theme && this.theme.assets) || {};
+  const local = assets.fingerprint === false ? s : fingerprintSrc(s);
   const base = String((this.config && this.config.url) || '').replace(/\/+$/, '');
-  const path = /^\/\//.test(s) ? s : this.url_for(s.startsWith('/') ? s : '/' + s);
+  const path = /^\/\//.test(local) ? local : this.url_for(local.startsWith('/') ? local : '/' + local);
   return base + (path.startsWith('/') ? path : '/' + path);
 });
 

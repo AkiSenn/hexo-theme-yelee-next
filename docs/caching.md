@@ -24,8 +24,24 @@ yn_asset('css/theme.css')   // → /css/theme.css?v=3f9a1c7e
 
 `?v=` 是**主题源文件的 md5 前 8 位**，构建期算出来的。文件改了 → 指纹变了 → URL 变了 → 浏览器和 CDN 必然拿到新内容；文件没改 → URL 不变 → 可以放心开一年不可变缓存。
 
-- 关掉：`assets.fingerprint: false`
-- CDN 前缀：`assets.cdn: https://cdn.jsdelivr.net/gh/you/repo@v4`（默认留空 = 自托管，少一个域名的 DNS/TLS/连接开销）
+**图片同样自动加指纹**（`lib/assets.js`）：头像、站点图标、`apple_touch_icon`、背景大图、`seo.og_image`，以及**文章正文里能定位到文件的 `<img>`**，都会带上 `?v=<内容哈希>`：
+
+```html
+<img src="/img/my-avatar.png?v=544e5f35" ...>          <!-- 头像 -->
+<link rel="icon" href="/img/my-favicon.svg?v=bb65e96e"> <!-- 站点图标 -->
+```
+
+为什么需要：静态托管普遍把 `/*.png`、`/img/*` 也设成长缓存甚至 `immutable`（本站的 `_headers` 就是 `/img/*` 一年 immutable）。图片没有指纹时，换了图**浏览器和 CDN 会一直用旧的那份**，只能手动改名或手写 `?v=2` 这类版本号 —— 现在不用了。
+
+几个约定：
+
+- 文件**查不到**就原样返回（例如文章资源目录 `post_asset_folder` 里的图、外链、`data:`），绝不猜；
+- 手写的 `?v=2` 会被**覆盖**成内容哈希；
+- 查找顺序是**主题 → 站点**，因为同名文件时产物里留下的是主题那份（实测）；
+- 关掉：`assets.fingerprint: false`（图片与 css/js 一起关）；
+- ⚠️ 增量构建会复用已渲染的 HTML，**换了图建议 `hexo clean` 再 `generate`**；CI/云端是从干净仓库构建的，不受影响。
+
+- CDN 前缀：`assets.cdn: https://cdn.jsdelivr.net/gh/you/repo@v4`（默认留空 = 自托管，少一个域名的 DNS/TLS/连接开销）。注意 `assets.cdn` 目前只作用于主题的 css/js，图片仍走站内。
 
 ## 三、关键 CSS 与异步样式表
 
