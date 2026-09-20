@@ -6,6 +6,39 @@
 
 ---
 
+## [1.2.0] - 2026-09-20
+
+无破坏性变更：`profile.favicon` 仍可只写一个路径，行为与 1.1.0 相同。
+
+### 新增
+
+- **站点图标支持一行配多个**：`profile.favicon` 除了字符串，也可以给一组路径，
+  会按顺序输出多行 `<link rel="icon">`，并按扩展名自动补 `type`
+  （`.svg` 会额外带 `sizes="any"`，`.ico` / `.png` / `.jpg` / `.webp` 各对应自己的类型）。
+
+  ```yaml
+  profile:
+    favicon:
+      - /img/my-favicon.svg      # → <link rel="icon" type="image/svg+xml" sizes="any" href="...">
+      - /img/my-favicon.png      # → <link rel="icon" type="image/png" href="...">
+  ```
+
+  SVG 在前 + 位图兜底是标准做法（Safari 对 SVG favicon 支持较晚）。带上 `type` 后，
+  浏览器可以直接挑合适的那个，不必先把文件下载回来再猜格式。
+
+### 清理 / 文档
+
+- **删掉主题里遗留的 `source/img/GitHub.png`（3.8KB）**。它是早年把 GitHub 图标放在图床上、
+  图床失效后的救急替代品；现在社交图标早已换成内置 SVG 精灵表（`yn_icon('github')`，
+  `currentColor` 跟随文字色），这个文件在主题里**没有任何引用**，纯属给每个使用者白打包 3.8KB。
+- `_config.yml` 与 `docs/starter-config.yml` 补上一条**容易踩的坑**：站点与主题存在**同名**资源时，
+  Hexo 产物里留下的是**主题那份**（实测：两边放同路径不同内容，产物是主题的）——
+  所以自己的图要放**站点** `source/img/` 下，并用 `my-avatar.png` 这类不重名的文件名；
+  直接改主题自带文件的话，下次升级主题又会被覆盖回去。
+- CI 新增两条签名断言：站点图标必须输出 SVG（含 `sizes="any"`）与 PNG 两行声明。
+
+---
+
 ## [1.1.0] - 2026-09-20
 
 无破坏性变更：不新增任何必填配置，`performance.precompress` 默认关闭，

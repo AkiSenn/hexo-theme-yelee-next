@@ -88,7 +88,19 @@ jobs:
             per_page: 5
           YAML
 
-          mkdir -p source/tags source/categories source/about
+          mkdir -p source/tags source/categories source/about source/img
+
+          # 站点级主题配置：把「站点图标多声明」这条路径也纳入 CI 覆盖
+          # （theme_config 优先级高于主题自带的 _config.yml）
+          cat > _config.yelee-next.yml <<'YAML'
+          profile:
+            favicon:
+              - /img/favicon.svg
+              - /img/favicon.png
+          YAML
+          cat > source/img/favicon.svg <<'SVG'
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#181717"/><circle cx="16" cy="16" r="6" fill="#fff"/></svg>
+          SVG
           cat > source/tags/index.md <<'MD'
           ---
           title: 标签云
@@ -167,7 +179,8 @@ jobs:
         # 既要确认 .br 生成了，也要确认它解压后与原文件逐字节一致（压坏了就是线上白屏）。
         run: |
           cd .ci
-          cat > _config.yelee-next.yml <<'YAML'
+          # 追加而不是覆盖：上面「写站点配置」步骤已经建了这个文件（站点图标多声明）
+          cat >> _config.yelee-next.yml <<'YAML'
           performance:
             precompress: true
           YAML

@@ -20,9 +20,13 @@ profile:
   author:                            # 👈 你的名字（侧栏署名 / 页脚版权署名）
   subtitle:                          # 👈 一句话签名，留空则不显示
   email:                             # 👈 联系邮箱，留空则不显示
-  avatar: /img/avatar.png            # 👈 头像：换成自己的图（放主题 source/img/ 下，
-                                     #    或写 https://... 的完整外链）
-  favicon: /img/favicon.png          # 👈 浏览器标签页图标
+  # ⚠️ 自己的图放**站点** source/img/ 下，并用不重名的文件名：
+  #    站点与主题同名时，产物里留下的是主题那份，会被静默覆盖。
+  avatar: /img/avatar.png            # 👈 头像：换成自己的图（站点 source/img/my-avatar.png）
+  favicon: /img/favicon.png          # 👈 浏览器标签页图标：同样换成 my-favicon.png 之类
+                                     #    想用「SVG 主 + 位图兜底」，写成一组即可：
+                                     #      favicon: ['/img/my-favicon.svg', '/img/my-favicon.png']
+                                     #    type/sizes 会按扩展名自动补
   since: 2020                        # 👈 建站年份 → 页脚版权显示「© 2020-<当前年>」，
                                      #    结束年取构建时的当前年，不用手改；
                                      #    填 2025 → © 2025-2026；留空则只显示 © 2026

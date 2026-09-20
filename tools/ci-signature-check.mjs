@@ -44,7 +44,12 @@ const checks = {
   '正文次图 lazy': /loading="lazy"/.test(post),
   '文章页目录生成': post.includes('toc-link'),
   '公式按文章 opt-in': post.includes('MathJax') && !index.includes('MathJax'),
-  '评论默认关闭': !index.includes('id="comments"') && !post.includes('id="comments"')
+  '评论默认关闭': !index.includes('id="comments"') && !post.includes('id="comments"'),
+  /* 站点图标：CI 站点配了 ['/img/favicon.svg', '/img/favicon.png']，
+     两行 link 都要在，且 type/sizes 按扩展名自动补（浏览器据此直接挑合适的，
+     不必先把文件下回来再猜格式）。 */
+  '站点图标 SVG 声明': /<link rel="icon" type="image\/svg\+xml" sizes="any" href="\/img\/favicon\.svg">/.test(index),
+  '站点图标 PNG 兜底声明': /<link rel="icon" type="image\/png" href="\/img\/favicon\.png">/.test(index)
 };
 
 let bad = 0;

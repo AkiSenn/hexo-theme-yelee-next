@@ -101,8 +101,28 @@
 <% } %>
 
 <!-- 图标 -->
-<% if (cfg.profile.favicon) { %>
-<link rel="icon" href="<%= yn_img(cfg.profile.favicon) %>">
+<% if (cfg.profile.favicon) {
+     /* 站点图标支持「一个路径」或「一组路径」：
+          profile.favicon: /img/favicon.png
+          profile.favicon: ['/img/favicon.svg', '/img/favicon.png']
+        SVG 在前 + 位图兜底是标准做法（Safari 对 SVG favicon 支持较晚）。
+        type / sizes 按扩展名自动补：浏览器据此直接挑合适的那个，
+        不必先把文件下回来再猜格式。 */
+     var icons = (Array.isArray(cfg.profile.favicon) ? cfg.profile.favicon : [cfg.profile.favicon])
+       .filter(function (p) { return p; });
+     var iconAttrs = function (p) {
+       var s = String(p).split('?')[0].split('#')[0].toLowerCase();
+       if (/\.svg$/.test(s)) return ' type="image/svg+xml" sizes="any"';
+       if (/\.ico$/.test(s)) return ' type="image/x-icon"';
+       if (/\.png$/.test(s)) return ' type="image/png"';
+       if (/\.jpe?g$/.test(s)) return ' type="image/jpeg"';
+       if (/\.webp$/.test(s)) return ' type="image/webp"';
+       return '';
+     };
+%>
+<% icons.forEach(function (icon) { %>
+<link rel="icon"<%- iconAttrs(icon) %> href="<%= yn_img(icon) %>">
+<% }); %>
 <link rel="apple-touch-icon" href="<%= yn_img(cfg.profile.apple_touch_icon || '/img/apple-touch-icon.png') %>">
 <% } %>
 <link rel="alternate" type="application/atom+xml" title="<%= site.title %>" href="<%= url_for('/atom.xml') %>">

@@ -15,7 +15,7 @@
 
 # 主题版本号（package.json 与 GitHub Release 用同一版本号）。
 # 页脚署名的 Yelee-Next 链接 title 里会显示它，鼠标悬停可见。
-version: 1.1.0
+version: 1.2.0
 
 # ----------------------------------------------------------------- 个人信息
 # / Profile /  需要你自己填的内容默认留空
@@ -23,11 +23,16 @@ profile:
   author:                        # 侧栏署名 / 页脚版权署名；留空则用站点 config.author
   subtitle:                      # 侧栏签名；留空则用站点 config.subtitle
   email:                         # 留空则用站点 config.email
-  avatar: /img/avatar.png        # 头像：默认是主题自带的鲸鱼占位图（🐋），
-                                 #   换成自己的：把图放主题 source/img/ 下改这里，
-                                 #   或直接写 https://... 外链
-  favicon: /img/favicon.png      # 站点图标
-  apple_touch_icon:              # iOS 添加到主屏幕的图标，留空用 /img/apple-touch-icon.png
+  # ⚠️ 换成自己的图时：放到**站点**的 source/img/ 下，并起一个不重名的文件名
+  #    （例如 my-avatar.png），再改下面两行指向它。原因：站点与主题存在同名资源时，
+  #    Hexo 产物里留下的是**主题那份**（实测：两边放同路径不同内容，产物是主题的），
+  #    同名会被静默覆盖 —— 改主题自带文件的话，下次升级主题还会被覆盖回去。
+  avatar: /img/avatar.png        # 头像：默认是主题自带的鲸鱼占位图（🐋）；也可写 https://... 外链
+  favicon: /img/favicon.png      # 浏览器标签页图标。可以给一组，按顺序输出多行 <link rel="icon">：
+                                 #   favicon: ['/img/my-favicon.svg', '/img/my-favicon.png']
+                                 #   SVG 在前 + 位图兜底是标准做法（Safari 对 SVG favicon 支持较晚）。
+                                 #   type / sizes 会按扩展名自动补（.svg 会带 sizes="any"）。
+  apple_touch_icon:              # iOS 添加到主屏幕的图标，留空用 /img/apple-touch-icon.png（建议 180×180）
   since:                         # 建站年份，决定页脚版权起始年：
                                  #   填 2020 → © 2020-2026（结束年取构建时的当前年）
                                  #   填 2025 → © 2025-2026；留空则只显示 © 2026
