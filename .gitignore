@@ -16,3 +16,7 @@ package-lock.json
 
 # 本地交接记录（给新对话读，不进公开仓库）
 .handoff.md
+
+# Windows 回收站：某些删除操作会在仓库内生成 $RECYCLE.BIN/，
+# 没被跟踪但会被 git add -A 扫进去（tools/sync.mjs 的文件清单同样继承本文件）
+$RECYCLE.BIN/

@@ -14,12 +14,19 @@
  * 行为：
  *   · 目标若是指向本仓库的 junction/软链接 → 先自动解除（不会动到源目录）
  *   · 目标是普通目录 → 整个删掉重建（它本来就是生成物）
- *   · 排除 .git / node_modules / public / .dev / 各类缓存
+ *   · 要复制哪些文件由 git 说了算：`git ls-files --cached --others --exclude-standard`
+ *     （即「git 已跟踪 + 未被 .gitignore 忽略的未跟踪文件」）。
+ *     为什么不用硬编码排除清单：那样等于把 .gitignore 抄了第二遍，两边必然漂移 ——
+ *     曾经就因为漏了 .ci/（local-ci.mjs 生成的临时站点）和 .handoff.md，
+ *     导致跑完本地 CI 再同步时会把 76 个临时文件塞进博客仓库。
+ *     git 不可用时退回内置清单（见 FALLBACK_EXCLUDE）。
+ *   · 指纹与复制用同一份文件清单，保证「--check 说一致」和「复制出来的内容」不可能对不上
  *   · 复制完写一份 SYNCED.json（来源、时间、文件数、文件清单哈希）
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const themeDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -39,29 +46,46 @@ if (!fs.existsSync(path.join(siteDir, '_config.yml'))) {
 }
 
 const target = path.join(siteDir, 'themes', themeName);
-const EXCLUDE = new Set(['.git', 'node_modules', 'public', '.dev', '.DS_Store', 'Thumbs.db', '.wrangler']);
 
-function shouldCopy(src) {
-  const rel = path.relative(themeDir, src);
-  if (!rel) return true;
-  return !rel.split(path.sep).some(part => EXCLUDE.has(part));
+/* 仅当 git 不可用时才用的兜底清单（正常情况下由 .gitignore 决定） */
+const FALLBACK_EXCLUDE = new Set(['.git', 'node_modules', 'public', '.dev', '.vscode', '.idea', '.ci', '.handoff.md', 'package-lock.json', '.DS_Store', 'Thumbs.db', '.wrangler']);
+
+/** 用 git 求「这个仓库里该被分发出去的文件」，顺带自动继承 .gitignore */
+function listFilesViaGit() {
+  try {
+    const out = execFileSync(
+      'git',
+      ['-C', themeDir, 'ls-files', '-z', '--cached', '--others', '--exclude-standard'],
+      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }
+    );
+    return [...new Set(out.split('\0').filter(Boolean).map(p => p.replace(/\\/g, '/')))];
+  } catch {
+    return null; // 不是 git 仓库 / 没装 git → 交给兜底清单，不因此中断同步
+  }
 }
 
-function listFiles(root) {
+/** 兜底：自己走目录，按 FALLBACK_EXCLUDE 逐个路径段排除 */
+function listFilesByWalk() {
   const out = [];
   const walk = dir => {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (FALLBACK_EXCLUDE.has(entry.name)) continue;
       const p = path.join(dir, entry.name);
-      if (!shouldCopy(p)) continue;
       if (entry.isDirectory()) walk(p);
-      else out.push(path.relative(root, p).replace(/\\/g, '/'));
+      else out.push(path.relative(themeDir, p).replace(/\\/g, '/'));
     }
   };
-  walk(root);
-  return out.sort();
+  walk(themeDir);
+  return out;
 }
 
-const srcFiles = listFiles(themeDir);
+const viaGit = listFilesViaGit();
+// 过滤掉「索引里有、工作区已删」的路径，避免下面读文件时炸掉
+const srcFiles = (viaGit ?? listFilesByWalk())
+  .filter(rel => fs.existsSync(path.join(themeDir, rel)))
+  .sort();
+console.log(`· 文件清单来源：${viaGit ? 'git（继承 .gitignore）' : '内置兜底清单（未检测到 git）'}`);
+
 const hash = crypto.createHash('sha256');
 for (const rel of srcFiles) hash.update(rel + '\n' + fs.readFileSync(path.join(themeDir, rel)));
 const digest = hash.digest('hex').slice(0, 12);
@@ -84,7 +108,13 @@ if (fs.existsSync(target)) {
 }
 fs.mkdirSync(target, { recursive: true });
 
-fs.cpSync(themeDir, target, { recursive: true, filter: shouldCopy });
+// 逐个文件复制（而不是 fs.cpSync + filter）：复制用的就是算指纹的那份清单，
+// 杜绝「指纹算的文件」和「实际拷过去的文件」两套判断再次分叉。
+for (const rel of srcFiles) {
+  const dst = path.join(target, rel);
+  fs.mkdirSync(path.dirname(dst), { recursive: true });
+  fs.copyFileSync(path.join(themeDir, rel), dst);
+}
 
 fs.writeFileSync(
   path.join(target, 'SYNCED.json'),
