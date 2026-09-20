@@ -102,3 +102,16 @@ notfound:
   title: 页面走丢了
   description: 你要找的页面不存在，或者已经被搬到别处了。
   back_home: 回到首页
+
+# meta description 模板（%s = 文本，%d = 数字；由 sprintf-js 填充）
+# 作用：让标签页 / 分类页 / 归档页各自生成「唯一且够长」的描述，
+#       而不是全部回落到站点描述（Bing/Google 会判为重复描述）。
+seo:
+  tag: '「%s」标签下共 %d 篇文章：%s'
+  category: '「%s」分类下共 %d 篇文章：%s'
+  archive: '文章归档：本站共 %d 篇文章，按时间倒序排列，可快速回看往期内容'
+  archive_year: '%s 年的 %d 篇文章：%s'
+  archive_month: '%s 年 %s 月的 %d 篇文章：%s'
+  tags_index: '标签云：本站共 %d 个标签，包括 %s'
+  categories_index: '分类：本站共 %d 个分类，包括 %s'
+  latest: '最新文章：%s'

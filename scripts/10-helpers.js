@@ -199,17 +199,124 @@ helper.register('yn_plain', function (html, limit) {
   return plainText(html, limit);
 });
 
-/** 页面描述：优先 front-matter description，其次摘要，最后站点描述 */
+/* ---------------------------------------------------------------------------
+ * meta description
+ *
+ * 搜索引擎的建议长度约 150-160 字符（中文约 75-80 字），并且**每页应当唯一**。
+ * 站点描述只有一个，如果标签页 / 分类页 / 归档页都回落到它，站长后台就会报
+ * 「描述过短」+「多页描述重复」。所以这里按页面类型分别拼装：
+ *   · 文章页     → front-matter description → 摘要 → 正文首段
+ *   · 标签/分类  → 「xxx」标签下共 N 篇文章：标题1、标题2…（随术语天然唯一）
+ *   · 归档页     → 年 / 月 + 篇数 + 文章标题
+ *   · 索引页     → 标签云 / 分类：共 N 个，包括 a、b、c
+ *   · 普通页面   → 正文首段
+ *   · 首页       → 站点描述；不足 80 字就补副标题与最新文章标题
+ * 文案模板放在 languages/*.yml 的 seo: 段，可自行翻译或改写。
+ * ------------------------------------------------------------------------ */
+const DESC_LIMIT = 160;
+
+/** Warehouse Query / 数组 / 空值 → 真数组 */
+function asArray(value) {
+  if (!value) return [];
+  if (typeof value.toArray === 'function') return value.toArray();
+  return Array.isArray(value) ? value : [];
+}
+
+/** 页面是不是「标签云 / 分类索引」页（新写法 type: tags；老 yelee 站点只有空页面 + 路径） */
+function taxonomyIndexOf(page) {
+  const type = String((page && page.type) || '');
+  const p = String((page && page.path) || '');
+  if (type === 'tags' || /(^|\/)tags\/index\.html$/.test(p)) return 'tags';
+  if (type === 'categories' || /(^|\/)categories\/index\.html$/.test(p)) return 'categories';
+  return '';
+}
+
 helper.register('yn_description', function () {
   const page = this.page || {};
-  const cfg = (this.theme && this.theme.profile) || {};
-  if (page.description) return plainText(page.description, 160);
-  if (page.excerpt) return plainText(page.excerpt, 160);
-  if (page.content && (page.layout === 'post' || page.layout === 'page')) {
-    return plainText(page.content, 160);
-  }
   const site = this.config || {};
-  return plainText(page.title ? `${page.title} - ${site.title}` : site.description || cfg.subtitle || '', 160);
+  const profile = (this.theme && this.theme.profile) || {};
+  const cut = value => plainText(value || '', DESC_LIMIT);
+  const type = this.yn_page_type();
+  const posts = asArray(page.posts);
+  const titles = n =>
+    posts
+      .slice(0, n)
+      .map(post => plainText(post.title || '', 40))
+      .filter(Boolean)
+      .join('、');
+  const names = (collection, n) =>
+    asArray(collection)
+      .slice(0, n)
+      .map(item => plainText(item.name || item.title || '', 20))
+      .filter(Boolean)
+      .join('、');
+  /* 模板 locals 里不一定挂着 site.tags（页面级渲染时可能是空的），
+     回落到 hexo.locals —— 否则会出现「标签云：本站共 0 个标签，包括」。 */
+  const siteCollection = kind =>
+    asArray((this.site && this.site[kind]) || (hexo.locals.get && hexo.locals.get(kind)));
+  /* 拼好的描述太短时，补一句站点描述：既满足搜索引擎的长度检查，
+     又不会造成「整段重复」—— 前半段（含术语/篇数/标题）本来就是唯一的。 */
+  const pad = text => {
+    const base = cut(text);
+    if ([...base].length >= 90) return base;
+    const extra = cut(site.description || '');
+    if (!extra || base.includes(extra)) return base;
+    return cut(base + ' · ' + extra);
+  };
+
+  // ① front-matter 明确写了 description → 以它为准
+  if (page.description) return cut(page.description);
+
+  // ② 文章页
+  if (type === 'post') return cut(page.excerpt || page.content);
+
+  // ③ 标签 / 分类的单个术语页（随术语与文章变化，天然唯一）
+  if (type === 'tag' && page.tag) return pad(this.__('seo.tag', page.tag, posts.length, titles(3)));
+  if (type === 'category' && page.category) {
+    return pad(this.__('seo.category', page.category, posts.length, titles(3)));
+  }
+
+  // ④ 归档页：/archives/ 、/archives/2020/ 、/archives/2020/08/
+  if (type === 'archive') {
+    if (page.year && page.month) {
+      return pad(this.__('seo.archive_month', page.year, page.month, posts.length, titles(3)));
+    }
+    if (page.year) return pad(this.__('seo.archive_year', page.year, posts.length, titles(3)));
+    return pad(this.__('seo.archive', posts.length));
+  }
+
+  // ⑤ 标签云 / 分类索引页
+  const taxIndex = taxonomyIndexOf(page);
+  if (taxIndex === 'tags') {
+    const tags = siteCollection('tags');
+    if (tags.length) return pad(this.__('seo.tags_index', tags.length, names(tags, 6)));
+    return pad(`${this.__('nav.tags')} | ${site.title || ''}${site.subtitle ? ' - ' + site.subtitle : ''}`);
+  }
+  if (taxIndex === 'categories') {
+    const cats = siteCollection('categories');
+    if (cats.length) return pad(this.__('seo.categories_index', cats.length, names(cats, 6)));
+    return pad(`${this.__('page.category')} | ${site.title || ''}${site.subtitle ? ' - ' + site.subtitle : ''}`);
+  }
+
+  // ⑥ 普通页面（关于页等）：正文首段
+  if (page.content) return pad(page.content);
+
+  // ⑦ 首页：站点描述；不足 80 字就补副标题与最新文章标题，避免被判「描述过短」
+  if (type === 'home') {
+    const base = cut(site.description || profile.subtitle || '');
+    const extra = [];
+    if ([...base].length < 80) {
+      if (site.subtitle) extra.push(cut(site.subtitle));
+      if (posts.length) extra.push(cut(this.__('seo.latest', titles(3))));
+    }
+    return cut([base, ...extra].filter(Boolean).join(' · '));
+  }
+
+  // ⑧ 兜底
+  if (page.title) {
+    return pad(`${page.title} | ${site.title || ''}${site.subtitle ? ' - ' + site.subtitle : ''}`);
+  }
+  return cut(site.description || profile.subtitle || site.title || '');
 });
 
 /** 页面标题 */
@@ -219,12 +326,22 @@ helper.register('yn_title', function () {
   let title = page.title;
   if (this.is_archive && this.is_archive()) {
     title = this.__('page.archives');
-    if (this.is_year && this.is_year()) title += `: ${page.year}`;
-    else if (this.is_month && this.is_month()) title += `: ${page.year}/${page.month}`;
+    /* 月份归档页面同时带 year 与 month，必须先判 is_month —— 反过来的话
+       /archives/2020/ 与 /archives/2020/08/ 会生成一模一样的 title。 */
+    if (this.is_month && this.is_month()) title += `: ${page.year}/${page.month}`;
+    else if (this.is_year && this.is_year()) title += `: ${page.year}`;
   } else if (this.is_category && this.is_category()) {
     title = `${this.__('page.category')}: ${page.category}`;
   } else if (this.is_tag && this.is_tag()) {
     title = `${this.__('page.tag')}: ${page.tag}`;
+  } else {
+    /* 标签云 / 分类索引页：老 yelee 站点的 front-matter 里 title 写的是英文 slug
+       （title: tags / title: categories），直接渲染会得到「tags | 站点名」。
+       这类页面统一换成语言包里的名字。 */
+    const taxIndex = taxonomyIndexOf(page);
+    if (taxIndex && (!title || /^[a-z0-9_-]+$/i.test(String(title)))) {
+      title = taxIndex === 'categories' ? this.__('page.category') : this.__('nav.tags');
+    }
   }
   if (!title || this.is_home()) return site.title + (site.subtitle ? ' - ' + site.subtitle : '');
   return `${title} | ${site.title}`;

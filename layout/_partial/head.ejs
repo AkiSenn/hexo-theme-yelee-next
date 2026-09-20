@@ -54,6 +54,8 @@
 
 <title><%= pageTitle %></title>
 <meta name="description" content="<%= pageDesc %>">
+<% /* 404 页不该被索引：给搜索引擎一个明确的 noindex */ %>
+<% if (pageType === '404') { %><meta name="robots" content="noindex, follow"><% } %>
 <% if (cfg.profile.author) { %><meta name="author" content="<%= cfg.profile.author %>"><% } %>
 <link rel="canonical" href="<%= canonical %>">
 <% if (is_home() && cfg.seo.baidu_site) { %><meta name="baidu-site-verification" content="<%= cfg.seo.baidu_site %>"><% } %>

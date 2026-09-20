@@ -71,7 +71,7 @@ jobs:
           cat > _config.yml <<'YAML'
           title: yelee-next CI
           subtitle: 构建自检
-          description: yelee-next theme CI
+          description: yelee-next theme CI —— 用最小 Hexo 站点验证主题能否正常构建、模板与 SEO 输出是否符合预期
           author: CI
           language: zh-CN
           url: https://example.com
@@ -105,7 +105,7 @@ jobs:
           title: 关于
           date: 2024-01-01 00:00:00
           ---
-          这是关于页，用来覆盖 page 模板。
+          这是关于页，用来覆盖 page 模板。它会成为该页 meta description 的来源，所以这里多写一句话凑够长度。
           MD
 
           cat > source/_posts/hello.md <<'MD'
@@ -151,6 +151,9 @@ jobs:
 
       - name: 产物体检（资源引用 / 阻塞请求 / 老依赖）
         run: node tools/check.mjs .ci/public
+
+      - name: SEO 体检（描述过短 / 描述重复 / 标题重复）
+        run: node tools/seo-audit.mjs .ci/public --min 35
 
       - name: 关键页面签名检查
         # 脚本在仓库根的 tools/ 下（主题副本在 .ci/themes/yelee-next/）

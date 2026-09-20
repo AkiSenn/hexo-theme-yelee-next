@@ -114,6 +114,9 @@ node <theme-dir>/tools/sync.mjs  /path/to/hexo-site --check
 
 # Post-build audit: missing asset references, blocking requests, leftover legacy deps
 node <theme-dir>/tools/check.mjs  /path/to/hexo-site/public
+
+# SEO audit: short / duplicated meta descriptions, duplicated titles
+node <theme-dir>/tools/seo-audit.mjs  /path/to/hexo-site/public
 ```
 
 The theme repo stays the single source of truth; the copy in the site repo is generated, and its `SYNCED.json` records origin, timestamp and fingerprint.

@@ -100,3 +100,17 @@ notfound:
   title: Page not found
   description: The page you are looking for does not exist or has been moved.
   back_home: Back to home
+
+# meta description templates (%s = string, %d = number, filled by sprintf-js).
+# They give tag / category / archive pages unique, long-enough descriptions
+# instead of all falling back to the site description (which search engines
+# report as duplicate meta descriptions).
+seo:
+  tag: '%d posts tagged "%s": %s'
+  category: '%d posts in the "%s" category: %s'
+  archive: 'Archive: all %d posts in reverse chronological order'
+  archive_year: '%d posts from %s: %s'
+  archive_month: '%d posts from %s/%s: %s'
+  tags_index: 'Tag cloud: %d tags in total, including %s'
+  categories_index: 'Categories: %d categories in total, including %s'
+  latest: 'Latest posts: %s'

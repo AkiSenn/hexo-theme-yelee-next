@@ -100,3 +100,14 @@ notfound:
   title: 頁面走丟了
   description: 你要找的頁面不存在，或者已經被搬到別處了。
   back_home: 回到首頁
+
+# meta description 範本（%s = 文字，%d = 數字；由 sprintf-js 填充）
+seo:
+  tag: '「%s」標籤下共 %d 篇文章：%s'
+  category: '「%s」分類下共 %d 篇文章：%s'
+  archive: '文章歸檔：本站共 %d 篇文章，依時間倒序排列'
+  archive_year: '%s 年的 %d 篇文章：%s'
+  archive_month: '%s 年 %s 月的 %d 篇文章：%s'
+  tags_index: '標籤雲：本站共 %d 個標籤，包括 %s'
+  categories_index: '分類：本站共 %d 個分類，包括 %s'
+  latest: '最新文章：%s'

@@ -114,6 +114,9 @@ node <主题目录>/tools/sync.mjs  /path/to/hexo-site --check
 
 # 生成后体检产物：资源引用是否缺失、还有没有阻塞请求、有没有老依赖残留
 node <主题目录>/tools/check.mjs  /path/to/hexo-site/public
+
+# SEO 体检：描述过短 / 描述重复 / 标题重复（就是 Bing/Google 站长后台那两条警告）
+node <主题目录>/tools/seo-audit.mjs  /path/to/hexo-site/public
 ```
 
 **主题仓库始终是唯一真源**，站点里那份是生成物 —— 目录里的 `SYNCED.json` 会标明来源、时间与指纹。
