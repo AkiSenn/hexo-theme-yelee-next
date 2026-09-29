@@ -614,8 +614,19 @@ function initFab() {
   const comments = $('[data-goto-comments]');
 
   if (fab) {
+    let lastY = 0;
     onViewportChange(() => {
-      fab.hidden = Math.max(0, window.scrollY || window.pageYOffset || 0) <= 320;
+      const y = Math.max(0, window.scrollY || window.pageYOffset || 0);
+      fab.hidden = y <= 320;
+      if (fab.hidden) {
+        fab.classList.remove('is-hidden');
+      } else if (y > lastY + 4) {
+        /* 向下读：让开正文右下角 */
+        fab.classList.add('is-hidden');
+      } else if (y < lastY - 4) {
+        fab.classList.remove('is-hidden');
+      }
+      lastY = y;
     });
   }
   if (toTop) toTop.addEventListener('click', () => scrollToY(0));

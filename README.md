@@ -44,6 +44,7 @@
 - **无障碍**：语义化标签、tablist、focus-visible、skip-link、`prefers-reduced-motion`
 - **SEO**：OG / Twitter Card / schema.org JSON-LD / canonical，正文 H1 自动降级；**每页生成唯一且够长的 meta description**（文章 / 标签 / 分类 / 归档 / 索引页各有模板）
 - **可选预压缩**：`performance.precompress` 打开后，构建时给 css/js 生成 `brotli-11` 的 `.br`（默认关闭 —— 只有 nginx `brotli_static` 或自己写 Worker 下发才用得上，见 [`docs/caching.md`](./docs/caching.md)）
+- **中文排版**：列表摘要**按段落抽取**（不会把 h2 小标题、代码块压成文字混进摘要）；中英文之间自动补空格（盘古之白，`article.autospace`，代码块与链接地址不受影响）
 - **多语言**：内置简体中文 / English / 繁體中文，往 `languages/` 加文件即可扩展
 
 ---

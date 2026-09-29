@@ -61,7 +61,14 @@ const checks = {
   /* 图片内容指纹：头像 / 图标这类图片也要带 ?v=<8 位哈希>，
      否则长缓存（Cloudflare _headers 里 /img/* 是一年 immutable）会让换图永远不生效。 */
   '图片内容指纹（头像）': /\/img\/avatar\.png\?v=[0-9a-f]{8}/.test(index),
-  '图片内容指纹（图标）': /\/img\/favicon\.png\?v=[0-9a-f]{8}/.test(index)
+  '图片内容指纹（图标）': /\/img\/favicon\.png\?v=[0-9a-f]{8}/.test(index),
+  /* 首页必须有且只有一个 h1（站点名，视觉隐藏）—— 缺了的话大纲会从 h2 起步 */
+  '首页 h1（视觉隐藏）': (index.match(/<h1[\s>]/g) || []).length === 1 && /<h1 class="visually-hidden">/.test(index),
+  /* 中英文之间自动补空格：CI 文章里写了「用Hexo写博客」，产物应是「用 Hexo 写博客」 */
+  '中英文间隙（盘古之白）': index.includes('用 Hexo 写博客') && !index.includes('用Hexo写博客'),
+  /* 摘要按段落抽：excerpt-test 那篇开头是 h2，标题与代码块都不该混进首页摘要 */
+  '摘要按段落抽取': index.includes('这是第一段正文') &&
+    !index.includes('这是小标题不该进摘要') && !index.includes('shouldNotAppear')
 };
 
 let bad = 0;

@@ -44,6 +44,7 @@ A two-column theme designed for reading. Sensible defaults work out of the box �
 - **Accessibility**: semantic markup, tablist, focus-visible, skip-link, `prefers-reduced-motion`
 - **SEO**: OG, Twitter Card, schema.org JSON-LD, canonical, automatic demotion of in-post H1; **a unique, long-enough meta description per page** (separate templates for posts / tags / categories / archives / index pages)
 - **Optional precompression**: with `performance.precompress` enabled, the build emits `brotli-11` `.br` files next to css/js (off by default — only useful behind nginx `brotli_static` or a Worker that serves them; see [`docs/caching.md`](./docs/caching.md))
+- **CJK typography**: list excerpts are extracted **paragraph by paragraph** (headings and code blocks never leak into them); automatic spacing between CJK and Latin (`article.autospace`), leaving code blocks and URLs untouched
 - **i18n**: ships 简体中文 / English / 繁體中文 — add a file under `languages/` to extend
 
 ---

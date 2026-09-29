@@ -11,7 +11,7 @@
  */
 
 const DEFAULTS = {
-  version: '1.3.1',
+  version: '1.4.0',
 
   profile: {
     author: '',
@@ -47,6 +47,8 @@ const DEFAULTS = {
   article: {
     excerpt: 'auto',
     excerpt_length: 200,
+    excerpt_paragraphs: 2,
+    autospace: true,
     more_link: '',
     toc: {
       enable: true,

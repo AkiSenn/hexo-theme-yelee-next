@@ -78,8 +78,10 @@ appearance:
 
 # ---------------------------------------------------------------- 文章页
 article:
-  excerpt: auto                      # 列表页摘要：auto(取 <!-- more --> 或前 N 字) | false(全文)
+  excerpt: auto                      # 列表页摘要：auto(取 <!-- more --> 或正文前 N 段) | false(全文)
   excerpt_length: 200
+  excerpt_paragraphs: 2              # auto 模式最多取几段（按段落抽，跳过标题/代码块/引用）
+  autospace: true                    # 中英文之间自动补空格（盘古之白），代码块不受影响
   toc:
     enable: true                     # 文章目录（桌面在左侧栏「目录」页签）
     min_depth: 2

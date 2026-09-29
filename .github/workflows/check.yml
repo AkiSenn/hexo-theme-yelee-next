@@ -138,7 +138,7 @@ jobs:
           mathjax: true
           ---
 
-          这是一篇用于自检的文章：验证中文、**加粗**、`行内代码`、公式 $E = mc^2$ 与代码块渲染。
+          这是一篇用于自检的文章：验证中文、**加粗**、`行内代码`、公式 $E = mc^2$ 与代码块渲染。顺带验证中英文间隙：用Hexo写博客。
 
           <!-- more -->
 
@@ -163,6 +163,27 @@ jobs:
           再来一张：
 
           ![第二张图（应 lazy）](/img/avatar.png)
+          MD
+
+          # 摘要抽取测试：正文必须以 h2 开头、且不含 <!-- more -->，
+          # 用来验证首页卡片摘要是「按段落抽」而不是把标题/代码块压成文字。
+          cat > source/_posts/excerpt-test.md <<'MD'
+          ---
+          title: 摘要抽取测试
+          date: 2024-01-02 00:00:00
+          tags: [CI]
+          categories: [测试]
+          ---
+
+          ## 这是小标题不该进摘要
+
+          这是第一段正文，用Hexo搭建。
+
+          ```js
+          const shouldNotAppear = 1;
+          ```
+
+          这是第二段正文。
           MD
 
       - name: 构建主题（hexo generate）

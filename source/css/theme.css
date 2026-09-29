@@ -243,7 +243,13 @@ html[data-theme="dark"] .icon-btn__moon { display: inline-flex; }
 .post-card__title { margin-block: 10px 0; font-size: 1.3rem; line-height: 1.4; }
 .post-card__title a { color: inherit; text-decoration: none; transition: color .16s ease; }
 .post-card__title a:hover { color: var(--c-link); }
-.post-card__excerpt { margin-block-start: 8px; font-size: .94rem; color: var(--c-fg-soft); }
+.post-card__excerpt { margin-block-start: 8px; color: var(--c-fg-soft); }
+/* 卡片的摘要元素带 .markdown（摘要内容本身是 Markdown 片段），而 .markdown 在下面
+   又声明了 font-size:1rem —— 两者特异性相同、后者在后，早前这条 .94rem 根本没生效
+   （摘要按 16px 渲染，跟正文一个大小，层级没拉开）。这里用双类名提特异性。 */
+.post-card__excerpt.markdown { font-size: .94rem; line-height: 1.7; }
+/* 作者用 <!-- more --> 手写的摘要里可能自带小标题：卡片里压成正文大小，
+   免得摘要区出现一个比标题还大的大字。（自动摘要已经不会混入标题了） */
 .post-card__excerpt :is(h1, h2, h3, h4, h5, h6) { font-size: 1em; font-weight: 600; }
 .post-card__foot {
   display: flex;
@@ -805,6 +811,10 @@ pre[class*='language-'].line-numbers {
   transition: color .16s ease, transform .16s ease, background .16s ease, border-color .16s ease;
 }
 .fab__btn .icon { inline-size: 18px; block-size: 18px; }
+/* 向下滚动阅读时整条淡出：它固定在右下角，会压住正文右边缘的几个字。
+   向上滚动（想用按钮了）立刻回来。 */
+.fab { transition: opacity .2s ease, transform .2s ease; }
+.fab.is-hidden { opacity: 0; pointer-events: none; transform: translateY(10px); }
 .fab__btn:hover { color: var(--c-link); transform: translateY(-2px); }
 .fab__btn.is-active { background: var(--c-accent); border-color: var(--c-accent); color: var(--c-accent-fg); }
 
@@ -958,7 +968,9 @@ pre[class*='language-'].line-numbers {
   /* 卡片入场交给 app.js 的 initReveal（复刻原版 yelee 的 ScrollReveal 随机动画：
      未进入视口时保持 opacity:0，所以快速下滑会看到"还没加载出来"的观感）。
      这里不再给 .post-card 挂 CSS 动画，否则 animation-fill-mode 会盖掉 opacity:0。 */
-  .fab { animation: yn-fade-up .24s ease-out both; }
+  /* 注意别用 animation-fill-mode: both —— 那会把 opacity/transform 锁在终态，
+     盖掉 .fab.is-hidden 的 opacity:0（post-card 上踩过同一个坑）。 */
+  .fab { animation: yn-fade-up .24s ease-out; }
 }
 
 /* ======================================================= 17. 响应式 == */
@@ -973,6 +985,10 @@ pre[class*='language-'].line-numbers {
 /* 17.2 手机 */
 @media (max-width: 639.98px) {
   .main { padding: 12px 12px 8px; }
+  /* 移动端把元信息抬到 14px 以上：.78rem(12.5px) + muted 灰在手机上明显小一档 */
+  .post-card__meta { font-size: .875rem; }
+  .post-card__meta, .post-card__stats { color: var(--c-fg-soft); }
+  .chip { font-size: .8rem; }
   .card, .post-card { padding: 16px; }
   .article { padding: 18px 16px; }
   .comments { padding: 16px; }

@@ -25,7 +25,9 @@ const yamlPath = path.join(repoRoot, '.github/workflows/check.yml');
 const yamlText = fs.readFileSync(yamlPath, 'utf8');
 
 // 不引第三方 YAML：这个工作流结构简单，按缩进取步骤即可
-const lines = yamlText.split('\n');
+/* 按 CRLF 也能解析：Windows 工作区里文件可能是 CRLF，而 `(.+)$` 的 `.` 不匹配 `\r`
+   —— 曾经因此一个步骤都解析不出来（假装 0 个步骤还报错）。 */
+const lines = yamlText.split(/\r?\n/);
 const steps = [];
 const skipped = [];
 

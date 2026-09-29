@@ -25,8 +25,12 @@
   --content-w: 1000px;
   --radius: 14px;
   --c-accent: #5b8def;
+  /* 按平台分组：拉丁先给各系统的 UI 字体，CJK 再按 macOS → Windows → 通用 排。
+     Windows 上 system-ui 解析到 Segoe UI（不含 CJK），中文会落到雅黑；
+     先 Microsoft YaHei UI（Win8+ 的更细字面）再 Microsoft YaHei，混排观感更整齐。 */
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
-    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei",
+    "Noto Sans SC", "Source Han Sans SC", sans-serif;
   --font-code: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
     "Liberation Mono", "Courier New", monospace;
   /* 派生尺寸 */
@@ -191,6 +195,19 @@ body {
   color: var(--c-muted); cursor: pointer;
 }
 .side-tabs__label { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+/* 视觉隐藏但保留给屏幕阅读器（首页的 h1 用它：页面主标题不能没有，
+   但侧栏已经显示了站名，重复显示反而难看） */
+.visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
 .side-panels { min-inline-size: 0; }
 .side-panel { display: none; }
 .side-panel.is-active { display: block; }
@@ -220,7 +237,10 @@ body {
   text-overflow: ellipsis;
 }
 .topbar__actions { display: flex; align-items: center; gap: 4px; margin-inline-start: auto; }
-.progress { position: absolute; inset-inline: 0; inset-block-end: -1px; block-size: 2px; overflow: hidden; }
+/* 阅读进度条：不再是顶栏的子元素（宽屏要整条隐藏顶栏，进度条得自己活着）。
+   窄屏：顶栏 sticky 在顶端，进度条紧贴它下沿（52px = 8px 内边距 ×2 + 36px 按钮）。
+   宽屏：见下面的断点块，改成内容栏顶部的一条 fixed 细线。 */
+.progress { position: sticky; inset-block-start: 52px; z-index: 31; block-size: 2px; overflow: hidden; }
 .progress__bar { display: block; block-size: 100%; transform: scaleX(0); transform-origin: left; background: var(--c-accent); }
 
 /* -------------------------------------------------------------- 按钮基元 */
@@ -252,15 +272,17 @@ body {
      再在内容栏顶上压一条带模糊底的方框栏属于纯重复（用户反馈「很突兀」）。
      顶栏因此只剩阅读进度条：去掉内外边距/底色/模糊，它就是内容栏顶部的一条 2px 细线，
      滚动阅读时才出现（.progress 默认 hidden）。 */
-  .topbar {
-    padding: 0;
-    background: none;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+  /* 顶栏整体不要了：侧栏已经有站名/搜索/主题开关。整条 display:none 还顺带
+     去掉了一个空的 banner landmark（.topbar 是 <header>，且不在 <main> 内，
+     宽屏只剩进度条时它就是空 landmark）。 */
+  .topbar { display: none; }
+  .progress {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline-start: var(--sidebar-w);
+    inset-inline-end: 0;
+    z-index: 31;
   }
-  .topbar__btn,
-  .topbar__title,
-  .topbar__actions { display: none; }
   .mask { display: none !important; }
 }
 @media (max-width: 1079.98px) {

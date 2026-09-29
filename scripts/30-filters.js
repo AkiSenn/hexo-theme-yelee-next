@@ -13,6 +13,7 @@ const { URL } = require('url');
 const path = require('path');
 /* 与 10-helpers.js 共用同一份内容指纹实现（同一个文件只算一次哈希） */
 const { configure, fingerprintSrc } = require(path.join(hexo.theme_dir, 'lib', 'assets.js'));
+const { autospace } = require(path.join(hexo.theme_dir, 'lib', 'text.js'));
 configure(hexo.theme_dir, hexo.source_dir);
 
 /* 需要原样保留、不能被压缩逻辑碰的块 */
@@ -111,6 +112,35 @@ function enhanceCodeBlocks(html) {
   });
   out = out.replace(/<pre\b[\s\S]*?<\/pre>/gi, m => enhancePre(m));
   return out.replace(/\u0000C(\d+)\u0000/g, (_, i) => kept[Number(i)]);
+}
+
+/* -------------------------------------------------------------- 中英文间隙 */
+
+/* 这些标签内的文本一律不碰：改了代码块 / 行内代码就毁了 */
+const AUTOSPACE_SKIP = /^(pre|code|kbd|samp|script|style|textarea)$/i;
+
+/**
+ * 中英文之间补空格（盘古之白）。
+ * 只处理**文本节点**：按标签切开，标签本身（含 href/class 等属性）原样返回；
+ * pre/code/kbd/samp/script/style/textarea 内的文本整段跳过。
+ * 幂等：已加过空格处不会再匹配，片段渲染与整页渲染各跑一次也不会叠。
+ */
+function autospaceHtml(html) {
+  let skip = 0;
+  return String(html)
+    .split(/(<[^>]*>)/)
+    .map(part => {
+      if (part.startsWith('<')) {
+        const m = part.match(/^<(\/?)([a-zA-Z][a-zA-Z0-9-]*)/);
+        if (m && AUTOSPACE_SKIP.test(m[2])) {
+          if (m[1] === '/') skip = Math.max(0, skip - 1);
+          else if (!/\/>$/.test(part)) skip += 1;
+        }
+        return part;
+      }
+      return skip > 0 ? part : autospace(part);
+    })
+    .join('');
 }
 
 /* -------------------------------------------------------------------- 图片 */
@@ -277,6 +307,8 @@ hexo.extend.filter.register(
     if (cfg.open_in_new) {
       out = enhanceExternalLinks(out, cfg, hexo.config.url, cfg.open_in_new_exclude || []);
     }
+    /* 中英文间隙放最后：前面的结构变换都已经定型，只改可见文本 */
+    if (cfg.article.autospace !== false) out = autospaceHtml(out);
     return out;
   },
   40

@@ -10,7 +10,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const { escapeHTML } = require('hexo-util');
-const { plainText, countWords, readingMinutes, stableHash } = require(path.join(
+const { plainText, leadingParagraphs, countWords, readingMinutes, stableHash } = require(path.join(
   hexo.theme_dir,
   'lib',
   'text.js'
@@ -110,14 +110,16 @@ helper.register('yn_background', function () {
 
 /* ------------------------------------------------------------------ 文章相关 */
 
-/** 列表页摘要：有 <!-- more --> 用渲染好的 excerpt，否则按字数截断纯文本 */
+/** 列表页摘要：有 <!-- more --> 用作者圈定的那段（渲染好的 HTML）；
+    否则**按段落**抽取正文前 1–2 段 —— 不再把 h2 小标题与代码块压成文字混进来。 */
 helper.register('yn_excerpt', function (post) {
   const cfg = (this.theme && this.theme.article) || {};
   if (!post) return '';
   if (post.excerpt) return post.excerpt;
   if (cfg.excerpt === false) return post.content || '';
   const len = Number(cfg.excerpt_length) || 200;
-  return escapeHTML(plainText(post.content, len));
+  const paragraphs = Number(cfg.excerpt_paragraphs) || 2;
+  return escapeHTML(leadingParagraphs(post.content, len, paragraphs));
 });
 
 /** 列表页是否展示「阅读全文」 */

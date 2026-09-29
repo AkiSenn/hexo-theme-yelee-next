@@ -22,7 +22,9 @@
     </button>
     <% } %>
   </div>
-  <% if (theme.appearance.reading_progress) { %>
-  <div class="progress" data-progress hidden><span class="progress__bar" data-progress-bar></span></div>
-  <% } %>
 </header>
+<% if (theme.appearance.reading_progress) { %>
+<%# 进度条放在 header **外面**：宽屏时整个顶栏 display:none（避免留下一个空的
+    banner landmark），进度条得单独存活下来，所以不能是它的子元素。 %>
+<div class="progress" data-progress hidden><span class="progress__bar" data-progress-bar></span></div>
+<% } %>
