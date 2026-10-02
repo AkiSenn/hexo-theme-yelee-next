@@ -1,6 +1,6 @@
 <p align="center">
   <strong>简体中文</strong> ·
-  <a href="./README.en.md">English</a>
+  <a href="https://github.com/AkiSenn/hexo-theme-yelee-next/blob/main/README.en.md">English</a>
 </p>
 
 <p align="center">
@@ -15,8 +15,6 @@
 </p>
 
 yelee-next 是 [hexo-theme-yelee](https://github.com/MOxFIVE/hexo-theme-yelee) 的现代化重制版，保留侧栏、全屏背景和半透明卡片等视觉特征，并采用原生 ESM 与现代 CSS。
-
-> 📖 [缓存指南（中文）](./docs/caching.md) · [English](./docs/caching.en.md)
 
 ![yelee-next 在桌面、平板和手机上的展示](./docs/responsive-showcase.png)
 
@@ -66,6 +64,7 @@ hexo clean && hexo g && hexo s
 | [主题配置](./_config.yml) | 默认配置 |
 | [起步配置](./docs/starter-config.yml) | 可复制到站点使用的配置模板 |
 | [迁移指南（中文）](./docs/migration.md) · [English](./docs/migration.en.md) | 从 Yelee 3.5 迁移 |
+| [缓存指南（中文）](./docs/caching.md) · [English](./docs/caching.en.md) | 资源指纹与缓存配置 |
 | [更新日志](./CHANGELOG.md) | 版本变更记录（中文） |
 
 ## 部署
