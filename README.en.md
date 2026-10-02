@@ -16,6 +16,8 @@
 
 yelee-next modernizes [hexo-theme-yelee](https://github.com/MOxFIVE/hexo-theme-yelee), preserving its sidebar, full-screen background and translucent cards while using native ES modules and modern CSS.
 
+> 📖 Caching guide: [中文](./docs/caching.md) · [English](./docs/caching.en.md)
+
 ![yelee-next shown on desktop, tablet and phone](./docs/responsive-showcase.png)
 
 Showcase based on the [akisenn.com](https://akisenn.com/) homepage.
@@ -64,7 +66,6 @@ Configuration precedence: site _config.yelee-next.yml → theme _config.yml → 
 | [Theme config](./_config.yml) | Theme defaults |
 | [Starter config](./docs/starter-config.yml) | Copy-ready configuration template |
 | [Migration guide (中文)](./docs/migration.md) · [English](./docs/migration.en.md) | Migrate from Yelee 3.5 |
-| [Caching guide (中文)](./docs/caching.md) · [English](./docs/caching.en.md) | Asset fingerprinting and caching |
 | [Changelog](./CHANGELOG.md) | Release history (Chinese) |
 
 ## Deployment
