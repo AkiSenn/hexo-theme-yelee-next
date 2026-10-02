@@ -18,7 +18,7 @@ yelee-next modernizes [hexo-theme-yelee](https://github.com/MOxFIVE/hexo-theme-y
 
 ![yelee-next shown on desktop, tablet and phone](./docs/responsive-showcase.png)
 
-Showcase based on the [akisenn.com](https://akisenn.com/) homepage.
+Showcase captured from the yelee-demo site, featuring desktop, tablet and phone layouts.
 
 ## Features
 

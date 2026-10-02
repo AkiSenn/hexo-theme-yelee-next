@@ -18,7 +18,7 @@ yelee-next 是 [hexo-theme-yelee](https://github.com/MOxFIVE/hexo-theme-yelee) �
 
 ![yelee-next 在桌面、平板和手机上的展示](./docs/responsive-showcase.png)
 
-展示图基于 [akisenn.com](https://akisenn.com/) 首页制作。
+展示图由 yelee-demo 演示站生成，展示桌面、平板和手机布局。
 
 ## 特性
 
